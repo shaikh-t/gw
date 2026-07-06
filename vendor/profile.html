@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — GlobalWays Vendor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/globalways.css" rel="stylesheet">
+</head>
+<body class="bg-warm">
+  <div class="dashboard-wrapper d-flex">
+    <aside class="dashboard-sidebar d-flex flex-column">
+      <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+        <a href="../index.html" class="text-decoration-none d-flex align-items-center gap-2">
+          <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:linear-gradient(135deg,#1165EF,#3F83F4)"><i class="bi bi-globe2 text-white small"></i></div>
+          <div><div class="text-white font-serif small">GlobalWays</div><div class="font-mono text-uppercase" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.4)">Vendor Portal</div></div>
+        </a>
+        <button class="btn btn-link text-white-50 p-0 d-lg-none" data-sidebar-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <nav class="nav flex-column p-3 gap-1 flex-grow-1">
+        <a class="nav-link" href="index.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a class="nav-link" href="services.html"><i class="bi bi-box-seam"></i> Services</a>
+        <a class="nav-link" href="quotations.html"><i class="bi bi-file-earmark-richtext"></i> Quotations</a>
+        <a class="nav-link" href="cases.html"><i class="bi bi-briefcase"></i> Cases <span class="badge rounded-pill">5</span></a>
+        <a class="nav-link" href="crm.html"><i class="bi bi-people"></i> CRM</a>
+        <a class="nav-link active" href="profile.html"><i class="bi bi-person"></i> Profile</a>
+      </nav>
+      <div class="p-3 border-top border-secondary border-opacity-25"><a class="nav-link" href="../index.html"><i class="bi bi-box-arrow-left"></i> Back to Home</a></div>
+    </aside>
+    <div class="sidebar-backdrop"></div>
+    <div class="dashboard-main">
+      <header class="dashboard-topbar d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3"><button class="btn btn-light d-lg-none" data-sidebar-toggle><i class="bi bi-list"></i></button></div>
+        <div class="d-flex align-items-center gap-2"><button class="btn btn-light"><i class="bi bi-bell"></i></button><span class="avatar-circle bg-dark">VP</span></div>
+      </header>
+      <main class="p-4 p-lg-5">
+        <div class="mb-4"><h1 class="font-serif h2 mb-1">Vendor Profile</h1><p class="text-muted mb-0">Manage your company profile and settings</p></div>
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white border-bottom"><h2 class="h6 mb-0">Company Information</h2></div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label small">Company Name</label><input type="text" class="form-control" value="Vision PRO Services"></div>
+                  <div class="col-md-6"><label class="form-label small">Trade License No.</label><input type="text" class="form-control" value="TL-2024-88421"></div>
+                  <div class="col-md-6"><label class="form-label small">Contact Email</label><input type="email" class="form-control" value="info@visionpro.ae"></div>
+                  <div class="col-md-6"><label class="form-label small">Phone</label><input type="tel" class="form-control" value="+971 4 567 8901"></div>
+                  <div class="col-12"><label class="form-label small">Address</label><textarea class="form-control" rows="2">Business Bay, Dubai, UAE</textarea></div>
+                  <div class="col-12"><label class="form-label small">Description</label><textarea class="form-control" rows="3">Leading UAE visa and business setup consultancy with 10+ years of experience.</textarea></div>
+                </div>
+              </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom"><h2 class="h6 mb-0">Banking Details</h2></div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label small">Bank Name</label><input type="text" class="form-control" value="Emirates NBD"></div>
+                  <div class="col-md-6"><label class="form-label small">IBAN</label><input type="text" class="form-control" value="AE07 0331 2345 6789 0123 456"></div>
+                  <div class="col-md-6"><label class="form-label small">Account Holder</label><input type="text" class="form-control" value="Vision PRO Services LLC"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-body text-center">
+                <span class="avatar-circle d-inline-flex mb-3 border border-primary" style="width:4rem;height:4rem;font-size:1rem;background:rgba(17,101,239,.2);color:#70A5F7">VP</span>
+                <div class="fw-semibold">Vision PRO Services</div>
+                <span class="badge bg-primary-subtle text-primary mb-3">Verified Partner</span>
+                <div class="small text-muted mb-3">Member since Mar 2024 · 4.9★ rating</div>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill">Upload Logo</button>
+              </div>
+            </div>
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white border-bottom"><h3 class="h6 mb-0">Verification Status</h3></div>
+              <ul class="list-group list-group-flush small">
+                <li class="list-group-item d-flex justify-content-between"><span>Trade License</span><i class="bi bi-check-circle-fill text-success"></i></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Insurance</span><i class="bi bi-check-circle-fill text-success"></i></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Background Check</span><i class="bi bi-check-circle-fill text-success"></i></li>
+              </ul>
+            </div>
+            <button class="btn btn-primary w-100 rounded-pill">Save Changes</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

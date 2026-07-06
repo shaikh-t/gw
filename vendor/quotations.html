@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotations — GlobalWays Vendor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/globalways.css" rel="stylesheet">
+</head>
+<body class="bg-warm">
+  <div class="dashboard-wrapper d-flex">
+    <aside class="dashboard-sidebar d-flex flex-column">
+      <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+        <a href="../index.html" class="text-decoration-none d-flex align-items-center gap-2">
+          <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:linear-gradient(135deg,#1165EF,#3F83F4)"><i class="bi bi-globe2 text-white small"></i></div>
+          <div><div class="text-white font-serif small">GlobalWays</div><div class="font-mono text-uppercase" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.4)">Vendor Portal</div></div>
+        </a>
+        <button class="btn btn-link text-white-50 p-0 d-lg-none" data-sidebar-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="p-3 border-bottom border-secondary border-opacity-25">
+        <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,.05)">
+          <span class="avatar-circle border border-primary" style="background:rgba(17,101,239,.2);color:#70A5F7">VP</span>
+          <div class="min-w-0"><div class="text-white small fw-semibold text-truncate">Vision PRO Services</div></div>
+        </div>
+      </div>
+      <nav class="nav flex-column p-3 gap-1 flex-grow-1">
+        <div class="font-mono text-uppercase px-2 mb-2" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.25)">Menu</div>
+        <a class="nav-link" href="index.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a class="nav-link" href="services.html"><i class="bi bi-box-seam"></i> Services</a>
+        <a class="nav-link active" href="quotations.html"><i class="bi bi-file-earmark-richtext"></i> Quotations</a>
+        <a class="nav-link" href="cases.html"><i class="bi bi-briefcase"></i> Cases <span class="badge rounded-pill">5</span></a>
+        <a class="nav-link" href="crm.html"><i class="bi bi-people"></i> CRM</a>
+        <a class="nav-link" href="profile.html"><i class="bi bi-person"></i> Profile</a>
+      </nav>
+      <div class="p-3 border-top border-secondary border-opacity-25"><a class="nav-link" href="../index.html"><i class="bi bi-box-arrow-left"></i> Back to Home</a></div>
+    </aside>
+    <div class="sidebar-backdrop"></div>
+    <div class="dashboard-main">
+      <header class="dashboard-topbar d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3 flex-grow-1"><button class="btn btn-light d-lg-none" data-sidebar-toggle><i class="bi bi-list"></i></button></div>
+        <div class="d-flex align-items-center gap-2"><button class="btn btn-light"><i class="bi bi-bell"></i></button><span class="avatar-circle bg-dark">VP</span></div>
+      </header>
+      <main class="p-4 p-lg-5">
+        <div class="mb-4"><h1 class="font-serif h2 mb-1">Quotation Builder</h1><p class="text-muted mb-0">Create and send custom quotations to leads</p></div>
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom"><h2 class="h6 mb-0">New Quotation</h2></div>
+              <div class="card-body">
+                <form>
+                  <div class="row g-3 mb-4">
+                    <div class="col-md-6"><label class="form-label small">Customer Name</label><input type="text" class="form-control" placeholder="John Smith"></div>
+                    <div class="col-md-6"><label class="form-label small">Email</label><input type="email" class="form-control" placeholder="john@example.com"></div>
+                    <div class="col-md-6"><label class="form-label small">Service</label><select class="form-select"><option>Golden Visa</option><option>Family Visa</option><option>Business Setup</option></select></div>
+                    <div class="col-md-6"><label class="form-label small">Valid Until</label><input type="date" class="form-control" value="2026-07-06"></div>
+                  </div>
+                  <h3 class="h6 mb-3">Line Items</h3>
+                  <div class="table-responsive mb-3">
+                    <table class="table table-sm align-middle">
+                      <thead class="table-light"><tr><th>Description</th><th style="width:100px">Qty</th><th style="width:120px">Rate (AED)</th><th style="width:120px">Amount</th><th></th></tr></thead>
+                      <tbody>
+                        <tr><td><input type="text" class="form-control form-control-sm" value="Government Fees"></td><td><input type="number" class="form-control form-control-sm" value="1"></td><td><input type="number" class="form-control form-control-sm" value="3000"></td><td>AED 3,000</td><td><button type="button" class="btn btn-sm btn-light"><i class="bi bi-trash"></i></button></td></tr>
+                        <tr><td><input type="text" class="form-control form-control-sm" value="Service Fee"></td><td><input type="number" class="form-control form-control-sm" value="1"></td><td><input type="number" class="form-control form-control-sm" value="2000"></td><td>AED 2,000</td><td><button type="button" class="btn btn-sm btn-light"><i class="bi bi-trash"></i></button></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill mb-4"><i class="bi bi-plus me-1"></i> Add Line Item</button>
+                  <div class="mb-3"><label class="form-label small">Notes</label><textarea class="form-control" rows="3" placeholder="Additional terms or conditions…"></textarea></div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="h5 mb-0">Total: <span class="text-primary">AED 5,000</span></div>
+                    <div class="d-flex gap-2"><button type="button" class="btn btn-outline-secondary rounded-pill">Save Draft</button><button type="button" class="btn btn-primary rounded-pill">Send Quotation</button></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom"><h3 class="h6 mb-0">Recent Quotations</h3></div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item small"><div class="d-flex justify-content-between"><strong>QT-2026-042</strong><span class="badge bg-warning-subtle text-warning-emphasis">Pending</span></div><div class="text-muted">John Smith · Investor Visa · AED 4,500</div></li>
+                <li class="list-group-item small"><div class="d-flex justify-content-between"><strong>QT-2026-041</strong><span class="badge bg-success-subtle text-success">Accepted</span></div><div class="text-muted">Lisa Chen · Company Formation · AED 8,000</div></li>
+                <li class="list-group-item small"><div class="d-flex justify-content-between"><strong>QT-2026-040</strong><span class="badge bg-secondary-subtle text-secondary">Expired</span></div><div class="text-muted">Mark Wilson · Golden Visa · AED 5,000</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>
