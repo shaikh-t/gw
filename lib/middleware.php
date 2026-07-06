@@ -4,6 +4,7 @@ require_once __DIR__ . '/permissions.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/csrf.php';
 function require_permission_or_die(string $perm) {
+    global $domain;
     if (!current_user()) {
         // not logged in
         header('Location: '.$domain.'/login.php');
@@ -19,8 +20,13 @@ function require_permission_or_die(string $perm) {
         }
         // normal request -> redirect or show forbidden page
         http_response_code(403);
-        // Option A: redirect to a no-access page
-        header('Location: '.$domain.'/no_access.php');
+        // If it's a provider, redirect to their dashboard instead of a 404/403 page if they try to access admin
+        if (is_role('provider')) {
+            header('Location: '.$domain.'/vendor/index.php');
+            exit;
+        }
+        // Option A: redirect to a no-access page or login
+        header('Location: '.$domain.'/login.php');
         exit;
     }
 }

@@ -49,22 +49,27 @@ function can(string $permission): bool {
     $user = current_user();
     if (!$user) return false;
 
-    $now = time();
-    $ttl = 300; // seconds
-
-    // If not loaded or expired, reload from DB
-    if (empty($_SESSION['user']['_perms_loaded_at']) || ($now - ($_SESSION['user']['_perms_loaded_at'] ?? 0)) > $ttl) {
-        $_SESSION['user']['permissions'] = load_user_permissions_mysqli((int)$user['id']);
-        $_SESSION['user']['_perms_loaded_at'] = $now;
-    }
-
-    return in_array($permission, $_SESSION['user']['permissions'] ?? [], true);
+    // Security: Always fetch fresh permissions from DB to prevent session tampering
+    $perms = load_user_permissions_mysqli((int)$user['id']);
+    return in_array($permission, $perms, true);
 }
 
 
 function is_role(string $role): bool {
+    global $mysqli;
     $user = current_user();
     if (!$user) return false;
-    $roles = $user['roles'] ?? ($_SESSION['user']['roles'] ?? []);
-    return in_array($role, (array)$roles, true);
+
+    $userId = intval($user['id']);
+    $roleEsc = $mysqli->real_escape_string($role);
+
+    // Security: Always verify role against DB
+    $sql = "SELECT 1 FROM user_roles ur
+            JOIN roles r ON ur.role_id = r.id
+            WHERE ur.user_id = $userId AND r.name = '$roleEsc' LIMIT 1";
+    $res = $mysqli->query($sql);
+    $exists = ($res && $res->num_rows > 0);
+    if ($res && !is_bool($res)) $res->free();
+
+    return $exists;
 }

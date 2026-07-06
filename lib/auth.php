@@ -3,7 +3,7 @@
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 require_once __DIR__ . '/db_mysqli.php';
 
-$domain="/gw2";
+$domain="";
 /**
  * Return current user array or null.
  * Minimal fields: id, name, email, avatar, roles (array), permissions (array)
@@ -31,61 +31,26 @@ function login_user_by_id(int $userId): bool {
     $res->free();
     if (!$u) return false;
 
-    // load role ids
-    $roleIds = [];
-    $r = $mysqli->query("SELECT role_id FROM user_roles WHERE user_id = $id");
-    if ($r) { while ($rw = $r->fetch_assoc()) $roleIds[] = (int)$rw['role_id']; $r->free(); }
+    // load role names
+    $roleNames = [];
+    $r = $mysqli->query("SELECT r.name FROM user_roles ur JOIN roles r ON ur.role_id = r.id WHERE ur.user_id = $id");
+    if ($r) {
+        while ($rw = $r->fetch_assoc()) $roleNames[] = $rw['name'];
+        $r->free();
+    }
 
     $_SESSION['user'] = [
         'id' => (int)$u['id'],
         'name' => $u['name'],
         'email' => $u['email'],
         'avatar' => $u['avatar'] ?? null,
-        'roles' => $roleIds,
+        'roles' => $roleNames,
         'permissions' => [],
         '_perms_loaded_at' => 0
     ];
     session_regenerate_id(true);
     return true;
 }
-
-/**
- * Load user basic info by id and store in session.
- * Uses MySQLi, no prepared statements. Cast IDs with intval and escape strings.
- */
-// lib/auth.php (update login_user_by_id)
-function login_user_by_id2(int $userId): bool {
-    global $mysqli;
-    $id = intval($userId);
-    $sql = "SELECT id, name, email, avatar, roles FROM users WHERE id = $id LIMIT 1";
-    $res = $mysqli->query($sql);
-    if (!$res) return false;
-    $u = $res->fetch_assoc();
-    $res->free();
-    if (!$u) return false;
-
-    // Normalize roles: if roles stored as JSON in users.roles, decode to array
-    $roles = [];
-    if (!empty($u['roles'])) {
-        $decoded = json_decode($u['roles'], true);
-        if (is_array($decoded)) $roles = $decoded;
-    }
-
-    // Store minimal user info and roles in session
-    $_SESSION['user'] = [
-        'id' => (int)$u['id'],
-        'name' => $u['name'],
-        'email' => $u['email'],
-        'avatar' => $u['avatar'] ?? null,
-        'roles' => $roles,               // <-- populated here
-        'permissions' => [],             // will be filled by can()
-        '_perms_loaded_at' => 0          // <-- force reload on first can() call
-    ];
-
-    session_regenerate_id(true);
-    return true;
-}
-
 
 /**
  * Attempt login by email + password.
@@ -119,4 +84,3 @@ function logout_user(): void {
     unset($_SESSION['_csrf_token']);
     session_regenerate_id(true);
 }
-
