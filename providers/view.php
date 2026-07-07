@@ -53,9 +53,11 @@ include __DIR__ . '/../partials/header.php';
         </div>
 
         <div class="mb-3">
-          <a href="/book?provider=<?php echo intval($provider['id']); ?>" class="btn btn-primary">Book now</a>
-          <?php if (!empty($_SESSION['user']) && ($_SESSION['user']['id'] == $provider['owner_user_id'] || can('providers.manage'))): ?>
-            <a href="/admin/providers/edit.php?id=<?php echo intval($provider['id']); ?>" class="btn btn-outline-secondary">Edit provider</a>
+          <a href="/book?provider=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-primary">Book now</a>
+          <?php
+            $curr = current_user();
+            if ($curr && ($curr['id'] == $provider['owner_user_id'] || can('providers.manage'))): ?>
+            <a href="/admin/providers/edit.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary">Edit provider</a>
           <?php endif; ?>
         </div>
       </div>

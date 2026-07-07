@@ -12,7 +12,7 @@ $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 
 if (attempt_login($email, $password)) {
-    $mysqli->query("UPDATE users SET last_login = NOW() WHERE id = " . intval($_SESSION['user']['id']));
+    $mysqli->query("UPDATE users SET last_login = NOW() WHERE uuid = '" . $mysqli->real_escape_string($_SESSION['user']['uuid']) . "'");
 
     // Redirect based on role
     if (is_role('admin') || is_role('Super Admin')) {

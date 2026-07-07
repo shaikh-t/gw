@@ -64,14 +64,14 @@ include __DIR__ . '/../../partials/sidebar.php';
           <td><?php echo htmlspecialchars($p['verification_status'] ?? 'unverified', ENT_QUOTES); ?></td>
           <td><?php echo htmlspecialchars($p['created_at'], ENT_QUOTES); ?></td>
           <td class="text-end">
-           <?php if (can('providers.manage') || $p['owner_user_id'] == $current['id']): ?>
-  <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/providers/dashboard.php?id=<?php echo intval($p['id']); ?>">Admin View</a>
+           <?php if (can('providers.manage') || (!empty($current['id']) && $p['owner_user_id'] == $current['id'])): ?>
+  <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/providers/dashboard.php?uuid=<?php echo htmlspecialchars($p['uuid']); ?>">Admin View</a>
 <?php endif; ?>  
-          <a href="<?php echo $domain;?>/admin/providers/edit.php?id=<?php echo intval($p['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+          <a href="<?php echo $domain;?>/admin/providers/edit.php?uuid=<?php echo htmlspecialchars($p['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('providers.manage')): ?>
               <form method="post" action="<?php echo $domain;?>/admin/providers/delete.php" class="d-inline-block" onsubmit="return confirm('Delete provider?');">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="id" value="<?php echo intval($p['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($p['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
             <?php endif; ?>

@@ -48,7 +48,8 @@ if (!$update['ok']) {
 if ($avatarFilename) {
     $mysqli->query("UPDATE users SET avatar = '" . $mysqli->real_escape_string($avatarFilename) . "' WHERE id = $id");
     // If current user updated their own avatar, update session
-    if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $id) {
+    $curr = current_user();
+    if ($curr && $curr['uuid'] == $uuid) {
         $_SESSION['user']['avatar'] = $avatarFilename;
     }
 }

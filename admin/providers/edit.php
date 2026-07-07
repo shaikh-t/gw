@@ -5,8 +5,8 @@ require_permission_or_die('providers.manage');
 require_once __DIR__ . '/../../lib/providers_helpers.php';
 require_once __DIR__ . '/../../lib/users_helpers.php';
 
-$id = intval($_GET['id'] ?? 0);
-$provider = provider_find($id);
+$id_val = $_GET['uuid'] ?? $_GET['id'] ?? '';
+$provider = provider_find($id_val);
 if (!$provider) { http_response_code(404); echo 'Provider not found'; exit; }
 
 // owner list for assignment
@@ -30,7 +30,7 @@ include __DIR__ . '/../../partials/sidebar.php';
 
   <form method="post" action="/admin/providers/update.php" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo intval($provider['id']); ?>">
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($provider['uuid'] ?? $provider['id']); ?>">
 
     <div class="row">
       <div class="col-md-6 mb-3">
@@ -149,7 +149,7 @@ include __DIR__ . '/../../partials/sidebar.php';
   <h5>Admin verification actions</h5>
   <form method="post" action="<?php echo $domain;?>/admin/providers/verify.php" class="mb-3">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo intval($provider['id']); ?>">
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($provider['uuid'] ?? $provider['id']); ?>">
     <div class="mb-3">
       <label class="form-label">Action</label>
       <select name="action" class="form-select" required>

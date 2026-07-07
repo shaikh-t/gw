@@ -15,7 +15,7 @@ $current = current_user();
 $res = review_moderate($id, $action, $current['id'], $note);
 if (!$res['ok']) {
     $_SESSION['flash_errors'] = [$res['error'] ?? 'Action failed'];
-    header('Location: /admin/reviews/review.php?id=' . $id); exit;
+    header('Location: /admin/reviews/review.php?uuid=' . $id); exit;
 }
 
 $_SESSION['flash_success'] = 'Action applied';

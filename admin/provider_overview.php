@@ -92,7 +92,7 @@ include __DIR__ . '/../partials/sidebar.php';
           <td><?php echo htmlspecialchars($p['created_at'] ?? ''); ?></td>
           <td class="text-end">
             <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain; ?>/admin/providers/dashboard.php?id=<?php echo $pid; ?>">View</a>
-            <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain; ?>/admin/providers/edit.php?id=<?php echo $pid; ?>">Edit</a>
+            <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain; ?>/admin/providers/edit.php?uuid=<?php echo $pid; ?>">Edit</a>
             <a class="btn btn-sm btn-outline-info" href="<?php echo $domain; ?>/admin/reviews/index.php?provider_id=<?php echo $pid; ?>">Reviews</a>
             <a class="btn btn-sm btn-danger" href="<?php echo $domain; ?>/admin/providers/delete.php?id=<?php echo $pid; ?>" onclick="return confirm('Delete provider and all related data?');">Delete</a>
           </td>

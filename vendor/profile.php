@@ -4,9 +4,9 @@ require_once __DIR__ . '/../lib/providers_helpers.php';
 require_login();
 
 $user = current_user();
-$providers = providers_for_user($user['id']);
+$providers = providers_for_user($user['uuid']);
 if (empty($providers)) { die("No provider account found."); }
-$provider = provider_find($providers[0]['id']);
+$provider = provider_find($providers[0]['uuid']);
 
 // Handle update if POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'country' => $_POST['country'] ?? '',
         'description' => $_POST['description'] ?? '',
     ];
-    provider_update($provider['id'], $updateData);
-    $provider = provider_find($provider['id']); // refresh
+    provider_update($provider['uuid'], $updateData);
+    $provider = provider_find($provider['uuid']); // refresh
     $success = "Profile updated successfully.";
 }
 

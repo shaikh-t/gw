@@ -91,11 +91,13 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `label` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -103,22 +105,22 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 -- Dumping data for table `permissions`
 --
 
-INSERT INTO `permissions` (`id`, `name`, `label`, `description`, `created_at`) VALUES
-(1, 'users.view', 'Users: View', 'View user list and profiles', '2026-01-12 11:50:49'),
-(2, 'users.manage', 'Users: Manage', 'Create, update, delete users', '2026-01-12 11:50:49'),
-(3, 'roles.view', 'Roles: View', 'View roles and permissions', '2026-01-12 11:50:49'),
-(4, 'roles.manage', 'Roles: Manage', 'Create and edit roles and permissions', '2026-01-12 11:50:49'),
-(5, 'dashboard.view', 'Dashboard: View', 'Access dashboard', '2026-01-12 11:50:49'),
-(6, 'settings.view', 'Settings: View', 'View global settings', '2026-01-12 11:50:49'),
-(7, 'settings.manage', 'Settings: Manage', 'Change global configuration', '2026-01-12 11:50:49'),
-(8, 'providers.view', 'Providers: View', 'View providers list and profiles', '2026-01-12 12:41:24'),
-(9, 'providers.manage', 'Providers: Manage', 'Create, update, delete providers', '2026-01-12 12:41:24'),
-(10, 'services.view', 'Services: View', 'View services and listings', '2026-01-12 13:54:01'),
-(11, 'services.manage', 'Services: Manage', 'Create, edit, delete services', '2026-01-12 13:54:01'),
-(12, 'reviews.view', '', 'View published reviews and moderation queue', '2026-01-12 18:46:58'),
-(13, 'reviews.manage', 'Review Control', 'Moderate, approve, hide, reject reviews', '2026-01-12 18:46:58'),
-(14, 'reviews.create_admin', '', 'Create manual reviews from admin panel', '2026-01-12 18:46:58'),
-(17, 'permissions.manage', 'Permissions: Manage', '', '2026-01-14 08:12:52');
+INSERT INTO `permissions` (`id`, `uuid`, `name`, `label`, `description`, `created_at`) VALUES
+(1, '6d210674-f11a-47ee-8d56-1118414805f4', 'users.view', 'Users: View', 'View user list and profiles', '2026-01-12 11:50:49'),
+(2, '86d60bc9-052b-4ca7-8b3f-404467663059', 'users.manage', 'Users: Manage', 'Create, update, delete users', '2026-01-12 11:50:49'),
+(3, 'f9a3f9d9-01da-4060-8c8c-61def89e981e', 'roles.view', 'Roles: View', 'View roles and permissions', '2026-01-12 11:50:49'),
+(4, 'fb14c333-f0bb-4767-aad6-d677088199d3', 'roles.manage', 'Roles: Manage', 'Create and edit roles and permissions', '2026-01-12 11:50:49'),
+(5, '27e66130-dec6-49bc-928a-287f22d6dbec', 'dashboard.view', 'Dashboard: View', 'Access dashboard', '2026-01-12 11:50:49'),
+(6, 'c3f9f858-7410-4439-ac0d-07209964071e', 'settings.view', 'Settings: View', 'View global settings', '2026-01-12 11:50:49'),
+(7, '1eb4507c-360d-4c06-a713-a538c0af7c80', 'settings.manage', 'Settings: Manage', 'Change global configuration', '2026-01-12 11:50:49'),
+(8, '631d450e-5d6b-4317-8379-27fd09f9fc05', 'providers.view', 'Providers: View', 'View providers list and profiles', '2026-01-12 12:41:24'),
+(9, '81f17006-0b2f-4176-a708-0a0cb15eed97', 'providers.manage', 'Providers: Manage', 'Create, update, delete providers', '2026-01-12 12:41:24'),
+(10, '46550107-3cd2-4223-b96f-b6b5649a96d2', 'services.view', 'Services: View', 'View services and listings', '2026-01-12 13:54:01'),
+(11, '27c0173a-86d7-458c-88d3-e502beac6e4c', 'services.manage', 'Services: Manage', 'Create, edit, delete services', '2026-01-12 13:54:01'),
+(12, '9a00295e-a501-4485-ac78-a6c0d2182709', 'reviews.view', '', 'View published reviews and moderation queue', '2026-01-12 18:46:58'),
+(13, 'c695054d-15f6-492f-99c9-a1fb454428c3', 'reviews.manage', 'Review Control', 'Moderate, approve, hide, reject reviews', '2026-01-12 18:46:58'),
+(14, '39b51ae5-fe11-4b24-89fa-a9341406e55a', 'reviews.create_admin', '', 'Create manual reviews from admin panel', '2026-01-12 18:46:58'),
+(17, 'b761ef43-86f5-41d4-9315-cd18ce733f36', 'permissions.manage', 'Permissions: Manage', '', '2026-01-14 08:12:52');
 
 -- --------------------------------------------------------
 
@@ -129,6 +131,7 @@ INSERT INTO `permissions` (`id`, `name`, `label`, `description`, `created_at`) V
 DROP TABLE IF EXISTS `providers`;
 CREATE TABLE IF NOT EXISTS `providers` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `owner_user_id` int UNSIGNED DEFAULT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -152,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `providers` (
   `settings` json DEFAULT NULL,
   `created_by` int UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `slug` (`slug`),
   KEY `idx_providers_city` (`city`),
   KEY `idx_providers_state` (`state`),
@@ -166,8 +170,8 @@ CREATE TABLE IF NOT EXISTS `providers` (
 -- Dumping data for table `providers`
 --
 
-INSERT INTO `providers` (`id`, `owner_user_id`, `name`, `slug`, `email`, `phone`, `address`, `city`, `state`, `country`, `latitude`, `longitude`, `logo`, `description`, `status`, `verification_status`, `verification_docs`, `created_at`, `updated_at`, `rating_avg`, `rating_count`, `settings`, `created_by`) VALUES
-(1, 0, 'GoProAlpha', 'goproalpha', 'tahir@example.com', '03333092281', 'House #70-A 2nd floor, Shah Faisal Colony Block 2', 'Karachi', 'Sindh', 'Pakistan', NULL, NULL, '/public/uploads/providers/a0805473647f28e0281c6f32.png', 'Complete visa services', 'draft', 'unverified', NULL, '2026-01-14 08:22:05', NULL, NULL, 0, NULL, NULL);
+INSERT INTO `providers` (`id`, `uuid`, `owner_user_id`, `name`, `slug`, `email`, `phone`, `address`, `city`, `state`, `country`, `latitude`, `longitude`, `logo`, `description`, `status`, `verification_status`, `verification_docs`, `created_at`, `updated_at`, `rating_avg`, `rating_count`, `settings`, `created_by`) VALUES
+(1, '59ee7db4-44e7-4254-8b97-8fbe6c289005', 0, 'GoProAlpha', 'goproalpha', 'tahir@example.com', '03333092281', 'House #70-A 2nd floor, Shah Faisal Colony Block 2', 'Karachi', 'Sindh', 'Pakistan', NULL, NULL, '/public/uploads/providers/a0805473647f28e0281c6f32.png', 'Complete visa services', 'draft', 'unverified', NULL, '2026-01-14 08:22:05', NULL, NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -218,6 +222,7 @@ CREATE TABLE IF NOT EXISTS `provider_verification_logs` (
 DROP TABLE IF EXISTS `reviews`;
 CREATE TABLE IF NOT EXISTS `reviews` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int UNSIGNED NOT NULL,
   `provider_id` int UNSIGNED DEFAULT NULL,
   `service_id` int UNSIGNED DEFAULT NULL,
@@ -229,6 +234,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   KEY `idx_user` (`user_id`),
   KEY `idx_provider` (`provider_id`),
   KEY `idx_service` (`service_id`),
@@ -240,9 +246,9 @@ CREATE TABLE IF NOT EXISTS `reviews` (
 -- Dumping data for table `reviews`
 --
 
-INSERT INTO `reviews` (`id`, `user_id`, `provider_id`, `service_id`, `rating`, `title`, `body`, `status`, `helpful_count`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, 5, 'Title', 'Body here', 'pending', 0, '2026-01-15 13:48:33', NULL),
-(2, 3, NULL, 1, 4, 'some title', 'review description', 'pending', 0, '2026-01-16 07:51:04', NULL);
+INSERT INTO `reviews` (`id`, `uuid`, `user_id`, `provider_id`, `service_id`, `rating`, `title`, `body`, `status`, `helpful_count`, `created_at`, `updated_at`) VALUES
+(1, '21020e21-284b-43c3-9b62-f1c30414f5d8', 1, 1, NULL, 5, 'Title', 'Body here', 'pending', 0, '2026-01-15 13:48:33', NULL),
+(2, 'a273a233-0cdd-46da-863e-00e5e54aecc1', 3, NULL, 1, 4, 'some title', 'review description', 'pending', 0, '2026-01-16 07:51:04', NULL);
 
 -- --------------------------------------------------------
 
@@ -296,11 +302,13 @@ INSERT INTO `review_moderation_logs` (`id`, `review_id`, `actor_user_id`, `actio
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `label` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -308,11 +316,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`id`, `name`, `label`, `description`, `created_at`) VALUES
-(1, 'admin', 'Administrator', 'Full system access', '2026-01-12 11:50:49'),
-(2, 'manager', 'Manager', 'Manage operations', '2026-01-12 11:50:49'),
-(3, 'viewer', 'Viewer', 'Read-only access', '2026-01-12 11:50:49'),
-(4, 'Super Admin', 'Full Control', 'This user controls all', '2026-01-14 07:58:34');
+INSERT INTO `roles` (`id`, `uuid`, `name`, `label`, `description`, `created_at`) VALUES
+(1, '20044733-5f4b-43be-9f1d-5b8f81db6173', 'admin', 'Administrator', 'Full system access', '2026-01-12 11:50:49'),
+(2, 'a86cb5e4-752d-4519-a82b-58db6ba1a9d1', 'manager', 'Manager', 'Manage operations', '2026-01-12 11:50:49'),
+(3, '01741da9-0710-421e-8e02-5b572bfcab02', 'viewer', 'Viewer', 'Read-only access', '2026-01-12 11:50:49'),
+(4, '99e998fe-7b10-464e-ad7b-1391d8ef07b7', 'Super Admin', 'Full Control', 'This user controls all', '2026-01-14 07:58:34');
 
 -- --------------------------------------------------------
 
@@ -383,6 +391,7 @@ INSERT INTO `role_permissions` (`role_id`, `permission_id`, `created_at`) VALUES
 DROP TABLE IF EXISTS `services`;
 CREATE TABLE IF NOT EXISTS `services` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `provider_id` int UNSIGNED NOT NULL,
   `category_id` int UNSIGNED DEFAULT NULL,
   `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -399,6 +408,7 @@ CREATE TABLE IF NOT EXISTS `services` (
   `rating_avg` decimal(4,2) DEFAULT NULL,
   `rating_count` int UNSIGNED DEFAULT '0',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `slug` (`slug`),
   KEY `idx_services_provider` (`provider_id`),
   KEY `idx_services_category` (`category_id`),
@@ -410,8 +420,8 @@ CREATE TABLE IF NOT EXISTS `services` (
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`id`, `provider_id`, `category_id`, `title`, `slug`, `short_description`, `description`, `price`, `currency`, `duration_minutes`, `images`, `status`, `created_at`, `updated_at`, `rating_avg`, `rating_count`) VALUES
-(1, 1, 1, 'Visa', 'visa', '-', '-', 100.00, 'USD', 0, '[\"/public/uploads/services/c044f768e071b898b634edc2.png\"]', 'draft', '2026-01-15 13:45:30', NULL, NULL, 0);
+INSERT INTO `services` (`id`, `uuid`, `provider_id`, `category_id`, `title`, `slug`, `short_description`, `description`, `price`, `currency`, `duration_minutes`, `images`, `status`, `created_at`, `updated_at`, `rating_avg`, `rating_count`) VALUES
+(1, '8a38d478-ee47-424d-ba74-a02ca0ce6a6f', 1, 1, 'Visa', 'visa', '-', '-', 100.00, 'USD', 0, '[\"/public/uploads/services/c044f768e071b898b634edc2.png\"]', 'draft', '2026-01-15 13:45:30', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -422,11 +432,13 @@ INSERT INTO `services` (`id`, `provider_id`, `category_id`, `title`, `slug`, `sh
 DROP TABLE IF EXISTS `service_categories`;
 CREATE TABLE IF NOT EXISTS `service_categories` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `slug` (`slug`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -435,9 +447,9 @@ CREATE TABLE IF NOT EXISTS `service_categories` (
 -- Dumping data for table `service_categories`
 --
 
-INSERT INTO `service_categories` (`id`, `name`, `slug`, `description`, `created_at`) VALUES
-(1, 'Immigration Services', 'im', 'something here1', '2026-01-15 13:37:18'),
-(2, 'Immigration', 'imm', 'some description', '2026-01-16 07:44:41');
+INSERT INTO `service_categories` (`id`, `uuid`, `name`, `slug`, `description`, `created_at`) VALUES
+(1, 'a0cdb1ff-ee84-4367-8125-75698f9910f3', 'Immigration Services', 'im', 'something here1', '2026-01-15 13:37:18'),
+(2, 'ee8788ff-13d4-4ba7-a02e-888509070c05', 'Immigration', 'imm', 'some description', '2026-01-16 07:44:41');
 
 -- --------------------------------------------------------
 
@@ -448,9 +460,11 @@ INSERT INTO `service_categories` (`id`, `name`, `slug`, `description`, `created_
 DROP TABLE IF EXISTS `service_tags`;
 CREATE TABLE IF NOT EXISTS `service_tags` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -458,10 +472,10 @@ CREATE TABLE IF NOT EXISTS `service_tags` (
 -- Dumping data for table `service_tags`
 --
 
-INSERT INTO `service_tags` (`id`, `name`, `created_at`) VALUES
-(1, 'Visa', '2026-01-12 14:19:55'),
-(2, 'Business', '2026-01-15 13:31:52'),
-(3, 'xyz', '2026-01-16 07:44:18');
+INSERT INTO `service_tags` (`id`, `uuid`, `name`, `created_at`) VALUES
+(1, '60bd89c8-a0bf-4407-8c3e-6a3bc9b1d7a4', 'Visa', '2026-01-12 14:19:55'),
+(2, '37821471-0b87-4d4a-8de6-fc6a91ce4312', 'Business', '2026-01-15 13:31:52'),
+(3, '968fd9f3-d26a-4faa-823a-e8797f9cbd45', 'xyz', '2026-01-16 07:44:18');
 
 -- --------------------------------------------------------
 
@@ -494,6 +508,7 @@ INSERT INTO `service_tag_map` (`service_id`, `tag_id`) VALUES
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -504,6 +519,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
   UNIQUE KEY `email` (`email`),
   KEY `idx_users_email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -512,9 +528,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `avatar`, `phone`, `bio`, `last_login`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'tahir@goproalpha.com', '$2y$10$r1B0a3FsLhNNZIGUg.R1i.RdkQ46oYAnnFBhnMAe0rpCyppA7y5VO', NULL, NULL, NULL, '2026-07-06 18:37:15', '2026-01-12 11:50:49', '2026-07-06 13:37:15'),
-(3, 'Khurram', 'khurram@goproalpha.com', '$2y$10$M2gQgMQ4i9z674RB0zY.3.1FhhAotqA6bXlYm96Pi4HEZ5aQumsS2', '/public/uploads/avatars/f56f9be74aa815aec3fbabfa.png', NULL, NULL, NULL, '2026-01-16 07:43:51', '2026-01-16 07:43:51');
+INSERT INTO `users` (`id`, `uuid`, `name`, `email`, `password`, `avatar`, `phone`, `bio`, `last_login`, `created_at`, `updated_at`) VALUES
+(1, 'd82ee114-2e59-441c-871b-c037d552dc44', 'Admin', 'tahir@goproalpha.com', '$2y$10$r1B0a3FsLhNNZIGUg.R1i.RdkQ46oYAnnFBhnMAe0rpCyppA7y5VO', NULL, NULL, NULL, '2026-07-06 18:37:15', '2026-01-12 11:50:49', '2026-07-06 13:37:15'),
+(3, 'fad6d2b3-700f-44dc-96f3-8a3a1a5809c2', 'Khurram', 'khurram@goproalpha.com', '$2y$10$M2gQgMQ4i9z674RB0zY.3.1FhhAotqA6bXlYm96Pi4HEZ5aQumsS2', '/public/uploads/avatars/f56f9be74aa815aec3fbabfa.png', NULL, NULL, NULL, '2026-01-16 07:43:51', '2026-01-16 07:43:51');
 
 -- --------------------------------------------------------
 

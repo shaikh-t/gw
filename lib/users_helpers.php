@@ -2,6 +2,7 @@
 // lib/users_helpers.php
 require_once __DIR__ . '/db_mysqli.php';
 require_once __DIR__ . '/role_helpers.php'; // for sync_user_roles_mysqli if needed
+require_once __DIR__ . '/uuid_helper.php';
 
 function users_count(): int {
     global $mysqli;
@@ -26,11 +27,15 @@ function users_paginated(int $page = 1, int $perPage = 20): array {
     return $out;
 }
 
-function user_find(int $id) {
+function user_find($id) {
     global $mysqli;
-    $id = intval($id);
-    // echo "SELECT * FROM users WHERE id = $id LIMIT 1";
-    $res = $mysqli->query("SELECT * FROM users WHERE id = $id LIMIT 1");
+    if (is_numeric($id)) {
+        $id = intval($id);
+        $res = $mysqli->query("SELECT * FROM users WHERE id = $id LIMIT 1");
+    } else {
+        $uuid = $mysqli->real_escape_string($id);
+        $res = $mysqli->query("SELECT * FROM users WHERE uuid = '$uuid' LIMIT 1");
+    }
     if (!$res) return null;
     $row = $res->fetch_assoc();
     $res->free();
@@ -90,7 +95,8 @@ function user_has_permission($user_id,$perm_name){
 function user_create($name,$email,$password,$roles=[]) {
   global $mysqli;
   $hash = password_hash($password,PASSWORD_DEFAULT);
-  $sql = "INSERT INTO users (name,email,password) VALUES ('".$mysqli->real_escape_string($name)."','".$mysqli->real_escape_string($email)."','".$mysqli->real_escape_string($hash)."')";
+  $uuid = generate_uuid();
+  $sql = "INSERT INTO users (uuid,name,email,password) VALUES ('$uuid','".$mysqli->real_escape_string($name)."','".$mysqli->real_escape_string($email)."','".$mysqli->real_escape_string($hash)."')";
   if(!$mysqli->query($sql)) return ['ok'=>false,'error'=>$mysqli->error];
   $id = $mysqli->insert_id;
   foreach($roles as $role_id){
@@ -126,14 +132,11 @@ function user_update(int $id, array $data) {
     if ($mysqli->query($sql)) {
         // sync roles if provided
         if (is_array($roles)) {
-         
+
             $roleIds = array_map('intval', $roles);
             sync_user_roles_mysqli($id, $roleIds);
             // If current session user updated their own roles, update session
-            if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $id) {
-                $_SESSION['user']['roles'] = $roleIds;
-                $_SESSION['user']['_perms_loaded_at'] = 0;
-            }
+            $curr = current_user();
         }
         return ['ok' => true];
     }

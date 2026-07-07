@@ -5,8 +5,8 @@ require_permission_or_die('services.manage');
 require_once __DIR__ . '/../../lib/services_helpers.php';
 require_once __DIR__ . '/../../lib/providers_helpers.php';
 
-$id = intval($_GET['id'] ?? 0);
-$service = service_find($id);
+$id_val = $_GET['uuid'] ?? $_GET['id'] ?? '';
+$service = service_find($id_val);
 if (!$service) { http_response_code(404); echo 'Service not found'; exit; }
 
 $providers = [];
@@ -24,7 +24,7 @@ include __DIR__ . '/../../partials/sidebar.php';
   <h4>Edit service</h4>
   <form method="post" action="<?php echo $domain;?>/admin/services/update.php" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo intval($service['id']); ?>">
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($service['uuid'] ?? $service['id']); ?>">
 
     <div class="mb-3">
       <label class="form-label">Provider</label>

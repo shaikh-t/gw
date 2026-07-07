@@ -7,8 +7,11 @@ require_once __DIR__ . '/../../lib/providers_helpers.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $domain . '/admin/providers'); exit; }
 if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 
-$id = intval($_POST['id'] ?? 0);
-if ($id <= 0) { $_SESSION['flash_errors'] = ['Invalid provider id']; header('Location: ' . $domain . '/admin/providers'); exit; }
+$id_val = $_POST['id'] ?? '';
+$provider = provider_find($id_val);
+if (!$provider) { $_SESSION['flash_errors'] = ['Invalid provider id']; header('Location: ' . $domain . '/admin/providers'); exit; }
+$id = (int)$provider['id'];
+$uuid = $provider['uuid'];
 $data = [
   'name' => $_POST['name'] ?? null,
   'owner_user_id' => $_POST['owner_user_id'] ?? null,

@@ -9,7 +9,21 @@ $domain="";
  * Minimal fields: id, name, email, avatar, roles (array), permissions (array)
  */
 function current_user(): ?array {
-    return $_SESSION['user'] ?? null;
+    global $mysqli;
+    if (empty($_SESSION['user'])) return null;
+    $user = $_SESSION['user'];
+
+    // Resolve internal ID if needed by legacy code
+    if (empty($user['id']) && !empty($user['uuid'])) {
+        $uuid = $mysqli->real_escape_string($user['uuid']);
+        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '$uuid' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) {
+            $user['id'] = (int)$row['id'];
+        }
+        if ($res && !is_bool($res)) $res->free();
+    }
+
+    return $user;
 }
 
 
@@ -24,7 +38,7 @@ function login_user_by_id(int $userId): bool {
     global $mysqli;
     $id = intval($userId);
 
-    $sql = "SELECT id, name, email, avatar FROM users WHERE id = $id LIMIT 1";
+    $sql = "SELECT id, uuid, name, email, avatar FROM users WHERE id = $id LIMIT 1";
     $res = $mysqli->query($sql);
     if (!$res) return false;
     $u = $res->fetch_assoc();
@@ -41,6 +55,7 @@ function login_user_by_id(int $userId): bool {
 
     $_SESSION['user'] = [
         'id' => (int)$u['id'],
+        'uuid' => $u['uuid'],
         'name' => $u['name'],
         'email' => $u['email'],
         'avatar' => $u['avatar'] ?? null,

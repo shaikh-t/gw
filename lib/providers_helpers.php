@@ -3,6 +3,7 @@
 require_once __DIR__ . '/db_mysqli.php';
 require_once __DIR__ . '/upload.php';
 require_once __DIR__ . '/users_helpers.php';
+require_once __DIR__ . '/uuid_helper.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
@@ -45,14 +46,19 @@ function providers_paginated(int $page = 1, int $perPage = 20, array $filters = 
     return $out;
 }
 
-function provider_find($idOrSlug) {
+function provider_find($idOrUuidOrSlug) {
     global $mysqli;
-    if (is_numeric($idOrSlug)) {
-        $id = intval($idOrSlug);
+    if (is_numeric($idOrUuidOrSlug)) {
+        $id = intval($idOrUuidOrSlug);
         $res = $mysqli->query("SELECT * FROM providers WHERE id = $id LIMIT 1");
     } else {
-        $slug = $mysqli->real_escape_string($idOrSlug);
-        $res = $mysqli->query("SELECT * FROM providers WHERE slug = '$slug' LIMIT 1");
+        $val = $mysqli->real_escape_string($idOrUuidOrSlug);
+        // Try UUID first if it looks like one, then slug
+        if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $val)) {
+            $res = $mysqli->query("SELECT * FROM providers WHERE uuid = '$val' LIMIT 1");
+        } else {
+            $res = $mysqli->query("SELECT * FROM providers WHERE slug = '$val' LIMIT 1");
+        }
     }
     if (!$res) return null;
     $row = $res->fetch_assoc();
@@ -162,10 +168,18 @@ function provider_delete(int $id): bool {
 
 
 /** Return provider ids owned by a user (provider owner relationship assumed) */
-function providers_for_user(int $user_id): array {
+function providers_for_user($user_id): array {
     global $mysqli;
     $out = [];
-    $res = $mysqli->query("SELECT id, name FROM providers WHERE owner_user_id = " . intval($user_id) . " ORDER BY name");
+    $uid = is_numeric($user_id) ? intval($user_id) : null;
+    if (!$uid) {
+        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '" . $mysqli->real_escape_string($user_id) . "' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) $uid = (int)$row['id'];
+        if ($res && !is_bool($res)) $res->free();
+    }
+    if (!$uid) return [];
+
+    $res = $mysqli->query("SELECT id, uuid, name FROM providers WHERE owner_user_id = $uid ORDER BY name");
     if ($res) {
         while ($r = $res->fetch_assoc()) $out[] = $r;
         $res->free();
@@ -174,9 +188,15 @@ function providers_for_user(int $user_id): array {
 }
 
 /** Get dashboard metrics for a provider */
-function provider_dashboard_metrics(int $provider_id): array {
+function provider_dashboard_metrics($provider_id): array {
     global $mysqli;
-    $pid = intval($provider_id);
+    if (is_numeric($provider_id)) {
+        $pid = intval($provider_id);
+    } else {
+        $res = $mysqli->query("SELECT id FROM providers WHERE uuid = '" . $mysqli->real_escape_string($provider_id) . "' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) $pid = (int)$row['id'];
+        else return [];
+    }
     $metrics = [
         'total_services' => 0,
         'published_services' => 0,

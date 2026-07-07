@@ -38,7 +38,7 @@ include __DIR__ . '/../../partials/sidebar.php';
           <td><?php echo htmlspecialchars($r['verification_status'] ?? '', ENT_QUOTES); ?></td>
           <td><?php echo htmlspecialchars($r['created_at'], ENT_QUOTES); ?></td>
           <td class="text-end">
-            <a href="/admin/providers/onboarding_review.php?id=<?php echo intval($r['id']); ?>" class="btn btn-sm btn-outline-secondary">Review</a>
+            <a href="/admin/providers/onboarding_review.php?uuid=<?php echo htmlspecialchars($r['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Review</a>
           </td>
         </tr>
       <?php endforeach; ?>

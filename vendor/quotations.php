@@ -4,9 +4,9 @@ require_once __DIR__ . '/../lib/providers_helpers.php';
 require_login();
 
 $user = current_user();
-$providers = providers_for_user($user['id']);
+$providers = providers_for_user($user['uuid']);
 if (empty($providers)) { die("No provider account found."); }
-$provider = provider_find($providers[0]['id']);
+$provider = provider_find($providers[0]['uuid']);
 ?>
 
 <!DOCTYPE html>

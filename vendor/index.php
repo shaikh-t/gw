@@ -4,12 +4,12 @@ require_once __DIR__ . '/../lib/providers_helpers.php';
 require_login();
 
 $user = current_user();
-$providers = providers_for_user($user['id']);
+$providers = providers_for_user($user['uuid']);
 if (empty($providers)) {
     die("No provider account found for this user.");
 }
-$provider = provider_find($providers[0]['id']);
-$metrics = provider_dashboard_metrics($provider['id']);
+$provider = provider_find($providers[0]['uuid']);
+$metrics = provider_dashboard_metrics($provider['uuid']);
 
 // Get active cases (mocking as we don't have a cases table yet,
 // but we can look for reviews or something, but better just show metrics if available)

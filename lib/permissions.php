@@ -5,13 +5,23 @@ require_once __DIR__ . '/auth.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
-function load_user_permissions_mysqli(int $userId): array {
+function load_user_permissions_mysqli($userId): array {
     global $mysqli;
     $perms = [];
 
+    $uid = is_numeric($userId) ? intval($userId) : null;
+    if (!$uid) {
+        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '" . $mysqli->real_escape_string($userId) . "' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) {
+            $uid = (int)$row['id'];
+        }
+        if ($res && !is_bool($res)) $res->free();
+    }
+    if (!$uid) return [];
+
     // load role ids
     $roleIds = [];
-    $sql = "SELECT role_id FROM user_roles WHERE user_id = " . intval($userId);
+    $sql = "SELECT role_id FROM user_roles WHERE user_id = $uid";
     if ($res = $mysqli->query($sql)) {
         while ($r = $res->fetch_assoc()) $roleIds[] = (int)$r['role_id'];
         $res->free();
@@ -50,7 +60,9 @@ function can(string $permission): bool {
     if (!$user) return false;
 
     // Security: Always fetch fresh permissions from DB to prevent session tampering
-    $perms = load_user_permissions_mysqli((int)$user['id']);
+    // Prefer UUID for lookup if available in session
+    $userId = $user['uuid'] ?? (int)$user['id'];
+    $perms = load_user_permissions_mysqli($userId);
     return in_array($permission, $perms, true);
 }
 
@@ -60,13 +72,23 @@ function is_role(string $role): bool {
     $user = current_user();
     if (!$user) return false;
 
-    $userId = intval($user['id']);
+    $uid = null;
+    if (!empty($user['uuid'])) {
+        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '" . $mysqli->real_escape_string($user['uuid']) . "' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) $uid = (int)$row['id'];
+        if ($res && !is_bool($res)) $res->free();
+    } else {
+        $uid = intval($user['id']);
+    }
+
+    if (!$uid) return false;
+
     $roleEsc = $mysqli->real_escape_string($role);
 
     // Security: Always verify role against DB
     $sql = "SELECT 1 FROM user_roles ur
             JOIN roles r ON ur.role_id = r.id
-            WHERE ur.user_id = $userId AND r.name = '$roleEsc' LIMIT 1";
+            WHERE ur.user_id = $uid AND r.name = '$roleEsc' LIMIT 1";
     $res = $mysqli->query($sql);
     $exists = ($res && $res->num_rows > 0);
     if ($res && !is_bool($res)) $res->free();

@@ -74,11 +74,11 @@ include __DIR__ . '/../../partials/sidebar.php';
           <tr>
             <td><?php echo htmlspecialchars($t['name'], ENT_QUOTES); ?></td>
             <td class="text-end">
-              <a href="<?php echo $domain;?>/admin/service_tags/edit.php?id=<?php echo intval($t['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="<?php echo $domain;?>/admin/service_tags/edit.php?uuid=<?php echo htmlspecialchars($t['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
               <?php if (can('services.manage')): ?>
                 <form method="post" action="<?php echo $domain;?>/admin/service_tags/delete.php" class="d-inline-block" onsubmit="return confirm('Delete tag?');">
                   <?php echo csrf_field(); ?>
-                  <input type="hidden" name="id" value="<?php echo intval($t['id']); ?>">
+                  <input type="hidden" name="id" value="<?php echo htmlspecialchars($t['uuid']); ?>">
                   <button class="btn btn-sm btn-danger">Delete</button>
                 </form>
               <?php endif; ?>

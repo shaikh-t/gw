@@ -7,8 +7,11 @@ require_once __DIR__ . '/../../lib/services_helpers.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $domain . '/admin/services'); exit; }
 if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 
-$id = intval($_POST['id'] ?? 0);
-if ($id <= 0) { $_SESSION['flash_errors'] = ['Invalid service id']; header('Location: ' . $domain . '/admin/services'); exit; }
+$id_val = $_POST['id'] ?? '';
+$service = service_find($id_val);
+if (!$service) { $_SESSION['flash_errors'] = ['Invalid service id']; header('Location: ' . $domain . '/admin/services'); exit; }
+$id = (int)$service['id'];
+$uuid = $service['uuid'];
 $data = [
   'title' => $_POST['title'] ?? null,
   'short_description' => $_POST['short_description'] ?? null,
@@ -38,7 +41,7 @@ if (!empty($_FILES['images'])) {
 $res = service_update($id, $data);
 if (!$res['ok']) {
     $_SESSION['flash_errors'] = [$res['error']];
-    header('Location: ' . $domain . '/admin/services/edit.php?id=' . $id); exit;
+    header('Location: ' . $domain . '/admin/services/edit.php?uuid=' . $uuid); exit;
 }
 
 $_SESSION['flash_success'] = 'Service updated';

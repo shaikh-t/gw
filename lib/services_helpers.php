@@ -2,6 +2,7 @@
 // lib/services_helpers.php
 require_once __DIR__ . '/db_mysqli.php';
 require_once __DIR__ . '/upload.php';
+require_once __DIR__ . '/uuid_helper.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
@@ -83,13 +84,17 @@ function services_paginated(int $page = 1, int $perPage = 20, array $filters = [
     return $out;
 }
 
-function service_find($idOrSlug) {
+function service_find($idOrUuidOrSlug) {
     global $mysqli;
-    if (is_numeric($idOrSlug)) {
-        $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.id = " . intval($idOrSlug) . " LIMIT 1");
+    if (is_numeric($idOrUuidOrSlug)) {
+        $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.id = " . intval($idOrUuidOrSlug) . " LIMIT 1");
     } else {
-        $slug = $mysqli->real_escape_string($idOrSlug);
-        $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.slug = '$slug' LIMIT 1");
+        $val = $mysqli->real_escape_string($idOrUuidOrSlug);
+        if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $val)) {
+            $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.uuid = '$val' LIMIT 1");
+        } else {
+            $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.slug = '$val' LIMIT 1");
+        }
     }
     if (!$res) return null;
     $row = $res->fetch_assoc(); $res->free();
@@ -134,8 +139,9 @@ function service_create(array $data) {
         }
     }
 
-    $sql = "INSERT INTO services (provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, created_at)
-            VALUES (" . intval($provider_id) . ", " . ($category_id === 'NULL' ? 'NULL' : intval($category_id)) . ",
+    $uuid = generate_uuid();
+    $sql = "INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, created_at)
+            VALUES ('$uuid', " . intval($provider_id) . ", " . ($category_id === 'NULL' ? 'NULL' : intval($category_id)) . ",
                     '" . $title . "', '" . $mysqli->real_escape_string($slug) . "',
                     '" . $short . "', '" . $desc . "',
                     " . ($price === 'NULL' ? 'NULL' : $price) . ",

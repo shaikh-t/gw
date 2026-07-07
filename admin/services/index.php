@@ -59,11 +59,11 @@ include __DIR__ . '/../../partials/sidebar.php';
           <td><?php echo $s['price'] !== null ? htmlspecialchars($s['currency'] . ' ' . $s['price'], ENT_QUOTES) : '-'; ?></td>
           <td><?php echo htmlspecialchars($s['status'], ENT_QUOTES); ?></td>
           <td class="text-end">
-            <a href="<?php echo $domain;?>/admin/services/edit.php?id=<?php echo intval($s['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="<?php echo $domain;?>/admin/services/edit.php?uuid=<?php echo htmlspecialchars($s['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('services.manage')): ?>
               <form method="post" action="<?php echo $domain;?>/admin/services/delete.php" class="d-inline-block" onsubmit="return confirm('Delete service?');">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="id" value="<?php echo intval($s['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($s['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
             <?php endif; ?>

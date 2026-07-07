@@ -9,7 +9,8 @@ if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 $id = intval($_POST['id'] ?? 0);
 if ($id === 0) { header('Location: ' . $domain . '/admin/users'); exit; }
 // Prevent deleting yourself
-if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $id) {
+$curr = current_user();
+if ($curr && $curr['uuid'] == $user_new['uuid']) {
     $_SESSION['flash_errors'] = ['You cannot delete your own account'];
     header('Location: ' . $domain . '/admin/users/index.php');
     exit;

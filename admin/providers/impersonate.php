@@ -47,17 +47,26 @@ $owner = $userRes->fetch_assoc();
 $userRes->free();
 
 // Save impersonation state
-// Keep original admin id so we can restore later
-$_SESSION['impersonator_id'] = $current['id'];
-// Set session to impersonated user id (this assumes your auth uses $_SESSION['user_id'])
-$_SESSION['user_id'] = $owner['id'];
-// Optional: store a note about which provider is being impersonated
-$_SESSION['impersonating_provider_id'] = $provider['id'];
+// Keep original admin uuid so we can restore later
+$_SESSION['impersonator_uuid'] = $current['uuid'];
+
+// Update current user session to impersonated user
+$_SESSION['user'] = [
+    'uuid' => $owner['uuid'],
+    'name' => $owner['name'],
+    'email' => $owner['email'],
+    'avatar' => $owner['avatar'] ?? null
+];
+
+// Optional: store which provider is being impersonated
+$_SESSION['impersonating_provider_uuid'] = $provider['uuid'];
 
 // Audit log
-$actor = intval($current['id']);
-$note = $mysqli->real_escape_string("Impersonated provider owner {$owner['id']} for provider {$provider['id']} ({$provider['name']})");
-$mysqli->query("INSERT INTO audit_logs (actor_user_id, action, target_type, target_id, note) VALUES ($actor, 'impersonate_start', 'provider', ".intval($provider['id']).", '$note')");
+$actor_uuid = $mysqli->real_escape_string($current['uuid']);
+$note = $mysqli->real_escape_string("Impersonated provider owner {$owner['uuid']} for provider {$provider['uuid']} ({$provider['name']})");
+$mysqli->query("INSERT INTO audit_logs (actor_user_id, action, target_type, target_id, note)
+                SELECT id, 'impersonate_start', 'provider', ".intval($provider['id']).", '$note'
+                FROM users WHERE uuid = '$actor_uuid'");
 
 // Flash and redirect to provider dashboard (owner view)
 $_SESSION['flash_success'] = 'Now impersonating provider owner: ' . htmlspecialchars($owner['name'], ENT_QUOTES);

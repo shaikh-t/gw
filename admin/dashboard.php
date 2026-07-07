@@ -44,7 +44,7 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="card-body">
           <h5 class="card-title">Users</h5>
           <p class="card-text">Manage system users and roles.</p>
-          <?php if (user_has_permission($_SESSION['user']['id'], 'users.manage')): ?>
+          <?php if (can('users.manage')): ?>
             <a href="<?php echo $domain;?>/admin/users/index.php" class="btn btn-primary">Go</a>
           <?php else: ?>
             <button class="btn btn-secondary" disabled>Restricted</button>
@@ -58,7 +58,7 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="card-body">
           <h5 class="card-title">Roles</h5>
           <p class="card-text">Define roles and assign permissions.</p>
-          <?php if (user_has_permission($_SESSION['user']['id'], 'roles.manage')): ?>
+          <?php if (can('roles.manage')): ?>
             <a href="<?php echo $domain;?>/admin/roles/index.php" class="btn btn-primary">Go</a>
           <?php else: ?>
             <button class="btn btn-secondary" disabled>Restricted</button>
@@ -72,7 +72,7 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="card-body">
           <h5 class="card-title">Permissions</h5>
           <p class="card-text">Manage granular access rights.</p>
-          <?php if (user_has_permission($_SESSION['user']['id'], 'permissions.manage')): ?>
+          <?php if (can('permissions.manage')): ?>
             <a href="<?php echo $domain;?>/admin/permissions/index.php" class="btn btn-primary">Go</a>
           <?php else: ?>
             <button class="btn btn-secondary" disabled>Restricted</button>
@@ -86,7 +86,7 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="card-body">
           <h5 class="card-title">Reviews</h5>
           <p class="card-text">Moderate and manage user reviews.</p>
-          <?php if (user_has_permission($_SESSION['user']['id'], 'reviews.manage')): ?>
+          <?php if (can('reviews.manage')): ?>
             <a href="<?php echo $domain;?>/admin/reviews/index.php" class="btn btn-primary">Go</a>
           <?php else: ?>
             <button class="btn btn-secondary" disabled>Restricted</button>

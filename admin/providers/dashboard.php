@@ -92,7 +92,7 @@ include __DIR__ . '/../../partials/sidebar.php';
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Provider Admin Dashboard — <?php echo htmlspecialchars($provider['name'], ENT_QUOTES); ?></h3>
     <div>
-      <a href="<?php echo $domain;?>/admin/providers/edit.php?id=<?php echo intval($provider_id); ?>" class="btn btn-outline-secondary btn-sm">Edit Provider</a>
+      <a href="<?php echo $domain;?>/admin/providers/edit.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary btn-sm">Edit Provider</a>
       <a href="<?php echo $domain;?>/admin/reviews/index.php?provider_id=<?php echo intval($provider_id); ?>" class="btn btn-outline-primary btn-sm">All Reviews</a>
       <a href="<?php echo $domain;?>/admin/providers/export.php?id=<?php echo intval($provider_id); ?>" class="btn btn-outline-success btn-sm">Export Report</a>
     </div>
@@ -147,7 +147,7 @@ include __DIR__ . '/../../partials/sidebar.php';
                     <td><?php echo $s['price'] !== null ? htmlspecialchars($s['price'], ENT_QUOTES) : '—'; ?></td>
                     <td><?php echo htmlspecialchars($s['updated_at'] ?? $s['created_at'], ENT_QUOTES); ?></td>
                     <td class="text-end">
-                      <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/services/edit.php?id=<?php echo intval($s['id']); ?>">Edit</a>
+                      <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/services/edit.php?uuid=<?php echo htmlspecialchars($s['uuid']); ?>">Edit</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
