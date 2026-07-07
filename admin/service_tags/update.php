@@ -7,10 +7,22 @@ require_once __DIR__ . '/../../lib/db_mysqli.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $domain . '/admin/service_tags'); exit; }
 if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 
-$id = intval($_POST['id'] ?? 0);
+$id_val = $_POST['id'] ?? '';
+// Simple lookup for tags as they don't have a dedicated helper find yet
+$res = $mysqli->query("SELECT id, uuid FROM service_tags WHERE id = " . intval($id_val) . " OR uuid = '" . $mysqli->real_escape_string($id_val) . "' LIMIT 1");
+$tag = $res ? $res->fetch_assoc() : null;
+
+if (!$tag) {
+    $_SESSION['flash_errors'] = ['Tag not found'];
+    header('Location: ' . $domain . '/admin/service_tags/index.php'); exit;
+}
+
+$id = (int)$tag['id'];
+$uuid = $tag['uuid'];
 $name = trim($_POST['name'] ?? '');
-if ($id <= 0 || $name === '') {
-    $_SESSION['flash_errors'] = ['Invalid input'];
+
+if ($name === '') {
+    $_SESSION['flash_errors'] = ['Name required'];
     header('Location: ' . $domain . '/admin/service_tags/edit.php?uuid=' . $uuid); exit;
 }
 

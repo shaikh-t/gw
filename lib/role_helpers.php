@@ -1,6 +1,7 @@
 <?php
 // lib/role_helpers.php
 require_once __DIR__ . '/db_mysqli.php';
+require_once __DIR__ . '/uuid_helper.php';
 
 /* ---------- Roles ---------- */
 function roles_all(): array {
@@ -11,10 +12,14 @@ function roles_all(): array {
     return $out;
 }
 
-function role_find(int $id) {
+function role_find($idOrUuid) {
     global $mysqli;
-    $id = intval($id);
-    $res = $mysqli->query("SELECT * FROM roles WHERE id = $id LIMIT 1");
+    if (is_numeric($idOrUuid)) {
+        $res = $mysqli->query("SELECT * FROM roles WHERE id = " . intval($idOrUuid) . " LIMIT 1");
+    } else {
+        $uuid = $mysqli->real_escape_string($idOrUuid);
+        $res = $mysqli->query("SELECT * FROM roles WHERE uuid = '$uuid' LIMIT 1");
+    }
     if ($res) { $row = $res->fetch_assoc(); $res->free(); return $row ?: null; }
     return null;
 }
@@ -24,7 +29,8 @@ function role_create(string $name, string $label, string $desc = '') {
     $name = $mysqli->real_escape_string($name);
     $label = $mysqli->real_escape_string($label);
     $desc = $mysqli->real_escape_string($desc);
-    $sql = "INSERT INTO roles (name,label,description,created_at) VALUES ('$name','$label','$desc',NOW())";
+    $uuid = generate_uuid();
+    $sql = "INSERT INTO roles (uuid,name,label,description,created_at) VALUES ('$uuid','$name','$label','$desc',NOW())";
     if ($mysqli->query($sql)) return $mysqli->insert_id;
     return false;
 }
@@ -53,10 +59,14 @@ function permissions_all(): array {
     return $out;
 }
 
-function permission_find(int $id) {
+function permission_find($idOrUuid) {
     global $mysqli;
-    $id = intval($id);
-    $res = $mysqli->query("SELECT * FROM permissions WHERE id = $id LIMIT 1");
+    if (is_numeric($idOrUuid)) {
+        $res = $mysqli->query("SELECT * FROM permissions WHERE id = " . intval($idOrUuid) . " LIMIT 1");
+    } else {
+        $uuid = $mysqli->real_escape_string($idOrUuid);
+        $res = $mysqli->query("SELECT * FROM permissions WHERE uuid = '$uuid' LIMIT 1");
+    }
     if ($res) { $row = $res->fetch_assoc(); $res->free(); return $row ?: null; }
     return null;
 }
@@ -74,27 +84,16 @@ function permission_create($name, $label, $description = '') {
         $res->free();
     $_SESSION['flash_errors'] = ['Permission already exists'];
     return false;
-        // return ['ok'=>true,'id'=>$row['id'],'message'=>'Permission already exists'];
     }
 
-    $sql = "INSERT INTO permissions (name,label,description,created_at) VALUES ('$name_sql','$label_sql','$desc_sql',NOW())";
+    $uuid = generate_uuid();
+    $sql = "INSERT INTO permissions (uuid,name,label,description,created_at) VALUES ('$uuid','$name_sql','$label_sql','$desc_sql',NOW())";
     if (!$mysqli->query($sql)) {
-    $_SESSION['flash_errors'][] = $mysqli->error;
+        $_SESSION['flash_errors'][] = $mysqli->error;
         return false;
     }
     return $mysqli->insert_id;
-    // return ['ok'=>true,'id'=>$mysqli->insert_id];
 }
-
-// function permission_create(string $name, string $label, string $desc = '') {
-//     global $mysqli;
-//     $name = $mysqli->real_escape_string($name);
-//     $label = $mysqli->real_escape_string($label);
-//     $desc = $mysqli->real_escape_string($desc);
-//     $sql = "INSERT INTO permissions (name,label,description,created_at) VALUES ('$name','$label','$desc',NOW())";
-//     if ($mysqli->query($sql)) return $mysqli->insert_id;
-//     return false;
-// }
 
 function permission_update(int $id, string $name, string $label, string $desc = ''): bool {
     global $mysqli;
