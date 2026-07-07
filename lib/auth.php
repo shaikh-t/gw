@@ -54,14 +54,10 @@ function login_user_by_id(int $userId): bool {
     }
 
     $_SESSION['user'] = [
-        'id' => (int)$u['id'],
         'uuid' => $u['uuid'],
         'name' => $u['name'],
         'email' => $u['email'],
-        'avatar' => $u['avatar'] ?? null,
-        'roles' => $roleNames,
-        'permissions' => [],
-        '_perms_loaded_at' => 0
+        'avatar' => $u['avatar'] ?? null
     ];
     session_regenerate_id(true);
     return true;

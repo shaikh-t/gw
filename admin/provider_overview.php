@@ -8,12 +8,12 @@ require_once __DIR__ . '/../lib/users_helpers.php';
 
 $current = current_user();
 
-// optional filter by provider id
-$provider_id = isset($_GET['id']) ? intval($_GET['id']) : null;
+// optional filter by provider id or uuid
+$provider_id_val = $_GET['uuid'] ?? $_GET['id'] ?? null;
 
 // fetch providers list or single provider
-if ($provider_id) {
-    $providers = [$mysqli->query("SELECT * FROM providers WHERE id = $provider_id LIMIT 1")->fetch_assoc()];
+if ($provider_id_val) {
+    $providers = [provider_find($provider_id_val)];
 } else {
     $providers = provider_summary_list(200);
 }
@@ -67,7 +67,7 @@ include __DIR__ . '/../partials/sidebar.php';
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($providers as $p): 
+        <?php foreach ($providers as $p):
             $pid = intval($p['id']);
             $ownerName = '';
             if (!empty($p['owner_user_id'])) {
@@ -91,10 +91,14 @@ include __DIR__ . '/../partials/sidebar.php';
           <td><?php echo $onboarding; ?></td>
           <td><?php echo htmlspecialchars($p['created_at'] ?? ''); ?></td>
           <td class="text-end">
-            <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain; ?>/admin/providers/dashboard.php?id=<?php echo $pid; ?>">View</a>
-            <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain; ?>/admin/providers/edit.php?uuid=<?php echo $pid; ?>">Edit</a>
-            <a class="btn btn-sm btn-outline-info" href="<?php echo $domain; ?>/admin/reviews/index.php?provider_id=<?php echo $pid; ?>">Reviews</a>
-            <a class="btn btn-sm btn-danger" href="<?php echo $domain; ?>/admin/providers/delete.php?id=<?php echo $pid; ?>" onclick="return confirm('Delete provider and all related data?');">Delete</a>
+            <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain; ?>/admin/providers/dashboard.php?uuid=<?php echo htmlspecialchars($p['uuid']); ?>">View</a>
+            <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain; ?>/admin/providers/edit.php?uuid=<?php echo htmlspecialchars($p['uuid']); ?>">Edit</a>
+            <a class="btn btn-sm btn-outline-info" href="<?php echo $domain; ?>/admin/reviews/index.php?provider_uuid=<?php echo htmlspecialchars($p['uuid']); ?>">Reviews</a>
+            <form method="post" action="<?php echo $domain; ?>/admin/providers/delete.php" class="d-inline-block" onsubmit="return confirm('Delete provider?');">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($p['uuid']); ?>">
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
           </td>
         </tr>
         <?php endforeach; ?>

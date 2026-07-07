@@ -6,8 +6,11 @@ require_once __DIR__ . '/../../lib/users_helpers.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $domain . '/admin/users'); exit; }
 if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 
-$id = intval($_POST['id'] ?? 0);
-if ($id === 0) { header('Location: ' . $domain . '/admin/users'); exit; }
+$id_val = $_POST['id'] ?? '';
+$user_new = user_find($id_val);
+if (!$user_new) { header('Location: ' . $domain . '/admin/users'); exit; }
+$id = (int)$user_new['id'];
+
 // Prevent deleting yourself
 $curr = current_user();
 if ($curr && $curr['uuid'] == $user_new['uuid']) {

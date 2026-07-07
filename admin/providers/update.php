@@ -35,10 +35,10 @@ if (!empty($_FILES['logo']) && $_FILES['logo']['error'] !== UPLOAD_ERR_NO_FILE) 
 $res = provider_update($id, $data);
 if (!$res['ok']) {
     $_SESSION['flash_errors'] = [$res['error']];
-    header('Location: ' . $domain . '/admin/providers/edit.php?id=' . $id);
+    header('Location: ' . $domain . '/admin/providers/edit.php?uuid=' . $uuid);
     exit;
 }
 
 $_SESSION['flash_success'] = 'Provider updated';
-header('Location: ' . $domain . '/admin/providers/edit.php?id=' . $id);
+header('Location: ' . $domain . '/admin/providers/edit.php?uuid=' . $uuid);
 exit;

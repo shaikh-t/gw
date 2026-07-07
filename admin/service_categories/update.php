@@ -14,7 +14,7 @@ $desc = trim($_POST['description'] ?? '');
 
 if ($id <= 0 || $name === '') {
     $_SESSION['flash_errors'] = ['Invalid input'];
-    header('Location: ' . $domain . '/admin/service_categories/edit.php?id=' . $id); exit;
+    header('Location: ' . $domain . '/admin/service_categories/edit.php?uuid=' . $uuid); exit;
 }
 
 $sql = "UPDATE service_categories SET name = '" . $mysqli->real_escape_string($name) . "', slug = '" . $mysqli->real_escape_string($slug) . "', description = '" . $mysqli->real_escape_string($desc) . "' WHERE id = $id";

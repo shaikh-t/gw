@@ -24,6 +24,108 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `site_settings`
+--
+
+DROP TABLE IF EXISTS `site_settings`;
+CREATE TABLE IF NOT EXISTS `site_settings` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `key` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
+  `label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` enum('text','longtext','image','url') COLLATE utf8mb4_unicode_ci DEFAULT 'text',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `site_settings`
+--
+
+INSERT INTO `site_settings` (`id`, `key`, `value`, `label`, `type`) VALUES
+(1, 'hero_title', 'Your Ultimate UAE Marketplace for Documentation & Advisory', 'Hero Title', 'text'),
+(2, 'hero_subtitle', 'Access a vetted network of top-tier legal, business, and administrative professionals. Secure escrow payments, live tracking, and verified results.', 'Hero Subtitle', 'longtext'),
+(3, 'hero_bg_image', 'https://images.unsplash.com/photo-1582653280643-e395afdf1f1c?w=1400&q=85', 'Hero Background', 'image'),
+(4, 'hero_cta_text', 'Explore Services', 'Hero CTA Text', 'text'),
+(5, 'hero_cta_url', 'services.php', 'Hero CTA URL', 'url'),
+(6, 'stat_vendors', '150+', 'Stats: Vendors', 'text'),
+(7, 'stat_cases', '10K+', 'Stats: Cases', 'text'),
+(8, 'stat_success_rate', '99.8%', 'Stats: Success Rate', 'text'),
+(9, 'cta_banner_title', 'Ready to take your UAE journey with us!', 'CTA Banner Title', 'text'),
+(10, 'cta_banner_bg', 'https://images.unsplash.com/photo-1539630417222-d685b659ffcc?w=1400&q=85', 'CTA Banner Background', 'image'),
+(11, 'contact_address', 'GlobalWays Advisory\nDubai International Financial Centre\nLevel 6, Gate Avenue\nDubai, UAE 000001', 'HQ Address', 'longtext'),
+(12, 'contact_email', 'hello@globalways.ae', 'Contact Email', 'text'),
+(13, 'social_facebook', '#', 'Facebook URL', 'url'),
+(14, 'social_linkedin', '#', 'LinkedIn URL', 'url'),
+(15, 'social_instagram', '#', 'Instagram URL', 'url'),
+(16, 'social_behance', '#', 'Behance URL', 'url'),
+(17, 'footer_newsletter_text', 'Exclusive 20% discount when you sign up', 'Newsletter Text', 'text'),
+(18, 'footer_disclaimer', 'GlobalWays is a trusted marketplace built for individuals and companies navigating UAE documentation complexity that comes with growth. We work with government-approved vendors who have moved beyond experimentation and now face the challenge of scaling processes, teams, and compliance without losing control. Our approach is execution-led, verified, and grounded in operational reality — not theory. We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.', 'Footer Disclaimer', 'longtext');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `testimonials`
+--
+
+DROP TABLE IF EXISTS `testimonials`;
+CREATE TABLE IF NOT EXISTS `testimonials` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `client_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `client_role` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `client_location` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `quote` text COLLATE utf8mb4_unicode_ci,
+  `avatar_text` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stars` tinyint DEFAULT '5',
+  `is_active` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `testimonials`
+--
+
+INSERT INTO `testimonials` (`uuid`, `client_name`, `client_role`, `client_location`, `quote`, `avatar_text`) VALUES
+('e1346380-60b7-4180-879e-716801933f7c', 'Ahmed Al-Rashidi', 'Head of Product', 'Dubai', 'Their structured approach cut our operational waste in half. Golden Visa processed in 5 days.', 'AH'),
+('3587db44-05e8-406e-8e02-db6ba1a9d180', 'Sarah Thompson', 'Business Owner', 'Abu Dhabi', 'Set up my mainland company in under a week. Escrow payment gave me total peace of mind.', 'ST'),
+('0fc59ff7-5304-4be7-a0f9-36c388d783d1', 'Priya Sharma', 'HR Director', 'Sharjah', 'Managing 30+ employee visas has never been easier. Saves our team 10+ hours every month.', 'PS');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `landing_features`
+--
+
+DROP TABLE IF EXISTS `landing_features`;
+CREATE TABLE IF NOT EXISTS `landing_features` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `icon_class` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort_order` int DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `landing_features`
+--
+
+INSERT INTO `landing_features` (`uuid`, `title`, `description`, `icon_class`, `sort_order`) VALUES
+('631d450e-5d6b-4317-8379-27fd09f9fc05', 'Escrow Payments', 'Pay securely. Funds are held until you confirm satisfaction with your service.', 'bi-shield-check', 1),
+('81f17006-0b2f-4176-a708-0a0cb15eed97', 'Real-Time Tracking', 'Watch your application progress live — every stage, every update, instantly.', 'bi-lightning', 2),
+('46550107-3cd2-4223-b96f-b6b5649a96d2', 'Document Vault', 'Encrypted cloud storage for all your UAE documents, accessible anytime.', 'bi-lock', 3),
+('27c0173a-86d7-458c-88d3-e502beac6e4c', 'WhatsApp Messaging', 'Chat directly with your vendor through encrypted in-app messenger.', 'bi-chat-dots', 4),
+('9a00295e-a501-4485-ac78-a6c0d2182709', 'Vendor Analytics', 'Compare vendors by success rate, response time, reviews, and price.', 'bi-bar-chart', 5),
+('c695054d-15f6-492f-99c9-a1fb454428c3', '24/7 Support', 'Round-the-clock human support in English, Arabic, Hindi, and 10+ languages.', 'bi-headset', 6);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `audit_logs`
 --
 

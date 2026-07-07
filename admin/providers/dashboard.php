@@ -93,8 +93,8 @@ include __DIR__ . '/../../partials/sidebar.php';
     <h3>Provider Admin Dashboard — <?php echo htmlspecialchars($provider['name'], ENT_QUOTES); ?></h3>
     <div>
       <a href="<?php echo $domain;?>/admin/providers/edit.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary btn-sm">Edit Provider</a>
-      <a href="<?php echo $domain;?>/admin/reviews/index.php?provider_id=<?php echo intval($provider_id); ?>" class="btn btn-outline-primary btn-sm">All Reviews</a>
-      <a href="<?php echo $domain;?>/admin/providers/export.php?id=<?php echo intval($provider_id); ?>" class="btn btn-outline-success btn-sm">Export Report</a>
+      <a href="<?php echo $domain;?>/admin/reviews/index.php?provider_uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-primary btn-sm">All Reviews</a>
+      <a href="<?php echo $domain;?>/admin/providers/export.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-success btn-sm">Export Report</a>
     </div>
   </div>
 
@@ -173,7 +173,7 @@ include __DIR__ . '/../../partials/sidebar.php';
                     <td><?php echo $o['notes'] ? htmlspecialchars(mb_strimwidth($o['notes'], 0, 80, '...'), ENT_QUOTES) : '<span class="text-muted">—</span>'; ?></td>
                     <td><?php echo htmlspecialchars($o['created_at'], ENT_QUOTES); ?></td>
                     <td class="text-end">
-                      <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain;?>/admin/onboarding/view.php?id=<?php echo intval($o['id']); ?>">View</a>
+                      <a class="btn btn-sm btn-outline-secondary" href="<?php echo $domain;?>/admin/onboarding/view.php?uuid=<?php echo htmlspecialchars($o['uuid']); ?>">View</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -205,8 +205,8 @@ include __DIR__ . '/../../partials/sidebar.php';
                       <div class="text-muted small"><?php echo htmlspecialchars($rv['user_name'] ?? 'Anonymous', ENT_QUOTES); ?> — <?php echo htmlspecialchars($rv['created_at'], ENT_QUOTES); ?></div>
                     </div>
                     <div class="text-end">
-                      <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/reviews/view.php?id=<?php echo intval($rv['id']); ?>">View</a>
-                      <a class="btn btn-sm btn-outline-danger" href="<?php echo $domain;?>/admin/reviews/delete.php?id=<?php echo intval($rv['id']); ?>" onclick="return confirm('Delete this review?');">Delete</a>
+                      <a class="btn btn-sm btn-outline-primary" href="<?php echo $domain;?>/admin/reviews/view.php?uuid=<?php echo htmlspecialchars($rv['uuid']); ?>">View</a>
+                      <a class="btn btn-sm btn-outline-danger" href="<?php echo $domain;?>/admin/reviews/delete.php?uuid=<?php echo htmlspecialchars($rv['uuid']); ?>" onclick="return confirm('Delete this review?');">Delete</a>
                     </div>
                   </div>
                 </li>
@@ -219,9 +219,9 @@ include __DIR__ . '/../../partials/sidebar.php';
       <div class="card">
         <div class="card-header"><strong>Quick Actions</strong></div>
         <div class="card-body">
-          <a href="<?php echo $domain;?>/admin/services/create.php?provider_id=<?php echo intval($provider_id); ?>" class="btn btn-primary mb-2">Create Service</a>
-          <a href="<?php echo $domain;?>/admin/providers/impersonate.php?id=<?php echo intval($provider_id); ?>" class="btn btn-outline-secondary mb-2">Impersonate Provider</a>
-          <a href="<?php echo $domain;?>/admin/providers/export.php?id=<?php echo intval($provider_id); ?>" class="btn btn-outline-success mb-2">Export CSV</a>
+          <a href="<?php echo $domain;?>/admin/services/create.php?provider_uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-primary mb-2">Create Service</a>
+          <a href="<?php echo $domain;?>/admin/providers/impersonate.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary mb-2">Impersonate Provider</a>
+          <a href="<?php echo $domain;?>/admin/providers/export.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-success mb-2">Export CSV</a>
         </div>
       </div>
     </div>

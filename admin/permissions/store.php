@@ -22,5 +22,5 @@ if ($id === false) {
 }
 
 $_SESSION['flash_success'] = 'Permission created';
-header('Location: '.$domain.'/admin/permissions/index.php?id=' . intval($id));
+header('Location: '.$domain.'/admin/permissions/index.php');
 exit;
