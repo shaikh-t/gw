@@ -82,6 +82,12 @@ function user_find($id) {
 // }
 
 function user_has_permission($user_id,$perm_name){
+  // Optimization: if we are checking for the current user, use the request-cached can() function
+  $curr = current_user();
+  if ($curr && ($curr['id'] == $user_id || ($curr['uuid'] ?? '') == $user_id)) {
+      return can($perm_name);
+  }
+
   global $mysqli;
   $perm_sql = $mysqli->real_escape_string($perm_name);
   $sql = "SELECT 1 FROM permissions p

@@ -52,9 +52,9 @@ function service_tag_create($name) {
 function services_count(array $filters = []): int {
     global $mysqli;
     $where = [];
-    if (!empty($filters['provider_id'])) $where[] = "provider_id = " . intval($filters['provider_id']);
-    if (!empty($filters['status'])) $where[] = "status = '" . $mysqli->real_escape_string($filters['status']) . "'";
-    if (!empty($filters['category_id'])) $where[] = "category_id = " . intval($filters['category_id']);
+    if (!empty($filters['provider_id'])) $where[] = "s.provider_id = " . intval($filters['provider_id']);
+    if (!empty($filters['status'])) $where[] = "s.status = '" . $mysqli->real_escape_string($filters['status']) . "'";
+    if (!empty($filters['category_id'])) $where[] = "s.category_id = " . intval($filters['category_id']);
     $sql = "SELECT COUNT(*) AS cnt FROM services" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where));
     $res = $mysqli->query($sql);
     if (!$res) return 0;
@@ -67,9 +67,9 @@ function services_paginated(int $page = 1, int $perPage = 20, array $filters = [
     $page = max(1, intval($page)); $perPage = max(1, intval($perPage));
     $offset = ($page - 1) * $perPage;
     $where = [];
-    if (!empty($filters['provider_id'])) $where[] = "provider_id = " . intval($filters['provider_id']);
-    if (!empty($filters['status'])) $where[] = "status = '" . $mysqli->real_escape_string($filters['status']) . "'";
-    if (!empty($filters['category_id'])) $where[] = "category_id = " . intval($filters['category_id']);
+    if (!empty($filters['provider_id'])) $where[] = "s.provider_id = " . intval($filters['provider_id']);
+    if (!empty($filters['status'])) $where[] = "s.status = '" . $mysqli->real_escape_string($filters['status']) . "'";
+    if (!empty($filters['category_id'])) $where[] = "s.category_id = " . intval($filters['category_id']);
     $sql = "SELECT s.*, p.name AS provider_name, c.name AS category_name
             FROM services s
             LEFT JOIN providers p ON p.id = s.provider_id
