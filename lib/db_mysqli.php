@@ -1,7 +1,7 @@
 <?php
 // lib/db_mysqli.php
 // Edit these constants to match your environment
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PASS', 'lefkedev77');
 define('DB_NAME', 'gpa_gw2');

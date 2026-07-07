@@ -32,11 +32,11 @@ include __DIR__ . '/../../partials/sidebar.php';
             ?>
           </td>
           <td class="text-end">
-            <a href="<?php echo $domain; ?>/admin/roles/edit.php?id=<?php echo intval($r['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="<?php echo $domain; ?>/admin/roles/edit.php?uuid=<?php echo htmlspecialchars($r['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('roles.manage')): ?>
               <form method="post" action="<?php echo $domain; ?>/admin/roles/delete.php" class="d-inline-block" onsubmit="return confirm('Delete role?');">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="id" value="<?php echo intval($r['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($r['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
             <?php endif; ?>

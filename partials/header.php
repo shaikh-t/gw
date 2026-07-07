@@ -15,7 +15,18 @@ $user = current_user();
 <body class="<?php echo 'with-sidebar'; ?>">
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="/<?php echo $domain; ?>/admin/dashboard.php">
+    <?php
+      $brand_link = $domain . '/index.php';
+      if ($user) {
+          require_once __DIR__ . '/../lib/permissions.php';
+          if (is_role('admin') || is_role('Super Admin')) {
+              $brand_link = $domain . '/admin/dashboard.php';
+          } else if (is_role('provider')) {
+              $brand_link = $domain . '/vendor/index.php';
+          }
+      }
+    ?>
+    <a class="navbar-brand d-flex align-items-center" href="<?php echo $brand_link; ?>">
       <strong class="me-2">GW Admin</strong>
     </a>
 
@@ -58,18 +69,18 @@ if (!empty($_SESSION['impersonator_id'])):
 
 
     <div class="d-flex align-items-center ms-auto">
-      <?php if ($user): 
+      <?php if ($user):
         $avatar = $user['avatar'] ?? $domain.'/public/assets/img/avatar-placeholder.png';
       ?>
         <div class="d-flex align-items-center">
           <img src="<?php echo htmlspecialchars($avatar, ENT_QUOTES); ?>" alt="avatar" class="header-avatar me-2" onerror="this.onerror=null;this.src='/public/assets/img/avatar-placeholder.png'">
           <div class="d-none d-md-block text-end me-3">
             <div class="fw-bold small mb-0"><?php echo htmlspecialchars($user['name'], ENT_QUOTES); ?></div>
-            <a href="<?php echo $domain; ?>/admin/logout.php" class="small text-muted">Sign out</a>
+            <a href="<?php echo $domain; ?>/logout.php" class="small text-muted">Sign out</a>
           </div>
         </div>
       <?php else: ?>
-        <a class="btn btn-sm btn-primary" href="<?php echo $domain; ?>/admin/login.php">Sign in</a>
+        <a class="btn btn-sm btn-primary" href="<?php echo $domain; ?>/login.php">Sign in</a>
       <?php endif; ?>
     </div>
   </div>

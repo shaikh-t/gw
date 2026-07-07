@@ -82,5 +82,5 @@ notifier_send_email('admin@example.com', 'Admin created provider onboarding', 'A
 
 // Redirect to onboarding review page for admin
 $_SESSION['flash_success'] = 'Provider created and onboarding started.';
-header('Location: /admin/providers/onboarding_review.php?id=' . $onb_id);
+header('Location: /admin/providers/onboarding_review.php?uuid=' . $onb_id);
 exit;

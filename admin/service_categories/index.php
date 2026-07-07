@@ -26,11 +26,11 @@ include __DIR__ . '/../../partials/sidebar.php';
           <td><?php echo htmlspecialchars($c['slug'], ENT_QUOTES); ?></td>
           <td><?php echo htmlspecialchars($c['description'] ?? '', ENT_QUOTES); ?></td>
           <td class="text-end">
-            <a href="<?php echo $domain;?>/admin/service_categories/edit.php?id=<?php echo intval($c['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="<?php echo $domain;?>/admin/service_categories/edit.php?uuid=<?php echo htmlspecialchars($c['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('services.manage')): ?>
               <form method="post" action="<?php echo $domain;?>/admin/service_categories/delete.php" class="d-inline-block" onsubmit="return confirm('Delete category?');">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="id" value="<?php echo intval($c['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($c['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
             <?php endif; ?>

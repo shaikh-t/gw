@@ -41,5 +41,5 @@ if (!$res['ok']) {
 }
 
 $_SESSION['flash_success'] = 'Review created successfully.';
-header('Location: ' . $domain . '/admin/reviews/review.php?id=' . intval($res['id']));
+header('Location: ' . $domain . '/admin/reviews/review.php?uuid=' . $res['uuid']);
 exit;

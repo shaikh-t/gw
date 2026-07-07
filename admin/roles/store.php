@@ -22,5 +22,5 @@ if ($id === false) {
 }
 
 $_SESSION['flash_success'] = 'Role created';
-header('Location: '.$domain.'/admin/roles/index.php?id=' . intval($id));
+header('Location: '.$domain.'/admin/roles/index.php');
 exit;

@@ -25,13 +25,30 @@ include __DIR__ . '/../../partials/sidebar.php';
         <input name="name" class="form-control" required>
       </div>
       <div class="col-md-6 mb-3">
-        <label class="form-label">Owner (optional)</label>
+        <label class="form-label">Owner (existing user)</label>
         <select name="owner_user_id" class="form-select">
-          <option value="">-- none --</option>
+          <option value="">-- create new user below --</option>
           <?php foreach ($users as $u): ?>
             <option value="<?php echo intval($u['id']); ?>"><?php echo htmlspecialchars($u['name'] . ' <' . $u['email'] . '>', ENT_QUOTES); ?></option>
           <?php endforeach; ?>
         </select>
+      </div>
+    </div>
+
+    <div class="card mb-3 bg-light">
+      <div class="card-body">
+        <h6>Create New Provider Account</h6>
+        <p class="small text-muted">Leave blank if assigning to an existing owner above.</p>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">New User Email</label>
+            <input name="new_user_email" type="email" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">New User Password</label>
+            <input name="new_user_password" type="password" class="form-control">
+          </div>
+        </div>
       </div>
     </div>
 

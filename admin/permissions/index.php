@@ -23,7 +23,7 @@ include __DIR__ . '/../../partials/sidebar.php';
           <td><?php echo htmlspecialchars($p['label'], ENT_QUOTES); ?></td>
           <td><?php echo htmlspecialchars($p['description'] ?? '', ENT_QUOTES); ?></td>
           <td class="text-end">
-            <a href="<?php echo $domain; ?>/admin/permissions/edit.php?id=<?php echo intval($p['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="<?php echo $domain; ?>/admin/permissions/edit.php?uuid=<?php echo htmlspecialchars($p['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('roles.manage')): ?>
               <form method="post" action="<?php echo $domain; ?>/admin/permissions/delete.php" class="d-inline-block" onsubmit="return confirm('Delete permission?');">
                 <?php echo csrf_field(); ?>

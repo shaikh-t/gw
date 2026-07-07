@@ -17,7 +17,7 @@ $current = current_user();
 $res = onboarding_admin_action($onb_id, $action, $current['id'], $note);
 if (!$res['ok']) {
     $_SESSION['flash_errors'] = [$res['error'] ?? 'Action failed'];
-    header('Location: /admin/providers/onboarding_review.php?id=' . $onb_id); exit;
+    header('Location: /admin/providers/onboarding_review.php?uuid=' . $onb_id); exit;
 }
 
 $r = $mysqli->query("SELECT p.* FROM provider_onboarding po JOIN providers p ON p.id = po.provider_id WHERE po.id = " . intval($onb_id) . " LIMIT 1");

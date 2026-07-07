@@ -46,7 +46,7 @@ include __DIR__ . '/../../partials/sidebar.php';
             <td><?php echo htmlspecialchars(mb_strimwidth($r['body'], 0, 120, '...'), ENT_QUOTES); ?></td>
             <td><?php echo htmlspecialchars($r['created_at'], ENT_QUOTES); ?></td>
             <td class="text-end">
-              <a href="<?php echo $domain;?>/admin/reviews/review.php?id=<?php echo intval($r['id']); ?>" class="btn btn-sm btn-outline-secondary">Review</a>
+              <a href="<?php echo $domain;?>/admin/reviews/review.php?uuid=<?php echo htmlspecialchars($r['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Review</a>
             </td>
           </tr>
         <?php endforeach; ?>

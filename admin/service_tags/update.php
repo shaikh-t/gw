@@ -11,7 +11,7 @@ $id = intval($_POST['id'] ?? 0);
 $name = trim($_POST['name'] ?? '');
 if ($id <= 0 || $name === '') {
     $_SESSION['flash_errors'] = ['Invalid input'];
-    header('Location: ' . $domain . '/admin/service_tags/edit.php?id=' . $id); exit;
+    header('Location: ' . $domain . '/admin/service_tags/edit.php?uuid=' . $uuid); exit;
 }
 
 $sql = "UPDATE service_tags SET name = '" . $mysqli->real_escape_string($name) . "' WHERE id = $id";

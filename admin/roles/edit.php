@@ -3,9 +3,10 @@ require_once __DIR__ . '/../../lib/middleware.php';
 require_permission_or_die('roles.manage');
 require_once __DIR__ . '/../../lib/role_helpers.php';
 
-$id = intval($_GET['id'] ?? 0);
-$role = role_find($id);
+$id_val = $_GET['uuid'] ?? $_GET['id'] ?? '';
+$role = role_find($id_val);
 if (!$role) { http_response_code(404); echo 'Not found'; exit; }
+$id = (int)$role['id'];
 
 $allPerms = permissions_all();
 $assigned = role_permission_ids($id);
@@ -17,7 +18,7 @@ include __DIR__ . '/../../partials/sidebar.php';
   <h4>Edit role</h4>
   <form method="post" action="<?php echo $domain;?>/admin/roles/update.php" class="mb-4">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($role['uuid'] ?? $role['id']); ?>">
     <div class="mb-3">
       <label class="form-label">System name</label>
       <input name="name" class="form-control" value="<?php echo htmlspecialchars($role['name'], ENT_QUOTES); ?>" required>
@@ -36,7 +37,7 @@ include __DIR__ . '/../../partials/sidebar.php';
   <h5>Permissions</h5>
   <form method="post" action="<?php echo $domain;?>/admin/roles/sync_permissions.php">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($role['uuid'] ?? $role['id']); ?>">
     <div class="mb-3">
       <select name="permissions[]" class="form-select" multiple size="12">
         <?php foreach ($allPerms as $p): ?>

@@ -13,7 +13,7 @@ $desc = trim($_POST['description'] ?? '');
 
 if ($id <= 0 || $name === '' || $label === '') {
     $_SESSION['flash_errors'] = ['Invalid input'];
-    header('Location: '.$domain.'/admin/permissions/edit.php?id=' . $id); exit;
+    header('Location: '.$domain.'/admin/permissions/edit.php?uuid=' . $uuid); exit;
 }
 
 if (!permission_update($id, $name, $label, $desc)) {

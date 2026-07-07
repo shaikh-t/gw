@@ -5,13 +5,23 @@ require_once __DIR__ . '/auth.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
-function load_user_permissions_mysqli(int $userId): array {
+function load_user_permissions_mysqli($userId): array {
     global $mysqli;
     $perms = [];
 
+    $uid = is_numeric($userId) ? intval($userId) : null;
+    if (!$uid) {
+        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '" . $mysqli->real_escape_string($userId) . "' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) {
+            $uid = (int)$row['id'];
+        }
+        if ($res && !is_bool($res)) $res->free();
+    }
+    if (!$uid) return [];
+
     // load role ids
     $roleIds = [];
-    $sql = "SELECT role_id FROM user_roles WHERE user_id = " . intval($userId);
+    $sql = "SELECT role_id FROM user_roles WHERE user_id = $uid";
     if ($res = $mysqli->query($sql)) {
         while ($r = $res->fetch_assoc()) $roleIds[] = (int)$r['role_id'];
         $res->free();
@@ -45,26 +55,47 @@ function load_user_permissions_mysqli(int $userId): array {
 
 // lib/permissions.php (ensure TTL logic)
 function can(string $permission): bool {
+    static $request_perms = null;
     if (!function_exists('current_user')) return false;
     $user = current_user();
     if (!$user) return false;
 
-    $now = time();
-    $ttl = 300; // seconds
-
-    // If not loaded or expired, reload from DB
-    if (empty($_SESSION['user']['_perms_loaded_at']) || ($now - ($_SESSION['user']['_perms_loaded_at'] ?? 0)) > $ttl) {
-        $_SESSION['user']['permissions'] = load_user_permissions_mysqli((int)$user['id']);
-        $_SESSION['user']['_perms_loaded_at'] = $now;
+    if ($request_perms === null) {
+        // Security: Fetch fresh permissions from DB on first check of request to prevent session tampering
+        // Prefer UUID for lookup if available in session
+        $userId = $user['uuid'] ?? (int)$user['id'];
+        $request_perms = load_user_permissions_mysqli($userId);
     }
 
-    return in_array($permission, $_SESSION['user']['permissions'] ?? [], true);
+    return in_array($permission, $request_perms, true);
 }
 
 
 function is_role(string $role): bool {
+    static $request_roles = null;
+    global $mysqli;
     $user = current_user();
     if (!$user) return false;
-    $roles = $user['roles'] ?? ($_SESSION['user']['roles'] ?? []);
-    return in_array($role, (array)$roles, true);
+
+    if ($request_roles === null) {
+        $uid = null;
+        if (!empty($user['uuid'])) {
+            $res = $mysqli->query("SELECT id FROM users WHERE uuid = '" . $mysqli->real_escape_string($user['uuid']) . "' LIMIT 1");
+            if ($res && $row = $res->fetch_assoc()) $uid = (int)$row['id'];
+            if ($res && !is_bool($res)) $res->free();
+        } else {
+            $uid = intval($user['id']);
+        }
+
+        if (!$uid) return false;
+
+        $request_roles = [];
+        $sql = "SELECT r.name FROM user_roles ur JOIN roles r ON ur.role_id = r.id WHERE ur.user_id = $uid";
+        if ($res = $mysqli->query($sql)) {
+            while ($row = $res->fetch_assoc()) $request_roles[] = $row['name'];
+            $res->free();
+        }
+    }
+
+    return in_array($role, $request_roles, true);
 }

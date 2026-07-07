@@ -13,7 +13,7 @@ $note = trim($_POST['note'] ?? '');
 
 if ($id <= 0 || !in_array($action, ['admin_approved','admin_rejected','admin_requested_more'], true)) {
     $_SESSION['flash_errors'] = ['Invalid input'];
-    header('Location: /admin/providers/edit.php?id=' . $id); exit;
+    header('Location: /admin/providers/edit.php?uuid=' . $uuid); exit;
 }
 
 $statusMap = [
@@ -37,5 +37,5 @@ if ($ok) {
     $_SESSION['flash_errors'] = ['Update failed: ' . $mysqli->error];
 }
 
-header('Location: /admin/providers/edit.php?id=' . $id);
+header('Location: /admin/providers/edit.php?uuid=' . $uuid);
 exit;

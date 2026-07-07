@@ -45,11 +45,11 @@ echo '<main class="main-content p-4">';
           </td>
           <td><?php echo htmlspecialchars($u['created_at'], ENT_QUOTES); ?></td>
           <td class="text-end">
-            <a href="<?php echo $domain;?>/admin/users/edit.php?id=<?php echo intval($u['id']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="<?php echo $domain;?>/admin/users/edit.php?uuid=<?php echo htmlspecialchars($u['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('users.manage')): ?>
               <form method="post" action="<?php echo $domain;?>/admin/users/delete.php" class="d-inline-block" onsubmit="return confirm('Delete user?');">
                 <?php echo csrf_field(); ?>
-                <input type="hidden" name="id" value="<?php echo intval($u['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo htmlspecialchars($u['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
             <?php endif; ?>
