@@ -283,3 +283,196 @@ Stack trace:
 [Sat Jul 11 19:46:10 2026] 127.0.0.1:41506 [200]: GET /js/main.js
 [Sat Jul 11 19:46:10 2026] 127.0.0.1:41492 Closing
 [Sat Jul 11 19:46:10 2026] 127.0.0.1:41506 Closing
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47308 Accepted
+[Sat Jul 11 20:54:20 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/login.php(57): ensure_customer_seeded()
+#2 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47308 [500]: GET /login.php?action=demo_login - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/login.php(57): ensure_customer_seeded()
+#2 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47308 Closing
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47318 Accepted
+[Sat Jul 11 20:54:20 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/customer/index.php(19): ensure_customer_seeded()
+#2 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47318 [500]: GET /customer/index.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/customer/index.php(19): ensure_customer_seeded()
+#2 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:20 2026] 127.0.0.1:47318 Closing
+[Sat Jul 11 20:54:21 2026] 127.0.0.1:47332 Accepted
+[Sat Jul 11 20:54:21 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/applications.php(18): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:21 2026] 127.0.0.1:47332 [500]: GET /customer/applications.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/applications.php(18): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:21 2026] 127.0.0.1:47332 Closing
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47344 Accepted
+[Sat Jul 11 20:54:22 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(267): ensure_customer_seeded()
+#2 /app/customer/application-detail.php(20): get_customer_application()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47344 [500]: GET /customer/application-detail.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(267): ensure_customer_seeded()
+#2 /app/customer/application-detail.php(20): get_customer_application()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47344 Closing
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47346 Accepted
+[Sat Jul 11 20:54:22 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(282): ensure_customer_seeded()
+#2 /app/customer/documents.php(45): get_customer_documents()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47346 [500]: GET /customer/documents.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(282): ensure_customer_seeded()
+#2 /app/customer/documents.php(45): get_customer_documents()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:22 2026] 127.0.0.1:47346 Closing
+[Sat Jul 11 20:54:23 2026] 127.0.0.1:47348 Accepted
+[Sat Jul 11 20:54:23 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(312): ensure_customer_seeded()
+#2 /app/customer/messages.php(46): get_customer_messages()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:23 2026] 127.0.0.1:47348 [500]: GET /customer/messages.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(312): ensure_customer_seeded()
+#2 /app/customer/messages.php(46): get_customer_messages()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:23 2026] 127.0.0.1:47348 Closing
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47352 Accepted
+[Sat Jul 11 20:54:24 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/payments.php(37): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47352 [500]: GET /customer/payments.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/payments.php(37): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47352 Closing
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47356 Accepted
+[Sat Jul 11 20:54:24 2026] PHP Fatal error:  Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/profile.php(54): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47356 [500]: GET /customer/profile.php - Uncaught ValueError: mysqli_stmt::bind_param(): Argument #1 ($types) must only contain the "b", "d", "i", "s" type specifiers in /app/lib/customer_helpers.php:81
+Stack trace:
+#0 /app/lib/customer_helpers.php(81): mysqli_stmt->bind_param()
+#1 /app/lib/customer_helpers.php(252): ensure_customer_seeded()
+#2 /app/customer/profile.php(54): get_customer_applications()
+#3 {main}
+  thrown in /app/lib/customer_helpers.php on line 81
+[Sat Jul 11 20:54:24 2026] 127.0.0.1:47356 Closing
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43440 Accepted
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43440 [302]: GET /login.php?action=demo_login
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43440 Closing
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43456 Accepted
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43456 [404]: GET /gw2/customer/index.php - No such file or directory
+[Sat Jul 11 21:01:51 2026] 127.0.0.1:43456 Closing
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43460 Accepted
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43460 [200]: GET /customer/index.php
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43460 Closing
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43476 Accepted
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43478 Accepted
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43476 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43478 [200]: GET /js/main.js
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43476 Closing
+[Sat Jul 11 21:01:52 2026] 127.0.0.1:43478 Closing
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43490 Accepted
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43490 [200]: GET /customer/applications.php
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43490 Closing
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43494 Accepted
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43502 Accepted
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43494 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43502 [200]: GET /js/main.js
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43494 Closing
+[Sat Jul 11 21:01:53 2026] 127.0.0.1:43502 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43508 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43508 [200]: GET /customer/application-detail.php
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43508 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43512 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43518 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43512 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43512 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43518 [200]: GET /js/main.js
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43518 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43524 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43524 [200]: GET /customer/documents.php
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43524 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43526 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43528 Accepted
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43526 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43528 [200]: GET /js/main.js
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43528 Closing
+[Sat Jul 11 21:01:54 2026] 127.0.0.1:43526 Closing
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43544 Accepted
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43544 [200]: GET /customer/messages.php
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43544 Closing
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43550 Accepted
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43552 Accepted
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43550 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43552 [200]: GET /js/main.js
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43552 Closing
+[Sat Jul 11 21:01:55 2026] 127.0.0.1:43550 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60152 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60152 [200]: GET /customer/payments.php
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60152 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60160 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60174 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60160 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60160 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60174 [200]: GET /js/main.js
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60174 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60188 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60188 [200]: GET /customer/profile.php
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60188 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60192 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60200 Accepted
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60192 [200]: GET /css/globalways.css
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60192 Closing
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60200 [200]: GET /js/main.js
+[Sat Jul 11 21:01:56 2026] 127.0.0.1:60200 Closing

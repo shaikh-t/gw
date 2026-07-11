@@ -2,6 +2,63 @@
 // login.php
 require_once __DIR__ . '/lib/csrf.php';
 require_once __DIR__ . '/lib/auth.php';
+require_once __DIR__ . '/lib/db_mysqli.php';
+require_once __DIR__ . '/lib/uuid_helper.php';
+
+// Intercept Demo Login
+if (isset($_GET['action']) && $_GET['action'] === 'demo_login') {
+    $demo_email = 'demo.customer@globalways.ae';
+    $stmt = $mysqli->prepare("SELECT id, uuid, name, email FROM users WHERE email = ? LIMIT 1");
+    $stmt->bind_param('s', $demo_email);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $user_row = $res->fetch_assoc();
+    $stmt->close();
+
+    if (!$user_row) {
+        // Create demo user
+        $uuid = generate_uuid();
+        $name = 'Ahmed Hassan';
+        $dummy_pass = password_hash('democustomer77', PASSWORD_BCRYPT);
+        $phone = '+971 50 123 4567';
+        $nationality = 'United Arab Emirates';
+        $goal = 'Golden Visa';
+        $emirate = 'Dubai';
+
+        $stmt_ins = $mysqli->prepare("INSERT INTO users (uuid, name, email, password, phone, nationality, goal, emirate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt_ins->bind_param('ssssssss', $uuid, $name, $demo_email, $dummy_pass, $phone, $nationality, $goal, $emirate);
+        $stmt_ins->execute();
+        $user_id = $stmt_ins->insert_id;
+        $stmt_ins->close();
+
+        // Assign viewer role (3)
+        $mysqli->query("INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, 3)");
+
+        $user_row = [
+            'id' => $user_id,
+            'uuid' => $uuid,
+            'name' => $name,
+            'email' => $demo_email
+        ];
+    }
+
+    // Log them in
+    $_SESSION['user'] = [
+        'id' => (int)$user_row['id'],
+        'uuid' => $user_row['uuid'],
+        'name' => $user_row['name'],
+        'email' => $user_row['email'],
+        'avatar' => null
+    ];
+    session_regenerate_id(true);
+
+    // Seed customer records
+    require_once __DIR__ . '/lib/customer_helpers.php';
+    ensure_customer_seeded((int)$user_row['id']);
+
+    header('Location: ' . $domain . '/customer/index.php');
+    exit;
+}
 
 // If already logged in, redirect based on role
 if (!empty($_SESSION['user'])) {
@@ -11,7 +68,7 @@ if (!empty($_SESSION['user'])) {
     } else if (is_role('provider')) {
         header('Location: ' . $domain . '/vendor/index.php');
     } else {
-        header('Location: ' . $domain . '/admin/dashboard.php');
+        header('Location: ' . $domain . '/customer/index.php');
     }
     exit;
 }
@@ -169,7 +226,7 @@ if (!empty($_SESSION['user'])) {
               <li><i class="bi bi-check-circle-fill text-primary"></i>Document upload status tracking</li>
               <li><i class="bi bi-check-circle-fill text-primary"></i>Direct vendor messaging in-platform</li>
             </ul>
-            <a href="customer/index.php" class="btn btn-gw-dark">See Demo Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="login.php?action=demo_login" class="btn btn-gw-dark">See Demo Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
           </div>
           <div class="col-lg-7 fade-in">
             <div class="tracking-mockup">
