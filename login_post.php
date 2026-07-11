@@ -20,7 +20,12 @@ if (attempt_login($email, $password)) {
     } else if (is_role('provider')) {
         header('Location: ' . $domain . '/vendor/index.php');
     } else {
-        header('Location: ' . $domain . '/admin/dashboard.php');
+        require_once __DIR__ . '/lib/customer_helpers.php';
+        $u = current_user();
+        if ($u && !empty($u['id'])) {
+            ensure_customer_seeded((int)$u['id']);
+        }
+        header('Location: ' . $domain . '/customer/index.php');
     }
     exit;
 }

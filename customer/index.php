@@ -1,3 +1,69 @@
+<?php
+// customer/index.php
+require_once __DIR__ . '/../lib/auth.php';
+require_once __DIR__ . '/../lib/permissions.php';
+require_once __DIR__ . '/../lib/customer_helpers.php';
+
+require_login();
+
+// Guard access: customer role only
+if (is_role('provider') || is_role('admin') || is_role('Super Admin')) {
+    header('Location: ../login.php');
+    exit;
+}
+
+$user = current_user();
+$userId = (int)$user['id'];
+
+// Seed if needed
+ensure_customer_seeded($userId);
+
+// Fetch dynamic data
+$apps = get_customer_applications($userId);
+$docs = get_customer_documents($userId);
+$payments = get_customer_payments($userId);
+$messages = get_customer_messages($userId);
+
+// Calculate counts dynamically
+$active_apps_count = 0;
+foreach ($apps as $a) {
+    if ($a['status'] !== 'Completed' && $a['status'] !== 'Cancelled') {
+        $active_apps_count++;
+    }
+}
+
+$pending_docs_count = 0;
+foreach ($docs as $d) {
+    if ($d['status'] === 'Required' || $d['status'] === 'Rejected') {
+        $pending_docs_count++;
+    }
+}
+
+// Unread messages count: count of incoming messages
+$unread_msgs_count = 0;
+foreach ($messages as $m) {
+    if ($m['sender'] !== 'You') {
+        $unread_msgs_count++;
+    }
+}
+
+// Payments due count: applications where amount > paid_amount
+$payments_due_count = 0;
+foreach ($apps as $a) {
+    if ($a['amount'] > $a['paid_amount']) {
+        $payments_due_count++;
+    }
+}
+
+// Generate initials
+$initials = '';
+$words = explode(' ', $user['name'] ?? 'Customer');
+foreach ($words as $w) {
+    $initials .= strtoupper(substr($w, 0, 1));
+}
+$initials = substr($initials, 0, 2);
+if (empty($initials)) $initials = 'CU';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +78,7 @@
   <div class="dashboard-wrapper d-flex">
     <aside class="dashboard-sidebar d-flex flex-column">
       <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
-        <a href="../index.html" class="text-decoration-none d-flex align-items-center gap-2">
+        <a href="../index.php" class="text-decoration-none d-flex align-items-center gap-2">
           <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:linear-gradient(135deg,#1165EF,#3F83F4)">
             <i class="bi bi-globe2 text-white small"></i>
           </div>
@@ -25,24 +91,24 @@
       </div>
       <div class="p-3 border-bottom border-secondary border-opacity-25">
         <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,.05)">
-          <span class="avatar-circle bg-dark border border-secondary">AH</span>
+          <span class="avatar-circle bg-dark border border-secondary"><?= htmlspecialchars($initials) ?></span>
           <div class="min-w-0">
-            <div class="text-white small fw-semibold text-truncate">Ahmed Hassan</div>
-            <div class="font-mono text-truncate" style="font-size:10px;color:rgba(255,255,255,.4)">ahmed@example.com</div>
+            <div class="text-white small fw-semibold text-truncate"><?= htmlspecialchars($user['name']) ?></div>
+            <div class="font-mono text-truncate" style="font-size:10px;color:rgba(255,255,255,.4)"><?= htmlspecialchars($user['email']) ?></div>
           </div>
         </div>
       </div>
       <nav class="nav flex-column p-3 gap-1 flex-grow-1">
         <div class="font-mono text-uppercase px-2 mb-2" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.25)">Menu</div>
-        <a class="nav-link active" href="index.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
-        <a class="nav-link" href="applications.html"><i class="bi bi-file-earmark-text"></i> Applications</a>
-        <a class="nav-link" href="documents.html"><i class="bi bi-folder2-open"></i> Documents</a>
-        <a class="nav-link" href="messages.html"><i class="bi bi-chat-dots"></i> Messages <span class="badge rounded-pill">3</span></a>
-        <a class="nav-link" href="payments.html"><i class="bi bi-credit-card"></i> Payments</a>
-        <a class="nav-link" href="profile.html"><i class="bi bi-person"></i> Profile</a>
+        <a class="nav-link active" href="index.php"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a class="nav-link" href="applications.php"><i class="bi bi-file-earmark-text"></i> Applications</a>
+        <a class="nav-link" href="documents.php"><i class="bi bi-folder2-open"></i> Documents</a>
+        <a class="nav-link" href="messages.php"><i class="bi bi-chat-dots"></i> Messages <span class="badge rounded-pill"><?= $unread_msgs_count ?></span></a>
+        <a class="nav-link" href="payments.php"><i class="bi bi-credit-card"></i> Payments</a>
+        <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
       </nav>
       <div class="p-3 border-top border-secondary border-opacity-25">
-        <a class="nav-link" href="../index.html"><i class="bi bi-box-arrow-left"></i> Back to Home</a>
+        <a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-left"></i> Logout</a>
       </div>
     </aside>
     <div class="sidebar-backdrop"></div>
@@ -67,28 +133,28 @@
           <div class="cp-stat">
             <div class="cp-stat-top">
               <span class="cp-stat-icon"><i class="bi bi-file-earmark-text"></i></span>
-              <span class="cp-stat-value">3</span>
+              <span class="cp-stat-value"><?= $active_apps_count ?></span>
             </div>
             <div class="cp-stat-label">Active Applications</div>
           </div>
           <div class="cp-stat">
             <div class="cp-stat-top">
               <span class="cp-stat-icon"><i class="bi bi-folder2-open"></i></span>
-              <span class="cp-stat-value">2</span>
+              <span class="cp-stat-value"><?= $pending_docs_count ?></span>
             </div>
             <div class="cp-stat-label">Pending Documents</div>
           </div>
           <div class="cp-stat">
             <div class="cp-stat-top">
               <span class="cp-stat-icon"><i class="bi bi-chat-dots"></i></span>
-              <span class="cp-stat-value">5</span>
+              <span class="cp-stat-value"><?= $unread_msgs_count ?></span>
             </div>
             <div class="cp-stat-label">Unread Messages</div>
           </div>
           <div class="cp-stat">
             <div class="cp-stat-top">
               <span class="cp-stat-icon"><i class="bi bi-credit-card"></i></span>
-              <span class="cp-stat-value">1</span>
+              <span class="cp-stat-value"><?= $payments_due_count ?></span>
             </div>
             <div class="cp-stat-label">Payments Due</div>
           </div>
@@ -98,56 +164,36 @@
           <div class="col-lg-7">
             <div class="cp-section-head">
               <h2 class="cp-section-title">Active Applications</h2>
-              <a href="applications.html" class="cp-view-all">View All →</a>
+              <a href="applications.php" class="cp-view-all">View All →</a>
             </div>
 
-            <a href="application-detail.html" class="cp-app-card text-decoration-none d-block">
-              <div class="cp-app-card-top">
-                <div>
-                  <p class="cp-app-name">Golden Visa</p>
-                  <p class="cp-app-id">UAE-2026-000982</p>
-                </div>
-                <span class="cp-badge cp-badge-dark">In Progress</span>
+            <?php if (empty($apps)): ?>
+              <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
+                <p class="text-muted mb-0">No active applications found.</p>
               </div>
-              <div class="cp-progress-meta"><span>Progress</span><span>65%</span></div>
-              <div class="cp-progress"><span style="width:65%"></span></div>
-              <div class="cp-app-card-foot">
-                <span class="cp-app-time"><i class="bi bi-clock"></i> 2 hours ago</span>
-                <span class="cp-app-next">Medical Test</span>
-              </div>
-            </a>
-
-            <a href="application-detail.html" class="cp-app-card text-decoration-none d-block">
-              <div class="cp-app-card-top">
-                <div>
-                  <p class="cp-app-name">Family Visa</p>
-                  <p class="cp-app-id">UAE-2026-000975</p>
-                </div>
-                <span class="cp-badge cp-badge-outline">Document Review</span>
-              </div>
-              <div class="cp-progress-meta"><span>Progress</span><span>45%</span></div>
-              <div class="cp-progress"><span style="width:45%"></span></div>
-              <div class="cp-app-card-foot">
-                <span class="cp-app-time"><i class="bi bi-clock"></i> 1 day ago</span>
-                <span class="cp-app-next">Upload Passport Copy</span>
-              </div>
-            </a>
-
-            <a href="application-detail.html" class="cp-app-card text-decoration-none d-block">
-              <div class="cp-app-card-top">
-                <div>
-                  <p class="cp-app-name">Emirates ID</p>
-                  <p class="cp-app-id">UAE-2026-000968</p>
-                </div>
-                <span class="cp-badge cp-badge-dark">Almost Complete</span>
-              </div>
-              <div class="cp-progress-meta"><span>Progress</span><span>90%</span></div>
-              <div class="cp-progress"><span style="width:90%"></span></div>
-              <div class="cp-app-card-foot">
-                <span class="cp-app-time"><i class="bi bi-clock"></i> 3 days ago</span>
-                <span class="cp-app-next">Collect Card</span>
-              </div>
-            </a>
+            <?php else: ?>
+              <?php foreach ($apps as $a):
+                if ($a['status'] === 'Completed') continue;
+              ?>
+                <a href="application-detail.php?id=<?= $a['uuid'] ?>" class="cp-app-card text-decoration-none d-block">
+                  <div class="cp-app-card-top">
+                    <div>
+                      <p class="cp-app-name"><?= htmlspecialchars($a['service_name']) ?></p>
+                      <p class="cp-app-id"><?= htmlspecialchars($a['tracking_id']) ?></p>
+                    </div>
+                    <span class="cp-badge <?= $a['status'] === 'Document Review' ? 'cp-badge-outline' : 'cp-badge-dark' ?>">
+                      <?= htmlspecialchars($a['status']) ?>
+                    </span>
+                  </div>
+                  <div class="cp-progress-meta"><span>Progress</span><span><?= (int)$a['progress'] ?>%</span></div>
+                  <div class="cp-progress"><span style="width:<?= (int)$a['progress'] ?>%"></span></div>
+                  <div class="cp-app-card-foot">
+                    <span class="cp-app-time"><i class="bi bi-clock"></i> <?= htmlspecialchars($a['last_update']) ?></span>
+                    <span class="cp-app-next"><?= htmlspecialchars($a['next_action']) ?></span>
+                  </div>
+                </a>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
 
           <div class="col-lg-5">

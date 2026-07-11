@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Rewrite clean blog slugs (e.g. /scaling-breaks-businesses) to blog-detail.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9\-]+)$ blog-detail.php?id=$1 [L,QSA]
