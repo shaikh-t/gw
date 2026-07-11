@@ -3,7 +3,7 @@
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 require_once __DIR__ . '/db_mysqli.php';
 
-$domain="";
+$domain="/gw2";
 /**
  * Return current user array or null.
  * Minimal fields: id, name, email, avatar, roles (array), permissions (array)
