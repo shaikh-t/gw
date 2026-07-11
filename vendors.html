@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-base="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verified Vendors — GlobalWays</title>
+  <meta name="description" content="Browse 500+ verified UAE service vendors with ratings and reviews.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/globalways.css" rel="stylesheet">
+</head>
+<body class="vendors-page">
+
+  <nav class="navbar navbar-expand-lg gw-navbar dark-hero fixed-top" id="gwNav">
+  <div class="container-xl">
+    <a class="navbar-brand py-0 d-flex align-items-center" href="index.html">
+      <img src="assets/logo.png" alt="globalways" class="gw-logo gw-logo-default">
+      <img src="assets/logo-white.png" alt="globalways" class="gw-logo gw-logo-on-dark">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link active" href="vendors.html" aria-current="page">Vendors</a></li>
+        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="how-it-works.html">How It Works</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 navbar-actions">
+        <a href="login.html" class="btn btn-signin rounded-pill px-4">Sign In</a>
+        <a href="register.html" class="btn btn-gw-blue px-4">Get Started Free</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <main>
+    <section class="page-hero vendors-hero">
+      <div class="container-xl">
+        <nav class="breadcrumb-gw" aria-label="Breadcrumb"><a href="index.html">Pages</a> / Vendors</nav>
+        <h1 class="font-serif vendors-hero-title">Find Your Perfect Vendor</h1>
+        <p class="vendors-hero-sub">Compare verified UAE service providers by rating, price and speciality. Every vendor is background-checked.</p>
+        <form class="vendors-hero-search" action="vendors.html" role="search">
+          <i class="bi bi-search"></i>
+          <input type="search" placeholder="Search by name, service or speciality..." aria-label="Search vendors">
+          <div class="vendors-hero-divider"></div>
+          <select aria-label="Filter by city">
+            <option selected>All Cities</option>
+            <option>Dubai</option>
+            <option>Abu Dhabi</option>
+            <option>Sharjah</option>
+            <option>Ajman</option>
+          </select>
+        </form>
+      </div>
+    </section>
+
+    <section class="vendors-list-section">
+      <div class="container-xl">
+        <div class="d-flex flex-wrap gap-2 vendors-type-tabs" role="group" aria-label="Filter by type">
+          <button type="button" class="filter-pill-btn active"><i class="bi bi-funnel"></i> All Types</button>
+          <button type="button" class="filter-pill-btn"><i class="bi bi-clipboard-check"></i> PRO Services</button>
+          <button type="button" class="filter-pill-btn"><i class="bi bi-briefcase"></i> Business Setup</button>
+          <button type="button" class="filter-pill-btn"><i class="bi bi-passport"></i> Visa &amp; Immigration</button>
+          <button type="button" class="filter-pill-btn"><i class="bi bi-mortarboard"></i> Education Visa</button>
+          <button type="button" class="filter-pill-btn"><i class="bi bi-award"></i> Golden / Residential</button>
+        </div>
+        <hr class="section-tabs-divider">
+
+        <div class="row vendors-layout g-0">
+          <aside class="col-lg-3 vendors-sidebar-col">
+            <div class="filter-sidebar vendors-filter-card fade-in">
+              <h3>Verification</h3>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="verifiedOnly" checked>
+                <label class="form-check-label" for="verifiedOnly">Verified only</label>
+              </div>
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="topRated">
+                <label class="form-check-label" for="topRated">Top Rated only</label>
+              </div>
+
+              <h3>Minimum Rating</h3>
+              <div class="d-flex flex-wrap gap-2 mb-4 rating-pills">
+                <button type="button" class="filter-pill-btn active">Any</button>
+                <button type="button" class="filter-pill-btn">4+</button>
+                <button type="button" class="filter-pill-btn">4.5+</button>
+                <button type="button" class="filter-pill-btn">4.8+</button>
+              </div>
+
+              <h3>Languages</h3>
+              <div class="d-flex flex-wrap gap-2 mb-4 lang-pills">
+                <button type="button" class="filter-pill-btn active">English</button>
+                <button type="button" class="filter-pill-btn">Arabic</button>
+                <button type="button" class="filter-pill-btn">Russian</button>
+                <button type="button" class="filter-pill-btn">Urdu</button>
+                <button type="button" class="filter-pill-btn">Tagalog</button>
+                <button type="button" class="filter-pill-btn">Chinese</button>
+                <button type="button" class="filter-pill-btn">French</button>
+              </div>
+
+              <h3>Member Since</h3>
+              <div class="member-since-list">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="memberSince" id="sinceAny" checked>
+                  <label class="form-check-label" for="sinceAny">Any time</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="memberSince" id="since2">
+                  <label class="form-check-label" for="since2">2+ years</label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="memberSince" id="since5">
+                  <label class="form-check-label" for="since5">5+ years</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="memberSince" id="since10">
+                  <label class="form-check-label" for="since10">10+ years</label>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="col-lg-9 vendors-results-col">
+            <div class="d-flex justify-content-between align-items-center results-toolbar flex-wrap gap-2">
+              <span class="vendors-found-count font-mono" id="vendorsFoundCount">8 vendors found</span>
+              <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm vendors-sort-select" aria-label="Sort vendors">
+                  <option selected>Most Relevant</option>
+                  <option>Highest Rated</option>
+                  <option>Lowest Price</option>
+                  <option>Newest</option>
+                </select>
+                <button type="button" class="view-toggle active" data-view="grid" aria-label="Grid view" aria-pressed="true"><i class="bi bi-grid-3x2-gap-fill"></i></button>
+                <button type="button" class="view-toggle" data-view="list" aria-label="List view" aria-pressed="false"><i class="bi bi-list-ul"></i></button>
+              </div>
+            </div>
+
+            <div class="row g-3 vendors-grid">
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <span class="featured-partner-chip"><i class="bi bi-award-fill"></i> Featured Partner</span>
+                  <div class="vnd-price-from"><span>From</span><strong>AED 500</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">EP</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Emirates Pro Services</h2>
+                        <span class="vnd-top-badge">TOP</span>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.9 <span>(250)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Dubai</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Full-service PRO firm specializing in Golden Visa, company formation and family sponsorship across Dubai &amp; Abu Dhabi.</p>
+                  <div class="vnd-tags">
+                    <span>Golden Visa</span>
+                    <span>Business Setup</span>
+                    <span>Family Visa</span>
+                    <span class="more">+3</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">15 specialists, Arabic +3</span>
+                    <a href="vendor-profile.html?id=emirates-pro" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <span class="featured-partner-chip"><i class="bi bi-award-fill"></i> Featured Partner</span>
+                  <div class="vnd-price-from"><span>From</span><strong>AED 800</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">DB</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Dubai Business Hub</h2>
+                        <span class="vnd-top-badge">TOP</span>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.8 <span>(186)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Dubai</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Mainland &amp; free zone company formation specialists with end-to-end banking, PRO and visa support.</p>
+                  <div class="vnd-tags">
+                    <span>Business Setup</span>
+                    <span>Free Zone</span>
+                    <span>Bank Account</span>
+                    <span class="more">+2</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">22 specialists, Arabic +4</span>
+                    <a href="vendor-profile.html?id=dubai-business-hub" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <div class="vnd-price-from"><span>From</span><strong>AED 450</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">GA</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Gulf Advisors LLC</h2>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.9 <span>(128)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Dubai</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Golden Visa, investor routes &amp; business setup specialists with 12+ years of experience across the UAE.</p>
+                  <div class="vnd-tags">
+                    <span>Golden Visa</span>
+                    <span>Investor Visa</span>
+                    <span>PRO Services</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">12 specialists, Arabic +2</span>
+                    <a href="vendor-profile.html?id=gulf-advisors" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <div class="vnd-price-from"><span>From</span><strong>AED 350</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">NV</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Nexus Visa Services</h2>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.7 <span>(76)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Sharjah</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Family, employment &amp; tourist visa processing with same-day document review and multi-language support.</p>
+                  <div class="vnd-tags">
+                    <span>Family Visa</span>
+                    <span>Employment</span>
+                    <span>Tourist Visa</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">9 specialists, Arabic +3</span>
+                    <a href="vendor-profile.html?id=nexus-visa" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <span class="featured-partner-chip"><i class="bi bi-award-fill"></i> Featured Partner</span>
+                  <div class="vnd-price-from"><span>From</span><strong>AED 1,200</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">ZC</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Zenith Corporate</h2>
+                        <span class="vnd-top-badge">TOP</span>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.9 <span>(52)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> DIFC</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Free zone &amp; mainland company formation experts for startups and enterprises seeking DIFC or ADGM setups.</p>
+                  <div class="vnd-tags">
+                    <span>Free Zone</span>
+                    <span>Mainland</span>
+                    <span>DIFC</span>
+                    <span class="more">+1</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">18 specialists, Arabic +5</span>
+                    <a href="vendor-profile.html?id=zenith-corporate" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <div class="vnd-price-from"><span>From</span><strong>AED 400</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">FT</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">FastTrack Experts</h2>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.8 <span>(109)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Dubai</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Fast approvals for visa renewals, Emirates ID, and family sponsorship applications with dedicated case managers.</p>
+                  <div class="vnd-tags">
+                    <span>Renewals</span>
+                    <span>Emirates ID</span>
+                    <span>Family Visa</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">11 specialists, Arabic +2</span>
+                    <a href="vendor-profile.html?id=fasttrack-experts" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <div class="vnd-price-from"><span>From</span><strong>AED 600</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">DS</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Dubai Services Hub</h2>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.9 <span>(141)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Dubai</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">One-stop desk for investor visas, compliance paperwork, and corporate renewals across all emirates.</p>
+                  <div class="vnd-tags">
+                    <span>Investor Visa</span>
+                    <span>Compliance</span>
+                    <span>PRO Services</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">14 specialists, Arabic +3</span>
+                    <a href="vendor-profile.html?id=dubai-services-hub" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-md-6 fade-in">
+                <article class="vendor-list-card">
+                  <div class="vnd-price-from"><span>From</span><strong>AED 550</strong></div>
+                  <div class="vnd-card-head">
+                    <span class="vnd-avatar">AT</span>
+                    <div class="vnd-card-meta">
+                      <div class="vnd-name-row">
+                        <h2 class="vnd-name">Atlas Consultants UAE</h2>
+                        <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                      </div>
+                      <div class="vnd-rating-row">
+                        <span class="vnd-rating"><i class="bi bi-star-fill"></i> 4.7 <span>(88)</span></span>
+                        <span class="vnd-loc"><i class="bi bi-geo-alt"></i> Abu Dhabi</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="vnd-desc">Corporate visa quotas, labor approvals, and expansion support for growing teams across Abu Dhabi &amp; Dubai.</p>
+                  <div class="vnd-tags">
+                    <span>Labor Quota</span>
+                    <span>Work Permit</span>
+                    <span>Expansion</span>
+                  </div>
+                  <div class="vnd-card-footer">
+                    <span class="vnd-specs">10 specialists, Arabic +2</span>
+                    <a href="vendor-profile.html?id=atlas-consultants" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vendors-cta-wrap">
+      <div class="container-xl">
+        <div class="vendors-cta-card text-center fade-in">
+          <div class="vendors-cta-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+          <h2 class="font-serif vendors-cta-title">Are you a UAE service provider?</h2>
+          <p class="vendors-cta-sub">Join 500+ verified vendors on GlobalWays. Get discovered by thousands of customers actively looking for your services.</p>
+          <a href="vendor-onboard.html" class="btn btn-gw-blue vendors-cta-btn">Apply to Become a Vendor <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="gw-footer">
+  <div class="container-xl pt-5 pb-4">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-3">
+        <a href="index.html" class="d-inline-block mb-4">
+          <img src="assets/logo-white.png" alt="globalways" class="gw-logo-footer">
+        </a>
+        <p class="footer-heading">Headquarter</p>
+        <p class="footer-text mb-4">GlobalWays Advisory<br>Dubai International Financial Centre<br>Level 6, Gate Avenue<br>Dubai, UAE 000001</p>
+        <p class="footer-heading">Email</p>
+        <p class="footer-text mb-4"><a href="mailto:hello@globalways.ae" class="footer-link">hello@globalways.ae</a></p>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Behance"><i class="bi bi-behance"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Pages</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="blog.html">Case Studies</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="blog.html">Insights</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Services</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="services.html">Golden Visa</a></li>
+          <li><a href="services.html">Business Setup</a></li>
+          <li><a href="services.html">Family Visa</a></li>
+          <li><a href="services.html">Emirates ID</a></li>
+          <li><a href="services.html">PRO Services</a></li>
+          <li><a href="services.html">Work Permit</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Utility</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Terms &amp; Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Compliance</a></li>
+          <li><a href="#">License</a></li>
+          <li><a href="#">Style Guide</a></li>
+          <li><a href="#">Change Log</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-text mb-3">Exclusive 20% discount when you sign up</p>
+        <div class="newsletter-input d-flex align-items-center gap-2">
+          <input type="email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
+          <button class="btn btn-gw-blue btn-sm rounded-circle p-2 flex-shrink-0" type="button" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container-xl py-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <p class="footer-copy mb-0">© 2026 GlobalWays®. All rights reserved.</p>
+      <p class="footer-copy mb-0 d-flex align-items-center gap-2"><span class="status-dot"></span>All systems operational</p>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <div class="container-xl py-4">
+      <p class="mb-0">GlobalWays is a trusted marketplace built for individuals and companies navigating UAE documentation complexity that comes with growth. We work with government-approved vendors who have moved beyond experimentation and now face the challenge of scaling processes, teams, and compliance without losing control. Our approach is execution-led, verified, and grounded in operational reality — not theory. We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      document.querySelectorAll('.vendors-type-tabs .filter-pill-btn, .rating-pills .filter-pill-btn, .lang-pills .filter-pill-btn').forEach((groupBtn) => {
+        groupBtn.addEventListener('click', () => {
+          const parent = groupBtn.closest('.vendors-type-tabs, .rating-pills, .lang-pills');
+          if (!parent) return;
+          if (parent.classList.contains('lang-pills')) {
+            groupBtn.classList.toggle('active');
+            return;
+          }
+          parent.querySelectorAll('.filter-pill-btn').forEach((b) => b.classList.remove('active'));
+          groupBtn.classList.add('active');
+        });
+      });
+      const vendorsGrid = document.querySelector('.vendors-grid');
+      document.querySelectorAll('.results-toolbar .view-toggle').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.results-toolbar .view-toggle').forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          if (vendorsGrid) {
+            vendorsGrid.classList.toggle('list-view', btn.dataset.view === 'list');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

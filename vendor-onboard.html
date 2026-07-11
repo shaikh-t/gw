@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-base="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Onboarding — GlobalWays</title>
+  <meta name="description" content="Apply to join the GlobalWays verified vendor network.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/globalways.css" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg gw-navbar scrolled fixed-top" id="gwNav">
+  <div class="container-xl">
+    <a class="navbar-brand py-0 d-flex align-items-center" href="index.html">
+      <img src="assets/logo.png" alt="globalways" class="gw-logo gw-logo-default">
+      <img src="assets/logo-white.png" alt="globalways" class="gw-logo gw-logo-on-dark">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="vendors.html">Vendors</a></li>
+        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="how-it-works.html">How It Works</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 navbar-actions">
+        <a href="login.html" class="btn btn-signin rounded-pill px-4">Sign In</a>
+        <a href="register.html" class="btn btn-gw-blue px-4">Get Started Free</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <main class="py-5" style="padding-top:7rem!important">
+    <div class="container-xl">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 fade-in">
+          <div class="text-center mb-5">
+            <p class="label-mono">Vendor Application</p>
+            <h1 class="font-serif h2 mb-2">Join the <span class="text-gradient-blue">GlobalWays</span> Network</h1>
+            <p class="text-secondary small">Complete all four steps to apply. Our team reviews applications within 3 business days.</p>
+          </div>
+
+          <!-- Step indicators -->
+          <div class="d-flex justify-content-between mb-4 px-2" id="stepIndicators" aria-hidden="true">
+            <div class="text-center flex-fill step-indicator active" data-step="1">
+              <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white mb-1" style="width:2rem;height:2rem;font-size:0.75rem">1</span>
+              <p class="font-mono small mb-0 d-none d-sm-block">Company</p>
+            </div>
+            <div class="text-center flex-fill step-indicator" data-step="2">
+              <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary text-white mb-1" style="width:2rem;height:2rem;font-size:0.75rem">2</span>
+              <p class="font-mono small mb-0 d-none d-sm-block">Services</p>
+            </div>
+            <div class="text-center flex-fill step-indicator" data-step="3">
+              <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary text-white mb-1" style="width:2rem;height:2rem;font-size:0.75rem">3</span>
+              <p class="font-mono small mb-0 d-none d-sm-block">Documents</p>
+            </div>
+            <div class="text-center flex-fill step-indicator" data-step="4">
+              <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary text-white mb-1" style="width:2rem;height:2rem;font-size:0.75rem">4</span>
+              <p class="font-mono small mb-0 d-none d-sm-block">Review</p>
+            </div>
+          </div>
+
+          <form id="vendorOnboardForm" class="feature-card">
+            <!-- Step 1: Company -->
+            <div class="onboard-step" data-step="1">
+              <h2 class="h5 font-serif mb-4">Company Information</h2>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="companyName" class="form-label small fw-medium">Company name</label>
+                  <input type="text" class="form-control" id="companyName" required>
+                </div>
+                <div class="col-sm-6">
+                  <label for="tradeLicense" class="form-label small fw-medium">Trade license number</label>
+                  <input type="text" class="form-control" id="tradeLicense" required>
+                </div>
+                <div class="col-sm-6">
+                  <label for="emirate" class="form-label small fw-medium">Emirate</label>
+                  <select class="form-select" id="emirate" required>
+                    <option value="">Select emirate</option>
+                    <option>Dubai</option>
+                    <option>Abu Dhabi</option>
+                    <option>Sharjah</option>
+                    <option>Ajman</option>
+                    <option>Ras Al Khaimah</option>
+                    <option>Fujairah</option>
+                    <option>Umm Al Quwain</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="companyDesc" class="form-label small fw-medium">Company description</label>
+                  <textarea class="form-control" id="companyDesc" rows="3" required></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Services -->
+            <div class="onboard-step d-none" data-step="2">
+              <h2 class="h5 font-serif mb-4">Services Offered</h2>
+              <p class="small text-secondary mb-3">Select all services your company provides.</p>
+              <div class="row g-2">
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcGolden" value="golden-visa"><label class="form-check-label small" for="svcGolden">Golden Visa</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcInvestor" value="investor-visa"><label class="form-check-label small" for="svcInvestor">Investor Visa</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcFamily" value="family-visa"><label class="form-check-label small" for="svcFamily">Family Visa</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcEmployment" value="employment-visa"><label class="form-check-label small" for="svcEmployment">Employment Visa</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcBusiness" value="business-setup"><label class="form-check-label small" for="svcBusiness">Business Setup</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcFreezone" value="free-zone"><label class="form-check-label small" for="svcFreezone">Free Zone</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcMainland" value="mainland"><label class="form-check-label small" for="svcMainland">Mainland</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcPro" value="pro-services"><label class="form-check-label small" for="svcPro">PRO Services</label></div></div>
+                <div class="col-sm-6"><div class="form-check"><input class="form-check-input" type="checkbox" id="svcEid" value="emirates-id"><label class="form-check-label small" for="svcEid">Emirates ID</label></div></div>
+              </div>
+              <div class="mt-3">
+                <label for="avgTurnaround" class="form-label small fw-medium">Average turnaround (days)</label>
+                <input type="number" class="form-control" id="avgTurnaround" min="1" max="90" placeholder="e.g. 5">
+              </div>
+            </div>
+
+            <!-- Step 3: Documents -->
+            <div class="onboard-step d-none" data-step="3">
+              <h2 class="h5 font-serif mb-4">Upload Documents</h2>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="licenseDoc" class="form-label small fw-medium">Trade license copy</label>
+                  <input type="file" class="form-control" id="licenseDoc" accept=".pdf,.jpg,.png">
+                </div>
+                <div class="col-12">
+                  <label for="ownerId" class="form-label small fw-medium">Owner Emirates ID / Passport</label>
+                  <input type="file" class="form-control" id="ownerId" accept=".pdf,.jpg,.png">
+                </div>
+                <div class="col-12">
+                  <label for="portfolio" class="form-label small fw-medium">Portfolio or case studies (optional)</label>
+                  <input type="file" class="form-control" id="portfolio" accept=".pdf">
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Review -->
+            <div class="onboard-step d-none" data-step="4">
+              <h2 class="h5 font-serif mb-4">Review &amp; Submit</h2>
+              <div class="bg-warm rounded-3 p-4 mb-4">
+                <p class="label-mono mb-2">Summary</p>
+                <dl class="row small mb-0" id="reviewSummary">
+                  <dt class="col-sm-4 text-secondary">Company</dt>
+                  <dd class="col-sm-8" id="reviewCompany">—</dd>
+                  <dt class="col-sm-4 text-secondary">License</dt>
+                  <dd class="col-sm-8" id="reviewLicense">—</dd>
+                  <dt class="col-sm-4 text-secondary">Emirate</dt>
+                  <dd class="col-sm-8" id="reviewEmirate">—</dd>
+                </dl>
+              </div>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="vendorTerms" required>
+                <label class="form-check-label small" for="vendorTerms">I confirm all information is accurate and agree to GlobalWays vendor terms.</label>
+              </div>
+              <div class="mb-3">
+                <label for="contactEmail" class="form-label small fw-medium">Contact email</label>
+                <input type="email" class="form-control" id="contactEmail" required>
+              </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+              <button type="button" class="btn btn-gw-outline" id="prevStep" disabled>Back</button>
+              <button type="button" class="btn btn-gw-blue" id="nextStep">Continue</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="gw-footer">
+  <div class="container-xl pt-5 pb-4">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-3">
+        <a href="index.html" class="d-inline-block mb-4">
+          <img src="assets/logo-white.png" alt="globalways" class="gw-logo-footer">
+        </a>
+        <p class="footer-heading">Headquarter</p>
+        <p class="footer-text mb-4">GlobalWays Advisory<br>Dubai International Financial Centre<br>Level 6, Gate Avenue<br>Dubai, UAE 000001</p>
+        <p class="footer-heading">Email</p>
+        <p class="footer-text mb-4"><a href="mailto:hello@globalways.ae" class="footer-link">hello@globalways.ae</a></p>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Behance"><i class="bi bi-behance"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Pages</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="blog.html">Case Studies</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="blog.html">Insights</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Services</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="services.html">Golden Visa</a></li>
+          <li><a href="services.html">Business Setup</a></li>
+          <li><a href="services.html">Family Visa</a></li>
+          <li><a href="services.html">Emirates ID</a></li>
+          <li><a href="services.html">PRO Services</a></li>
+          <li><a href="services.html">Work Permit</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Utility</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Terms &amp; Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Compliance</a></li>
+          <li><a href="#">License</a></li>
+          <li><a href="#">Style Guide</a></li>
+          <li><a href="#">Change Log</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-text mb-3">Exclusive 20% discount when you sign up</p>
+        <div class="newsletter-input d-flex align-items-center gap-2">
+          <input type="email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
+          <button class="btn btn-gw-blue btn-sm rounded-circle p-2 flex-shrink-0" type="button" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container-xl py-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <p class="footer-copy mb-0">© 2026 GlobalWays®. All rights reserved.</p>
+      <p class="footer-copy mb-0 d-flex align-items-center gap-2"><span class="status-dot"></span>All systems operational</p>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <div class="container-xl py-4">
+      <p class="mb-0">GlobalWays is a trusted marketplace built for individuals and companies navigating UAE documentation complexity that comes with growth. We work with government-approved vendors who have moved beyond experimentation and now face the challenge of scaling processes, teams, and compliance without losing control. Our approach is execution-led, verified, and grounded in operational reality — not theory. We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      let currentStep = 1;
+      const totalSteps = 4;
+      const steps = document.querySelectorAll('.onboard-step');
+      const indicators = document.querySelectorAll('.step-indicator');
+      const prevBtn = document.getElementById('prevStep');
+      const nextBtn = document.getElementById('nextStep');
+      const form = document.getElementById('vendorOnboardForm');
+
+      function showStep(n) {
+        currentStep = n;
+        steps.forEach((s) => s.classList.toggle('d-none', parseInt(s.dataset.step, 10) !== n));
+        indicators.forEach((ind) => {
+          const num = parseInt(ind.dataset.step, 10);
+          const circle = ind.querySelector('span');
+          const active = num <= n;
+          circle.classList.toggle('bg-primary', active);
+          circle.classList.toggle('bg-secondary', !active);
+          ind.classList.toggle('active', num === n);
+        });
+        prevBtn.disabled = n === 1;
+        nextBtn.textContent = n === totalSteps ? 'Submit Application' : 'Continue';
+
+        if (n === 4) {
+          document.getElementById('reviewCompany').textContent = document.getElementById('companyName').value || '—';
+          document.getElementById('reviewLicense').textContent = document.getElementById('tradeLicense').value || '—';
+          document.getElementById('reviewEmirate').textContent = document.getElementById('emirate').value || '—';
+        }
+      }
+
+      prevBtn.addEventListener('click', () => { if (currentStep > 1) showStep(currentStep - 1); });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentStep < totalSteps) {
+          showStep(currentStep + 1);
+        } else if (form.checkValidity()) {
+          alert('Application submitted! Our team will review within 3 business days.');
+          window.location.href = 'login.html';
+        } else {
+          form.reportValidity();
+        }
+      });
+
+      form.addEventListener('submit', (e) => e.preventDefault());
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages — GlobalWays Customer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/globalways.css" rel="stylesheet">
+</head>
+<body class="bg-warm">
+  <div class="dashboard-wrapper d-flex">
+    <aside class="dashboard-sidebar d-flex flex-column">
+      <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+        <a href="../index.html" class="text-decoration-none d-flex align-items-center gap-2">
+          <div class="rounded-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:linear-gradient(135deg,#1165EF,#3F83F4)"><i class="bi bi-globe2 text-white small"></i></div>
+          <div><div class="text-white font-serif small">GlobalWays</div><div class="font-mono text-uppercase" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.4)">Customer Portal</div></div>
+        </a>
+        <button class="btn btn-link text-white-50 p-0 d-lg-none" data-sidebar-close><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="p-3 border-bottom border-secondary border-opacity-25">
+        <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:rgba(255,255,255,.05)">
+          <span class="avatar-circle bg-dark border border-secondary">AH</span>
+          <div class="min-w-0"><div class="text-white small fw-semibold text-truncate">Ahmed Hassan</div><div class="font-mono text-truncate" style="font-size:10px;color:rgba(255,255,255,.4)">ahmed@example.com</div></div>
+        </div>
+      </div>
+      <nav class="nav flex-column p-3 gap-1 flex-grow-1">
+        <div class="font-mono text-uppercase px-2 mb-2" style="font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.25)">Menu</div>
+        <a class="nav-link" href="index.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a class="nav-link" href="applications.html"><i class="bi bi-file-earmark-text"></i> Applications</a>
+        <a class="nav-link" href="documents.html"><i class="bi bi-folder2-open"></i> Documents</a>
+        <a class="nav-link active" href="messages.html"><i class="bi bi-chat-dots"></i> Messages <span class="badge rounded-pill">3</span></a>
+        <a class="nav-link" href="payments.html"><i class="bi bi-credit-card"></i> Payments</a>
+        <a class="nav-link" href="profile.html"><i class="bi bi-person"></i> Profile</a>
+      </nav>
+      <div class="p-3 border-top border-secondary border-opacity-25"><a class="nav-link" href="../index.html"><i class="bi bi-box-arrow-left"></i> Back to Home</a></div>
+    </aside>
+    <div class="sidebar-backdrop"></div>
+    <div class="dashboard-main">
+      <header class="dashboard-topbar d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3 flex-grow-1">
+          <button class="btn btn-light d-lg-none" data-sidebar-toggle><i class="bi bi-list"></i></button>
+          <div class="cp-search d-none d-sm-flex">
+            <i class="bi bi-search"></i>
+            <input type="search" placeholder="Search applications, documents..">
+          </div>
+        </div>
+        <div class="cp-top-actions">
+          <button class="cp-bell" type="button" aria-label="Notifications"><i class="bi bi-bell"></i><span class="cp-dot"></span></button>
+          <span class="avatar-circle bg-dark">AH</span>
+        </div>
+      </header>
+      <main class="cp-page">
+        <h1 class="cp-page-title"><span class="text-gradient-blue">Messages</span></h1>
+        <p class="cp-page-sub">Chat with vendors and support team</p>
+
+        <div class="cp-msg-layout mt-4">
+          <div class="cp-msg-list">
+            <div class="cp-msg-search">
+              <i class="bi bi-search text-muted"></i>
+              <input type="search" placeholder="Search messages...">
+            </div>
+
+            <a href="#" class="cp-thread active">
+              <div class="cp-thread-top">
+                <span class="cp-thread-avatar">EP<span class="online"></span></span>
+                <div class="min-w-0 flex-grow-1">
+                  <p class="cp-thread-name">Emirates Pro Services</p>
+                  <p class="cp-thread-svc">Golden Visa</p>
+                  <p class="cp-thread-preview">Your medical test has been scheduled</p>
+                </div>
+                <div class="cp-thread-meta">
+                  <span class="cp-thread-time">2 hours ago</span>
+                  <span class="cp-thread-badge">2</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="cp-thread">
+              <div class="cp-thread-top">
+                <span class="cp-thread-avatar">FT</span>
+                <div class="min-w-0 flex-grow-1">
+                  <p class="cp-thread-name">FastTrack Visa Services</p>
+                  <p class="cp-thread-svc">Family Visa</p>
+                  <p class="cp-thread-preview">Please upload the passport copy</p>
+                </div>
+                <div class="cp-thread-meta">
+                  <span class="cp-thread-time">1 day ago</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="cp-thread">
+              <div class="cp-thread-top">
+                <span class="cp-thread-avatar">UD</span>
+                <div class="min-w-0 flex-grow-1">
+                  <p class="cp-thread-name">UAE Docs Hub Support</p>
+                  <p class="cp-thread-svc">General Support</p>
+                  <p class="cp-thread-preview">How can we help you today?</p>
+                </div>
+                <div class="cp-thread-meta">
+                  <span class="cp-thread-time">3 days ago</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="cp-chat">
+            <button type="button" class="cp-chat-back"><i class="bi bi-arrow-left"></i> Back to messages</button>
+            <div class="cp-chat-head">
+              <div class="cp-chat-user">
+                <span class="cp-thread-avatar">EP<span class="online"></span></span>
+                <div>
+                  <strong>Emirates Pro Services</strong>
+                  <span>Online • Golden Visa</span>
+                </div>
+              </div>
+              <button class="cp-icon-btn" type="button" aria-label="More"><i class="bi bi-three-dots-vertical"></i></button>
+            </div>
+            <div class="cp-chat-body">
+              <div class="cp-bubble-row">
+                <div>
+                  <div class="cp-bubble theirs">Hello! Thank you for choosing Emirates Pro Services.</div>
+                  <div class="cp-bubble-time">Jun 7, 10:00 AM</div>
+                </div>
+              </div>
+              <div class="cp-bubble-row mine">
+                <div>
+                  <div class="cp-bubble mine">Hi, I wanted to check the status of my Golden Visa application.</div>
+                  <div class="cp-bubble-time">Jun 7, 10:05 AM <i class="bi bi-check2-all"></i></div>
+                </div>
+              </div>
+              <div class="cp-bubble-row">
+                <div>
+                  <div class="cp-bubble theirs">Your application is progressing well. We have successfully submitted it to the authorities.</div>
+                  <div class="cp-bubble-time">Jun 7, 10:07 AM</div>
+                </div>
+              </div>
+              <div class="cp-bubble-row">
+                <div>
+                  <div class="cp-bubble theirs">The next step is the medical test. Appointment on June 10th at 9:00 AM at Dubai Healthcare City.</div>
+                  <div class="cp-bubble-time">Jun 7, 10:08 AM</div>
+                </div>
+              </div>
+              <div class="cp-bubble-row mine">
+                <div>
+                  <div class="cp-bubble mine">Perfect! What documents should I bring?</div>
+                  <div class="cp-bubble-time">Jun 7, 10:10 AM <i class="bi bi-check2-all"></i></div>
+                </div>
+              </div>
+              <div class="cp-bubble-row">
+                <div>
+                  <div class="cp-bubble theirs">Please bring your passport, application receipt, and the medical form we sent you.</div>
+                  <div class="cp-bubble-time">Jun 8, 6:00 AM</div>
+                </div>
+              </div>
+            </div>
+            <div class="cp-chat-input">
+              <button class="cp-icon-btn" type="button" aria-label="Attach"><i class="bi bi-paperclip"></i></button>
+              <input class="cp-chat-field" type="text" placeholder="Type a message...">
+              <button class="cp-send" type="button" aria-label="Send"><i class="bi bi-send-fill"></i></button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

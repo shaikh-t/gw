@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-base="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Profile — GlobalWays</title>
+  <meta name="description" content="View vendor ratings, services, and reviews on GlobalWays.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/globalways.css" rel="stylesheet">
+</head>
+<body class="vendor-profile-page">
+
+  <nav class="navbar navbar-expand-lg gw-navbar dark-hero fixed-top" id="gwNav">
+  <div class="container-xl">
+    <a class="navbar-brand py-0 d-flex align-items-center" href="index.html">
+      <img src="assets/logo.png" alt="globalways" class="gw-logo gw-logo-default">
+      <img src="assets/logo-white.png" alt="globalways" class="gw-logo gw-logo-on-dark">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="vendors.html">Vendors</a></li>
+        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="how-it-works.html">How It Works</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 navbar-actions">
+        <a href="login.html" class="btn btn-signin rounded-pill px-4">Sign In</a>
+        <a href="register.html" class="btn btn-gw-blue px-4">Get Started Free</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <main>
+    <!-- Dark hero -->
+    <section class="vp-hero">
+      <div class="container-xl">
+        <a href="vendors.html" class="vp-back">← Back to Vendors</a>
+
+        <div class="vp-hero-main fade-in">
+          <div class="vp-avatar" id="vendorAvatar">EP</div>
+          <div class="vp-hero-info">
+            <div class="vp-title-row">
+              <h1 class="vp-title font-serif" id="vendorTitle">Emirates Pro Services</h1>
+              <span class="vp-verified"><i class="bi bi-patch-check-fill"></i> Verified Partner</span>
+            </div>
+            <p class="vp-tagline" id="vendorTagline">Your Trusted Partner for UAE Documentation</p>
+            <div class="vp-meta" id="vendorMeta">
+              <span class="vp-stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                <strong>4.8</strong> (1,250 reviews)
+              </span>
+              <span class="vp-meta-sep">·</span>
+              <span><i class="bi bi-geo-alt"></i> Dubai, UAE</span>
+              <span class="vp-meta-sep">·</span>
+              <span>Since 2018</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vp-hero-stats fade-in">
+          <div class="vp-stat vp-stat-blue">
+            <strong id="vendorTasks">5,420</strong>
+            <span>Total Tasks</span>
+          </div>
+          <div class="vp-stat vp-stat-light">
+            <strong id="vendorSuccess">99.8%</strong>
+            <span>Success Rate</span>
+          </div>
+          <div class="vp-stat vp-stat-dark">
+            <strong id="vendorResponse">&lt; 2 hours</strong>
+            <span>Avg. Response</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="vp-body">
+      <div class="container-xl">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="vp-card fade-in">
+              <p class="vp-section-kicker">About</p>
+              <p class="vp-card-text" id="vendorBio">Emirates Pro Services has been a leading UAE documentation consultancy since 2018, helping thousands of individuals and businesses navigate Golden Visa applications, business setup, and family sponsorship. Our team of licensed consultants combines deep regulatory knowledge with a client-first approach.</p>
+            </div>
+
+            <div class="vp-card fade-in">
+              <p class="vp-section-kicker">What We Offer</p>
+              <h2 class="vp-card-title font-serif">Services Offered</h2>
+              <div class="vp-services-grid" id="vendorServices">
+                <a href="service-detail.html?id=golden-visa" class="vp-service-card">
+                  <strong>Golden Visa</strong>
+                  <div class="vp-service-meta">
+                    <div class="vp-service-row"><span class="vp-service-label">Price</span><span class="vp-service-value">AED 5,000</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Timeline</span><span class="vp-service-value">5 days</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Completed</span><span class="vp-service-value">850</span></div>
+                  </div>
+                </a>
+                <a href="service-detail.html?id=family-visa" class="vp-service-card">
+                  <strong>Family Visa</strong>
+                  <div class="vp-service-meta">
+                    <div class="vp-service-row"><span class="vp-service-label">Price</span><span class="vp-service-value">AED 3,200</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Timeline</span><span class="vp-service-value">4 days</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Completed</span><span class="vp-service-value">620</span></div>
+                  </div>
+                </a>
+                <a href="service-detail.html?id=business-setup" class="vp-service-card">
+                  <strong>Business Setup</strong>
+                  <div class="vp-service-meta">
+                    <div class="vp-service-row"><span class="vp-service-label">Price</span><span class="vp-service-value">AED 8,500</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Timeline</span><span class="vp-service-value">7 days</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Completed</span><span class="vp-service-value">310</span></div>
+                  </div>
+                </a>
+                <a href="service-detail.html?id=emirates-id" class="vp-service-card">
+                  <strong>Emirates ID</strong>
+                  <div class="vp-service-meta">
+                    <div class="vp-service-row"><span class="vp-service-label">Price</span><span class="vp-service-value">AED 550</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Timeline</span><span class="vp-service-value">2 days</span></div>
+                    <div class="vp-service-row"><span class="vp-service-label">Completed</span><span class="vp-service-value">1,200</span></div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="vp-card fade-in">
+              <p class="vp-section-kicker">What Customers Say</p>
+              <h2 class="vp-card-title font-serif">Customer Reviews</h2>
+              <div class="vp-reviews" id="vendorReviews">
+                <article class="vp-review">
+                  <div class="vp-review-top">
+                    <div>
+                      <strong>Ahmed K.</strong>
+                      <span class="vp-review-meta">Golden Visa · 2 weeks ago</span>
+                    </div>
+                    <div class="vp-review-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                  </div>
+                  <p>Outstanding service! Golden Visa approved in 5 days. Transparent pricing and excellent communication throughout.</p>
+                </article>
+                <article class="vp-review">
+                  <div class="vp-review-top">
+                    <div>
+                      <strong>Sarah T.</strong>
+                      <span class="vp-review-meta">Business Setup · 1 month ago</span>
+                    </div>
+                    <div class="vp-review-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                  </div>
+                  <p>Set up my free zone company seamlessly. Escrow payment gave total peace of mind. Highly recommend.</p>
+                </article>
+                <article class="vp-review">
+                  <div class="vp-review-top">
+                    <div>
+                      <strong>Mohammed H.</strong>
+                      <span class="vp-review-meta">Family Visa · 2 months ago</span>
+                    </div>
+                    <div class="vp-review-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></div>
+                  </div>
+                  <p>Fast and professional service. Brought my family over without any hassle. Great team to work with.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="vp-card fade-in" id="vendorTeam">
+              <p class="vp-section-kicker">The People</p>
+              <h2 class="vp-card-title font-serif">Our Team</h2>
+              <div class="vp-team-grid" id="vendorTeamGrid">
+                <div class="vp-team-card">
+                  <span class="vp-team-avatar">MA</span>
+                  <strong class="font-serif">Mohammed Al-Rashid</strong>
+                  <span class="vp-team-role">Founder &amp; CEO</span>
+                  <span class="vp-team-specialties">Immigration Law, Business Setup</span>
+                </div>
+                <div class="vp-team-card">
+                  <span class="vp-team-avatar">FH</span>
+                  <strong class="font-serif">Fatima Hassan</strong>
+                  <span class="vp-team-role">Visa Specialist</span>
+                  <span class="vp-team-specialties">Family Visa, Golden Visa</span>
+                </div>
+                <div class="vp-team-card">
+                  <span class="vp-team-avatar">RK</span>
+                  <strong class="font-serif">Raj Kumar</strong>
+                  <span class="vp-team-role">Documentation Manager</span>
+                  <span class="vp-team-specialties">Attestation, Certificates</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="vp-sidebar-card fade-in">
+              <p class="vp-section-kicker">Get in Touch</p>
+              <h3 class="vp-sidebar-title font-serif">Contact Vendor</h3>
+              <ul class="vp-contact-list" id="vendorContact">
+                <li><i class="bi bi-geo-alt"></i><span>Dubai, UAE</span></li>
+                <li><i class="bi bi-calendar3"></i><span>Member since 2020</span></li>
+                <li><i class="bi bi-clock"></i><span>Responds in &lt; 2 hours</span></li>
+                <li><i class="bi bi-people"></i><span>English, Arabic, Hindi, Urdu</span></li>
+              </ul>
+              <a href="register.html" class="vp-btn-primary"><i class="bi bi-chat-dots"></i> Request Quote</a>
+              <a href="#vendorTeam" class="vp-btn-secondary"><i class="bi bi-globe"></i> View Profile</a>
+            </div>
+
+            <div class="vp-sidebar-card fade-in">
+              <p class="vp-section-kicker">Trust &amp; Credentials</p>
+              <h3 class="vp-sidebar-title font-serif">Certifications</h3>
+              <div class="vp-cert-list" id="vendorCerts">
+                <div class="vp-cert-pill"><i class="bi bi-award"></i> Dubai Chamber Certified</div>
+                <div class="vp-cert-pill"><i class="bi bi-shield-check"></i> UAE Government Licensed</div>
+                <div class="vp-cert-pill"><i class="bi bi-patch-check"></i> GlobalWays Verified Partner</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="gw-footer">
+  <div class="container-xl pt-5 pb-4">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-3">
+        <a href="index.html" class="d-inline-block mb-4">
+          <img src="assets/logo-white.png" alt="globalways" class="gw-logo-footer">
+        </a>
+        <p class="footer-heading">Headquarter</p>
+        <p class="footer-text mb-4">GlobalWays Advisory<br>Dubai International Financial Centre<br>Level 6, Gate Avenue<br>Dubai, UAE 000001</p>
+        <p class="footer-heading">Email</p>
+        <p class="footer-text mb-4"><a href="mailto:hello@globalways.ae" class="footer-link">hello@globalways.ae</a></p>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Behance"><i class="bi bi-behance"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Pages</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="blog.html">Case Studies</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="blog.html">Insights</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Services</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="services.html">Golden Visa</a></li>
+          <li><a href="services.html">Business Setup</a></li>
+          <li><a href="services.html">Family Visa</a></li>
+          <li><a href="services.html">Emirates ID</a></li>
+          <li><a href="services.html">PRO Services</a></li>
+          <li><a href="services.html">Work Permit</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Utility</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Terms &amp; Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Compliance</a></li>
+          <li><a href="#">License</a></li>
+          <li><a href="#">Style Guide</a></li>
+          <li><a href="#">Change Log</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-text mb-3">Exclusive 20% discount when you sign up</p>
+        <div class="newsletter-input d-flex align-items-center gap-2">
+          <input type="email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
+          <button class="btn btn-gw-blue btn-sm rounded-circle p-2 flex-shrink-0" type="button" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container-xl py-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <p class="footer-copy mb-0">© 2026 GlobalWays®. All rights reserved.</p>
+      <p class="footer-copy mb-0 d-flex align-items-center gap-2"><span class="status-dot"></span>All systems operational</p>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <div class="container-xl py-4">
+      <p class="mb-0">GlobalWays is a trusted marketplace built for individuals and companies navigating UAE documentation complexity that comes with growth. We work with government-approved vendors who have moved beyond experimentation and now face the challenge of scaling processes, teams, and compliance without losing control. Our approach is execution-led, verified, and grounded in operational reality — not theory. We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      const defaultServices = [
+        { name: 'Golden Visa', id: 'golden-visa', price: 'AED 5,000', timeline: '5 days', completed: '850' },
+        { name: 'Family Visa', id: 'family-visa', price: 'AED 3,200', timeline: '4 days', completed: '620' },
+        { name: 'Business Setup', id: 'business-setup', price: 'AED 8,500', timeline: '7 days', completed: '310' },
+        { name: 'Emirates ID', id: 'emirates-id', price: 'AED 550', timeline: '2 days', completed: '1,200' },
+      ];
+      const defaultReviews = [
+        { name: 'Ahmed K.', service: 'Golden Visa', time: '2 weeks ago', stars: 5, text: 'Outstanding service! Golden Visa approved in 5 days. Transparent pricing and excellent communication throughout.' },
+        { name: 'Sarah T.', service: 'Business Setup', time: '1 month ago', stars: 5, text: 'Set up my free zone company seamlessly. Escrow payment gave total peace of mind. Highly recommend.' },
+        { name: 'Mohammed H.', service: 'Family Visa', time: '2 months ago', stars: 4, text: 'Fast and professional service. Brought my family over without any hassle. Great team to work with.' },
+      ];
+      const defaultTeam = [
+        { initials: 'MA', name: 'Mohammed Al-Rashid', role: 'Founder & CEO', specialties: 'Immigration Law, Business Setup' },
+        { initials: 'FH', name: 'Fatima Hassan', role: 'Visa Specialist', specialties: 'Family Visa, Golden Visa' },
+        { initials: 'RK', name: 'Raj Kumar', role: 'Documentation Manager', specialties: 'Attestation, Certificates' },
+      ];
+      const defaultCerts = ['Dubai Chamber Certified', 'UAE Government Licensed', 'GlobalWays Verified Partner'];
+      const certIcons = ['bi-award', 'bi-shield-check', 'bi-patch-check'];
+
+      const vendors = {
+        'emirates-pro': {
+          name: 'Emirates Pro Services', initials: 'EP', color: '#1A73E8',
+          tagline: 'Your Trusted Partner for UAE Documentation',
+          rating: '4.8', reviewCount: '1,250', location: 'Dubai, UAE', since: '2018', memberSince: '2020',
+          tasks: '5,420', success: '99.8%', response: '< 2 hours',
+          bio: 'Emirates Pro Services has been a leading UAE documentation consultancy since 2018, helping thousands of individuals and businesses navigate Golden Visa applications, business setup, and family sponsorship. Our team of licensed consultants combines deep regulatory knowledge with a client-first approach.',
+          languages: 'English, Arabic, Hindi, Urdu',
+          services: defaultServices, reviews: defaultReviews, team: defaultTeam, certs: defaultCerts,
+        },
+        'gulf-advisors': {
+          name: 'Gulf Advisors LLC', initials: 'GA', color: '#1165EF',
+          tagline: 'Expert Golden Visa & Business Setup Consultancy',
+          rating: '4.9', reviewCount: '980', location: 'Dubai, UAE', since: '2016', memberSince: '2018',
+          tasks: '4,200', success: '99.5%', response: '< 3 hours',
+          bio: 'Gulf Advisors is a licensed consultancy specializing in Golden Visa, investor residency, and business setup. With over 10 years in the UAE market, they maintain a 99.5% approval rate and average 5-day turnaround.',
+          languages: 'English, Arabic, Urdu',
+          services: defaultServices, reviews: defaultReviews, team: defaultTeam, certs: defaultCerts,
+        },
+        'nexus-visa': {
+          name: 'Nexus Visa Services', initials: 'NV', color: '#3F83F4',
+          tagline: 'Affordable Visa Processing for Families & Businesses',
+          rating: '4.7', reviewCount: '740', location: 'Sharjah, UAE', since: '2019', memberSince: '2019',
+          tasks: '2,800', success: '98.9%', response: '< 4 hours',
+          bio: 'Nexus Visa Services offers transparent pricing and fast turnaround for family visas, employment visas, and tourist visas across all UAE emirates.',
+          languages: 'English, Hindi, Malayalam',
+          services: defaultServices, reviews: defaultReviews, team: defaultTeam, certs: defaultCerts,
+        },
+      };
+
+      function renderStars(count) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= count) html += '<i class="bi bi-star-fill"></i>';
+          else if (i - 0.5 <= count) html += '<i class="bi bi-star-half"></i>';
+          else html += '<i class="bi bi-star"></i>';
+        }
+        return html;
+      }
+
+      function ratingStars(rating) {
+        const full = Math.floor(parseFloat(rating));
+        const half = parseFloat(rating) % 1 >= 0.5;
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= full) html += '<i class="bi bi-star-fill"></i>';
+          else if (i === full + 1 && half) html += '<i class="bi bi-star-half"></i>';
+          else html += '<i class="bi bi-star"></i>';
+        }
+        return html;
+      }
+
+      const id = new URLSearchParams(window.location.search).get('id') || 'emirates-pro';
+      const v = vendors[id] || vendors['emirates-pro'];
+
+      document.title = v.name + ' — GlobalWays';
+      document.getElementById('vendorAvatar').textContent = v.initials;
+      document.getElementById('vendorTitle').textContent = v.name;
+      document.getElementById('vendorTagline').textContent = v.tagline;
+      document.getElementById('vendorMeta').innerHTML =
+        '<span class="vp-stars">' + ratingStars(v.rating) + ' <strong>' + v.rating + '</strong> (' + v.reviewCount + ' reviews)</span>' +
+        '<span class="vp-meta-sep">·</span><span><i class="bi bi-geo-alt"></i> ' + v.location + '</span>' +
+        '<span class="vp-meta-sep">·</span><span>Since ' + v.since + '</span>';
+      document.getElementById('vendorTasks').textContent = v.tasks;
+      document.getElementById('vendorSuccess').textContent = v.success;
+      document.getElementById('vendorResponse').innerHTML = v.response;
+      document.getElementById('vendorBio').textContent = v.bio;
+
+      document.getElementById('vendorServices').innerHTML = v.services.map(function (s) {
+        return '<a href="service-detail.html?id=' + s.id + '" class="vp-service-card"><strong>' + s.name + '</strong>' +
+          '<div class="vp-service-meta">' +
+          '<div class="vp-service-row"><span class="vp-service-label">Price</span><span class="vp-service-value">' + s.price + '</span></div>' +
+          '<div class="vp-service-row"><span class="vp-service-label">Timeline</span><span class="vp-service-value">' + s.timeline + '</span></div>' +
+          '<div class="vp-service-row"><span class="vp-service-label">Completed</span><span class="vp-service-value">' + s.completed + '</span></div>' +
+          '</div></a>';
+      }).join('');
+
+      document.getElementById('vendorReviews').innerHTML = v.reviews.map(function (r) {
+        return '<article class="vp-review"><div class="vp-review-top"><div><strong>' + r.name + '</strong>' +
+          '<span class="vp-review-meta">' + r.service + ' · ' + r.time + '</span></div>' +
+          '<div class="vp-review-stars">' + renderStars(r.stars) + '</div></div>' +
+          '<p>' + r.text + '</p></article>';
+      }).join('');
+
+      document.getElementById('vendorTeamGrid').innerHTML = v.team.map(function (t) {
+        return '<div class="vp-team-card"><span class="vp-team-avatar">' + t.initials + '</span>' +
+          '<strong class="font-serif">' + t.name + '</strong><span class="vp-team-role">' + t.role + '</span>' +
+          '<span class="vp-team-specialties">' + t.specialties + '</span></div>';
+      }).join('');
+
+      document.getElementById('vendorContact').innerHTML =
+        '<li><i class="bi bi-geo-alt"></i><span>' + v.location + '</span></li>' +
+        '<li><i class="bi bi-calendar3"></i><span>Member since ' + v.memberSince + '</span></li>' +
+        '<li><i class="bi bi-clock"></i><span>Responds in ' + v.response + '</span></li>' +
+        '<li><i class="bi bi-people"></i><span>' + v.languages + '</span></li>';
+
+      document.getElementById('vendorCerts').innerHTML = v.certs.map(function (c, i) {
+        return '<div class="vp-cert-pill"><i class="bi ' + certIcons[i % certIcons.length] + '"></i> ' + c + '</div>';
+      }).join('');
+    })();
+  </script>
+</body>
+</html>

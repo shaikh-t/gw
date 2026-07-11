@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" data-base="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Detail — GlobalWays</title>
+  <meta name="description" content="Compare vendors, pricing, and timelines for UAE services on GlobalWays.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/globalways.css" rel="stylesheet">
+</head>
+<body class="service-detail-page">
+
+  <nav class="navbar navbar-expand-lg gw-navbar dark-hero fixed-top" id="gwNav">
+  <div class="container-xl">
+    <a class="navbar-brand py-0 d-flex align-items-center" href="index.html">
+      <img src="assets/logo.png" alt="globalways" class="gw-logo gw-logo-default">
+      <img src="assets/logo-white.png" alt="globalways" class="gw-logo gw-logo-on-dark">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="vendors.html">Vendors</a></li>
+        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="how-it-works.html">How It Works</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2 navbar-actions">
+        <a href="login.html" class="btn btn-signin rounded-pill px-4">Sign In</a>
+        <a href="register.html" class="btn btn-gw-blue px-4">Get Started Free</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <main>
+    <!-- Dark hero -->
+    <section class="sd-hero">
+      <div class="container-xl">
+        <div class="row align-items-end g-4">
+          <div class="col-lg-7 fade-in">
+            <a href="services.html" class="sd-back">← Back to Services</a>
+            <p class="sd-kicker" id="serviceCategory">Service Overview</p>
+            <h1 class="sd-title font-serif" id="serviceTitle">Golden Visa</h1>
+            <p class="sd-desc" id="serviceDesc">Long-term UAE residency for investors, entrepreneurs, and exceptional talent. Compare verified vendors and track your application in real time.</p>
+          </div>
+          <div class="col-lg-5 fade-in">
+            <div class="sd-price-card">
+              <p class="sd-price-label">Starting From</p>
+              <p class="sd-price-value font-serif" id="servicePrice">AED 5,000</p>
+              <p class="sd-price-time"><i class="bi bi-clock"></i> <span id="serviceTimeline">5–7 days</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="sd-body">
+      <div class="container-xl">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="sd-card fade-in">
+              <p class="sd-section-kicker">About This Service</p>
+              <p class="sd-card-text" id="serviceAbout">The UAE Golden Visa offers long-term residency for investors, entrepreneurs, specialized talents, and outstanding students — without the need for a local sponsor. GlobalWays connects you with verified vendors who handle eligibility assessment, filing, biometrics, and follow-through until approval.</p>
+            </div>
+
+            <div class="sd-card fade-in">
+              <p class="sd-section-kicker">Step-by-Step</p>
+              <h2 class="sd-card-title font-serif">Application Process</h2>
+              <div class="sd-process" id="serviceProcess">
+                <div class="sd-step"><span class="sd-step-num">1</span><div><strong>Document Preparation</strong><p>Gather and prepare all required documents</p></div></div>
+                <div class="sd-step"><span class="sd-step-num">2</span><div><strong>Vendor Selection</strong><p>Compare verified providers on GlobalWays</p></div></div>
+                <div class="sd-step"><span class="sd-step-num">3</span><div><strong>Application Submission</strong><p>Your vendor files with UAE authorities</p></div></div>
+                <div class="sd-step"><span class="sd-step-num">4</span><div><strong>Document Verification</strong><p>Authorities review submitted paperwork</p></div></div>
+                <div class="sd-step"><span class="sd-step-num">5</span><div><strong>Approval &amp; Processing</strong><p>Application moves through final review</p></div></div>
+                <div class="sd-step"><span class="sd-step-num">6</span><div><strong>Visa Issuance</strong><p>Collect your Golden Visa and Emirates ID</p></div></div>
+              </div>
+            </div>
+
+            <div class="sd-card fade-in">
+              <p class="sd-section-kicker">What You Need</p>
+              <h2 class="sd-card-title font-serif">Required Documents</h2>
+              <div class="sd-pill-grid" id="serviceDocs">
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Valid passport (6+ months validity)</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Recent passport-sized photographs</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Proof of investment or exceptional talent</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Bank statements or financial proof</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Medical fitness certificate</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Emirates ID application</div>
+                <div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> Security clearance documentation</div>
+              </div>
+            </div>
+
+            <div class="sd-card fade-in">
+              <p class="sd-section-kicker">What You Gain</p>
+              <h2 class="sd-card-title font-serif">Key Benefits</h2>
+              <div class="sd-pill-grid" id="serviceBenefits">
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> 5 or 10-year renewable residence visa</div>
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> No requirement for a UAE sponsor</div>
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> Ability to sponsor family members</div>
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> Freedom to stay outside UAE for extended periods</div>
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> Work permit included</div>
+                <div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> Access to UAE healthcare and education</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="sd-stats-card fade-in">
+              <p class="sd-section-kicker">Service Statistics</p>
+              <div class="sd-stat sd-stat-blue">
+                <div>
+                  <strong>99.8%</strong>
+                  <span>Success Rate</span>
+                </div>
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <div class="sd-stat sd-stat-light">
+                <div>
+                  <strong>50,000+</strong>
+                  <span>Applications Processed</span>
+                </div>
+                <i class="bi bi-award"></i>
+              </div>
+              <div class="sd-stat sd-stat-muted">
+                <div>
+                  <strong>45</strong>
+                  <span>Verified Vendors</span>
+                </div>
+              </div>
+              <a href="vendors.html" class="sd-compare-btn">Compare Vendors →</a>
+            </div>
+
+            <div class="sd-vendors-card fade-in">
+              <p class="sd-section-kicker">Top Rated</p>
+              <h3 class="sd-vendors-title font-serif">Top Vendors</h3>
+              <div class="sd-vendor-list" id="vendorList">
+                <a href="vendor-profile.html?id=emirates-pro" class="sd-vendor-item">
+                  <strong>Emirates Pro Services <span class="sd-vendor-badge"><i class="bi bi-patch-check-fill"></i></span></strong>
+                  <div class="sd-vendor-stars">
+                    <span class="sd-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span>
+                    <span class="sd-rating">4.9 (1250)</span>
+                  </div>
+                  <div class="sd-vendor-meta"><span>AED 5,000</span><span>5 days</span></div>
+                </a>
+                <a href="vendor-profile.html?id=gulf-advisors" class="sd-vendor-item">
+                  <strong>Gulf Advisors LLC <span class="sd-vendor-badge"><i class="bi bi-patch-check-fill"></i></span></strong>
+                  <div class="sd-vendor-stars">
+                    <span class="sd-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span>
+                    <span class="sd-rating">4.8 (980)</span>
+                  </div>
+                  <div class="sd-vendor-meta"><span>AED 5,200</span><span>5 days</span></div>
+                </a>
+                <a href="vendor-profile.html?id=nexus-visa" class="sd-vendor-item">
+                  <strong>Nexus Visa Services <span class="sd-vendor-badge"><i class="bi bi-patch-check-fill"></i></span></strong>
+                  <div class="sd-vendor-stars">
+                    <span class="sd-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span>
+                    <span class="sd-rating">4.7 (740)</span>
+                  </div>
+                  <div class="sd-vendor-meta"><span>AED 5,000</span><span>7 days</span></div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="sd-cta">
+      <div class="container-xl text-center fade-in">
+        <h2 class="font-serif" id="ctaTitle">Find the Best Golden Visa Vendor</h2>
+        <div class="sd-cta-actions">
+          <a href="vendors.html" class="btn btn-gw-blue btn-lg">Browse Vendors →</a>
+          <a href="register.html" class="btn btn-outline-light btn-lg rounded-pill">Create Free Account</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="gw-footer">
+  <div class="container-xl pt-5 pb-4">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-3">
+        <a href="index.html" class="d-inline-block mb-4">
+          <img src="assets/logo-white.png" alt="globalways" class="gw-logo-footer">
+        </a>
+        <p class="footer-heading">Headquarter</p>
+        <p class="footer-text mb-4">GlobalWays Advisory<br>Dubai International Financial Centre<br>Level 6, Gate Avenue<br>Dubai, UAE 000001</p>
+        <p class="footer-heading">Email</p>
+        <p class="footer-text mb-4"><a href="mailto:hello@globalways.ae" class="footer-link">hello@globalways.ae</a></p>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Behance"><i class="bi bi-behance"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Pages</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="blog.html">Case Studies</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="blog.html">Insights</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Services</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="services.html">Golden Visa</a></li>
+          <li><a href="services.html">Business Setup</a></li>
+          <li><a href="services.html">Family Visa</a></li>
+          <li><a href="services.html">Emirates ID</a></li>
+          <li><a href="services.html">PRO Services</a></li>
+          <li><a href="services.html">Work Permit</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h4 class="footer-col-title">Utility</h4>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Terms &amp; Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Compliance</a></li>
+          <li><a href="#">License</a></li>
+          <li><a href="#">Style Guide</a></li>
+          <li><a href="#">Change Log</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-text mb-3">Exclusive 20% discount when you sign up</p>
+        <div class="newsletter-input d-flex align-items-center gap-2">
+          <input type="email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
+          <button class="btn btn-gw-blue btn-sm rounded-circle p-2 flex-shrink-0" type="button" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container-xl py-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <p class="footer-copy mb-0">© 2026 GlobalWays®. All rights reserved.</p>
+      <p class="footer-copy mb-0 d-flex align-items-center gap-2"><span class="status-dot"></span>All systems operational</p>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <div class="container-xl py-4">
+      <p class="mb-0">GlobalWays is a trusted marketplace built for individuals and companies navigating UAE documentation complexity that comes with growth. We work with government-approved vendors who have moved beyond experimentation and now face the challenge of scaling processes, teams, and compliance without losing control. Our approach is execution-led, verified, and grounded in operational reality — not theory. We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      const defaultProcess = [
+        ['Document Preparation', 'Gather and prepare all required documents'],
+        ['Vendor Selection', 'Compare verified providers on GlobalWays'],
+        ['Application Submission', 'Your vendor files with UAE authorities'],
+        ['Document Verification', 'Authorities review submitted paperwork'],
+        ['Approval & Processing', 'Application moves through final review'],
+        ['Visa Issuance', 'Collect your Golden Visa and Emirates ID'],
+      ];
+      const defaultDocs = [
+        'Valid passport (6+ months validity)',
+        'Recent passport-sized photographs',
+        'Proof of investment or exceptional talent',
+        'Bank statements or financial proof',
+        'Medical fitness certificate',
+        'Emirates ID application',
+        'Security clearance documentation',
+      ];
+      const defaultBenefits = [
+        '5 or 10-year renewable residence visa',
+        'No requirement for a UAE sponsor',
+        'Ability to sponsor family members',
+        'Freedom to stay outside UAE for extended periods',
+        'Work permit included',
+        'Access to UAE healthcare and education',
+      ];
+
+      const services = {
+        'golden-visa': {
+          title: 'Golden Visa', category: 'Service Overview', price: 'AED 5,000', timeline: '5–7 days',
+          desc: 'Long-term UAE residency for investors, entrepreneurs, and exceptional talent. Compare verified vendors and track your application in real time.',
+          about: 'The UAE Golden Visa offers long-term residency for investors, entrepreneurs, specialized talents, and outstanding students — without the need for a local sponsor. GlobalWays connects you with verified vendors who handle eligibility assessment, filing, biometrics, and follow-through until approval.',
+          docs: defaultDocs,
+          benefits: defaultBenefits,
+          process: defaultProcess,
+        },
+        'investor-visa': { title: 'Investor Visa', category: 'Service Overview', price: 'AED 6,500', timeline: '7–10 days', desc: 'Obtain UAE residency through property or business investment with guided vendor matching.', about: 'Investor visas open long-term residency pathways through property purchase or qualifying business investment. GlobalWays helps you compare vendors who specialize in each route.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'family-visa': { title: 'Family Visa', category: 'Service Overview', price: 'AED 3,000', timeline: '5–7 days', desc: 'Sponsor your spouse, children, and dependents with streamlined family visa processing.', about: 'Family visas let eligible sponsors bring dependents to the UAE with clear documentation and processing steps handled by verified vendors.', docs: ['Sponsor Emirates ID', 'Passport copies', 'Marriage / birth certificates', 'Salary certificate', 'Tenancy contract', 'Photos'], benefits: defaultBenefits, process: defaultProcess },
+        'employment-visa': { title: 'Employment Visa', category: 'Service Overview', price: 'AED 2,500', timeline: '4–6 days', desc: 'Work permits and employment visas for all nationalities and business sectors.', about: 'Employment visas cover labour contracts, MOHRE processing, and status changes — coordinated end-to-end by verified PRO partners.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'tourist-visa': { title: 'Tourist Visa', category: 'Service Overview', price: 'AED 350', timeline: '1–2 days', desc: 'Short-stay tourist visas for visitors exploring or visiting the UAE.', about: 'Tourist visas are available in multiple durations with express options. Compare vendors for the fastest e-visa turnaround.', docs: ['Valid passport', 'Passport photo', 'Travel itinerary', 'Hotel booking', 'Return ticket', 'Bank statement'], benefits: defaultBenefits, process: defaultProcess },
+        'business-setup': { title: 'Business Setup', category: 'Service Overview', price: 'AED 8,000', timeline: '3–5 days', desc: 'End-to-end company formation including trade license, visa quotas, and bank account support.', about: 'From activity selection to trade license and banking introductions, verified setup partners guide your company formation on GlobalWays.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'free-zone': { title: 'Free Zone Setup', category: 'Service Overview', price: 'AED 9,500', timeline: '5–7 days', desc: '100% foreign ownership company setup across 40+ UAE free zones.', about: 'Compare free zones for cost, visas, and industry fit — then book a verified partner to handle license and establishment card issuance.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'freezone': { title: 'Free Zone Setup', category: 'Service Overview', price: 'AED 9,500', timeline: '5–7 days', desc: '100% foreign ownership company setup across 40+ UAE free zones.', about: 'Compare free zones for cost, visas, and industry fit — then book a verified partner to handle license and establishment card issuance.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'mainland': { title: 'Mainland License', category: 'Service Overview', price: 'AED 12,000', timeline: '7–10 days', desc: 'Mainland trade license and company formation for full UAE market access.', about: 'Mainland setup unlocks unrestricted trading across the UAE. Vendors on GlobalWays guide DED registration and immigration setup.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'pro-services': { title: 'PRO Services', category: 'Service Overview', price: 'AED 1,500', timeline: '1–2 days', desc: 'Government liaison, document attestation, stamping, and typing services.', about: 'PRO services cover government typing, attestation, and submissions with same-day options from verified local partners.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'emirates-id': { title: 'Emirates ID', category: 'Service Overview', price: 'AED 500', timeline: '2–3 days', desc: 'Emirates ID application, biometrics, renewal, and replacement services.', about: 'Emirates ID filing, biometrics coordination, and renewal reminders — handled by ICP-experienced vendors.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+        'work-permit': { title: 'Work Permit', category: 'Service Overview', price: 'AED 2,500', timeline: '4–6 days', desc: 'Employment visa for all nationalities and sectors.', about: 'Work permit processing covers labour approvals, entry permits, and status changes with verified PRO support.', docs: defaultDocs, benefits: defaultBenefits, process: defaultProcess },
+      };
+
+      const id = new URLSearchParams(window.location.search).get('id') || 'golden-visa';
+      const svc = services[id] || services['golden-visa'];
+
+      document.title = svc.title + ' — GlobalWays';
+      document.getElementById('serviceCategory').textContent = svc.category;
+      document.getElementById('serviceTitle').textContent = svc.title;
+      document.getElementById('serviceDesc').textContent = svc.desc;
+      document.getElementById('serviceAbout').textContent = svc.about;
+      document.getElementById('servicePrice').textContent = svc.price;
+      document.getElementById('serviceTimeline').textContent = svc.timeline;
+      document.getElementById('ctaTitle').textContent = 'Find the Best ' + svc.title + ' Vendor';
+
+      document.getElementById('serviceProcess').innerHTML = svc.process.map((step, i) =>
+        '<div class="sd-step"><span class="sd-step-num">' + (i + 1) + '</span><div><strong>' + step[0] + '</strong><p>' + step[1] + '</p></div></div>'
+      ).join('');
+
+      document.getElementById('serviceDocs').innerHTML = svc.docs.map((d) =>
+        '<div class="sd-pill sd-pill-doc"><i class="bi bi-check-lg"></i> ' + d + '</div>'
+      ).join('');
+
+      document.getElementById('serviceBenefits').innerHTML = svc.benefits.map((b) =>
+        '<div class="sd-pill sd-pill-benefit"><i class="bi bi-star-fill"></i> ' + b + '</div>'
+      ).join('');
+    })();
+  </script>
+</body>
+</html>
