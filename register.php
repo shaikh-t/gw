@@ -1,3 +1,83 @@
+<?php
+// register.php
+require_once __DIR__ . '/lib/db_mysqli.php';
+require_once __DIR__ . '/lib/auth.php';
+require_once __DIR__ . '/lib/csrf.php';
+require_once __DIR__ . '/lib/uuid_helper.php';
+
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+
+// If already logged in, redirect
+if (!empty($_SESSION['user'])) {
+    header('Location: index.php');
+    exit;
+}
+
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!csrf_check($_POST['_csrf'] ?? '')) {
+        die('Invalid CSRF');
+    }
+
+    $firstName = trim($_POST['firstName'] ?? '');
+    $lastName = trim($_POST['lastName'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $nationality = trim($_POST['nationality'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $goal = trim($_POST['goal'] ?? 'Just Exploring');
+    $emirate = trim($_POST['emirate'] ?? 'Dubai');
+
+    if ($firstName === '' || $lastName === '' || $email === '' || $password === '') {
+        $error_message = 'Please fill all required fields.';
+    } else {
+        $fullName = $firstName . ' ' . $lastName;
+
+        // Check unique email
+        $stmt_check = $mysqli->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $stmt_check->bind_param('s', $email);
+        $stmt_check->execute();
+        $res_check = $stmt_check->get_result();
+
+        if ($res_check->num_rows > 0) {
+            $error_message = 'An account with this email address already exists.';
+        } else {
+            // Generate UUID
+            $uuid = generate_uuid();
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+            $full_phone = '+971 ' . $phone;
+
+            $stmt_insert = $mysqli->prepare("INSERT INTO users (uuid, name, email, password, phone, nationality, goal, emirate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt_insert->bind_param('ssssssss', $uuid, $fullName, $email, $hash, $full_phone, $nationality, $goal, $emirate);
+
+            if ($stmt_insert->execute()) {
+                $user_id = $stmt_insert->insert_id;
+
+                // Assign default role (Manager or client role)
+                // In roles, role with id 1 is 'admin', role 2 is 'manager', etc. Let's assign default user role (or first user role)
+                $mysqli->query("INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, 3)"); // default to Viewer / Customer role
+
+                // Auto login
+                $_SESSION['user'] = [
+                    'id' => $user_id,
+                    'uuid' => $uuid,
+                    'name' => $fullName,
+                    'email' => $email,
+                    'avatar' => null
+                ];
+
+                $_SESSION['flash_success'] = 'Account created successfully! Welcome to GlobalWays.';
+                header('Location: index.php');
+                exit;
+            } else {
+                $error_message = 'Failed to create account: ' . $mysqli->error;
+            }
+        }
+        $stmt_check->close();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en" data-base="">
 <head>
@@ -13,7 +93,7 @@
 
   <nav class="navbar navbar-expand-lg gw-navbar scrolled fixed-top" id="gwNav">
   <div class="container-xl">
-    <a class="navbar-brand py-0 d-flex align-items-center" href="index.html">
+    <a class="navbar-brand py-0 d-flex align-items-center" href="index.php">
       <img src="assets/logo.png" alt="globalways" class="gw-logo gw-logo-default">
       <img src="assets/logo-white.png" alt="globalways" class="gw-logo gw-logo-on-dark">
     </a>
@@ -22,16 +102,16 @@
     </button>
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
-        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-        <li class="nav-item"><a class="nav-link" href="vendors.html">Vendors</a></li>
-        <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
-        <li class="nav-item"><a class="nav-link" href="how-it-works.html">How It Works</a></li>
-        <li class="nav-item"><a class="nav-link" href="blog.html">Insights</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.php">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="vendors.php">Vendors</a></li>
+        <li class="nav-item"><a class="nav-link" href="pricing.php">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="how-it-works.php">How It Works</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.php">Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
       </ul>
       <div class="d-flex align-items-center gap-2 navbar-actions">
-        <a href="login.html" class="btn btn-signin rounded-pill px-4">Sign In</a>
-        <a href="register.html" class="btn btn-gw-blue px-4">Get Started Free</a>
+        <a href="login.php" class="btn btn-signin rounded-pill px-4">Sign In</a>
+        <a href="register.php" class="btn btn-gw-blue px-4">Get Started Free</a>
       </div>
     </div>
   </div>
@@ -81,16 +161,23 @@
         <div class="col-lg-6 auth-form-panel d-flex align-items-center py-5 px-4 px-lg-5 order-lg-2">
           <div class="w-100 fade-in auth-form-inner register-form-wrap">
 
-            <!-- Step 1: account details -->
-            <div id="regStep1" class="reg-step">
-              <div class="register-form-brand">
-                <span class="register-form-brand-icon"><i class="bi bi-globe2"></i></span>
-                <span class="font-serif">GlobalWays</span>
-              </div>
-              <h1 class="register-form-title font-serif">Create your <span class="text-gradient-blue">account</span></h1>
-              <p class="register-form-sub">Free forever. No credit card required.</p>
+            <!-- Form -->
+            <form id="registerForm" method="post" action="register.php" novalidate>
+              <?= csrf_field(); ?>
 
-              <form id="registerStep1Form" novalidate>
+              <?php if (!empty($error_message)): ?>
+                <div class="alert alert-danger mb-4"><?= htmlspecialchars($error_message) ?></div>
+              <?php endif; ?>
+
+              <!-- Step 1: account details -->
+              <div id="regStep1" class="reg-step">
+                <div class="register-form-brand">
+                  <span class="register-form-brand-icon"><i class="bi bi-globe2"></i></span>
+                  <span class="font-serif">GlobalWays</span>
+                </div>
+                <h1 class="register-form-title font-serif">Create your <span class="text-gradient-blue">account</span></h1>
+                <p class="register-form-sub">Free forever. No credit card required.</p>
+
                 <div class="row g-3 mb-3">
                   <div class="col-sm-6">
                     <label for="firstName" class="auth-form-label">First name *</label>
@@ -140,22 +227,20 @@
                     <span class="pw-seg"></span>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-gw-dark w-100 py-3 mb-3 register-continue-btn">Continue →</button>
+                <button type="button" id="btnToStep2" class="btn btn-gw-dark w-100 py-3 mb-3 register-continue-btn">Continue →</button>
                 <p class="small text-secondary text-center mb-2">By signing up you agree to our <a href="#" class="text-dark">Terms of Service</a> and <a href="#" class="text-dark">Privacy Policy</a></p>
-                <p class="small text-secondary text-center mb-0">Already have an account? <a href="login.html" class="text-dark fw-medium">Sign in</a></p>
-              </form>
-            </div>
-
-            <!-- Step 2: goals -->
-            <div id="regStep2" class="reg-step d-none">
-              <div class="register-form-brand register-form-brand-center">
-                <span class="register-form-brand-icon"><i class="bi bi-globe2"></i></span>
-                <span class="font-serif">GlobalWays</span>
+                <p class="small text-secondary text-center mb-0">Already have an account? <a href="login.php" class="text-dark fw-medium">Sign in</a></p>
               </div>
-              <h1 class="register-form-title font-serif">What brings you to <span class="text-gradient-blue">UAE</span>?</h1>
-              <p class="register-form-sub">We'll personalise your experience based on your goal.</p>
 
-              <form id="registerStep2Form" novalidate>
+              <!-- Step 2: goals -->
+              <div id="regStep2" class="reg-step d-none">
+                <div class="register-form-brand register-form-brand-center">
+                  <span class="register-form-brand-icon"><i class="bi bi-globe2"></i></span>
+                  <span class="font-serif">GlobalWays</span>
+                </div>
+                <h1 class="register-form-title font-serif">What brings you to <span class="text-gradient-blue">UAE</span>?</h1>
+                <p class="register-form-sub">We'll personalise your experience based on your goal.</p>
+
                 <div class="goal-grid mb-4" role="group" aria-label="Select your goal">
                   <button type="button" class="goal-card active" data-goal="golden-visa">
                     <span class="goal-icon"><i class="bi bi-trophy"></i></span>
@@ -186,7 +271,7 @@
                     <span class="goal-label">Just Exploring</span>
                   </button>
                 </div>
-                <input type="hidden" name="goal" id="selectedGoal" value="golden-visa">
+                <input type="hidden" name="goal" id="selectedGoal" value="Golden Visa">
 
                 <div class="mb-4">
                   <label for="emirate" class="auth-form-label">Which emirate are you based in?</label>
@@ -207,9 +292,10 @@
                 <p class="small text-secondary text-center mb-2">
                   <button type="button" class="btn btn-link p-0 text-secondary text-decoration-none" id="backToDetails">← Back to details</button>
                 </p>
-                <p class="small text-secondary text-center mb-0">Already have an account? <a href="login.html" class="text-dark fw-medium">Sign in</a></p>
-              </form>
-            </div>
+                <p class="small text-secondary text-center mb-0">Already have an account? <a href="login.php" class="text-dark fw-medium">Sign in</a></p>
+              </div>
+
+            </form>
 
           </div>
         </div>
@@ -250,11 +336,19 @@
       });
     });
 
-    document.getElementById('registerStep1Form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const form = e.target;
-      if (!form.checkValidity()) {
-        form.reportValidity();
+    document.getElementById('btnToStep2')?.addEventListener('click', (e) => {
+      // Validate Step 1 Inputs manually before transitioning
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const regEmail = document.getElementById('regEmail');
+      const phone = document.getElementById('phone');
+
+      if (!firstName.checkValidity() || !lastName.checkValidity() || !regEmail.checkValidity() || !phone.checkValidity() || !password.checkValidity()) {
+        firstName.reportValidity();
+        lastName.reportValidity();
+        regEmail.reportValidity();
+        phone.reportValidity();
+        password.reportValidity();
         return;
       }
       step1.classList.add('d-none');
@@ -271,13 +365,8 @@
       card.addEventListener('click', () => {
         document.querySelectorAll('.goal-card').forEach((c) => c.classList.remove('active'));
         card.classList.add('active');
-        document.getElementById('selectedGoal').value = card.dataset.goal;
+        document.getElementById('selectedGoal').value = card.querySelector('.goal-label').textContent.trim();
       });
-    });
-
-    document.getElementById('registerStep2Form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      window.location.href = 'customer/index.html';
     });
   </script>
 </body>
