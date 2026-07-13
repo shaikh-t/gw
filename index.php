@@ -18,7 +18,11 @@ $features = [];
 if ($features_res) {
     while($row = $features_res->fetch_assoc()) $features[] = $row;
 }
-
+$testi_head_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 and stars>=4 ORDER BY RAND()  LIMIT 1");
+$testi_head = [];
+if ($testi_head_res) {
+    while($row = $testi_head_res->fetch_assoc()) $testi_head[] = $row;
+}
 // Fetch dynamic services
 $featured_services = services_paginated(1, 8, ['status' => 'published']);
 

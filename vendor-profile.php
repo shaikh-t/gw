@@ -89,7 +89,7 @@ include __DIR__ . '/partials/frontend_header.php';
 
         <div class="vp-hero-main fade-in">
           <?php if (!empty($provider['logo'])): ?>
-            <img src="<?= htmlspecialchars($provider['logo']) ?>" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin-right:20px;border:3px solid rgba(255,255,255,0.2);">
+            <img src="<?= htmlspecialchars($domain.$provider['logo']) ?>" style="width:80px;height:80px;object-fit:contain;border-radius:50%;margin-right:20px;border:3px solid rgba(255,255,255,0.2);">
           <?php else: ?>
             <div class="vp-avatar" id="vendorAvatar"><?= htmlspecialchars($initials) ?></div>
           <?php endif; ?>
@@ -245,4 +245,11 @@ include __DIR__ . '/partials/frontend_header.php';
     </section>
   </main>
 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('vendor-profile-page');
+    document.body.classList.add('has-custom-cursor');
+    document.getElementById('gwNav').classList.add('dark-hero');
+});
+</script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

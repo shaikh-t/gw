@@ -66,11 +66,11 @@ include __DIR__ . '/partials/frontend_header.php';
     <section class="py-5 services-list-section">
       <div class="container-xl py-3">
         <div class="d-flex flex-wrap gap-2 services-filter-row" id="categoryFilters" role="group" aria-label="Filter by category">
-          <a href="services.php?q=<?= urlencode($search_q) ?>&category=all" class="filter-pill text-decoration-none <?= $cat_filter === 'all' ? 'active' : '' ?>">
+          <a href="services.php?q=<?= urlencode($search_q) ?>&category=all" class="filter-pill-btn filter-pill text-decoration-none <?= $cat_filter === 'all' ? 'active' : '' ?>">
             <i class="bi bi-globe2"></i> All Services
           </a>
           <?php foreach ($categories as $cat): ?>
-            <a href="services.php?q=<?= urlencode($search_q) ?>&category=<?= urlencode($cat['slug']) ?>" class="filter-pill text-decoration-none <?= $cat_filter === $cat['slug'] ? 'active' : '' ?>">
+            <a href="services.php?q=<?= urlencode($search_q) ?>&category=<?= urlencode($cat['slug']) ?>" class="filter-pill-btn filter-pill text-decoration-none <?= $cat_filter === $cat['slug'] ? 'active' : '' ?>">
               <i class="bi bi-tag-fill"></i> <?= htmlspecialchars($cat['name']) ?>
             </a>
           <?php endforeach; ?>
@@ -128,4 +128,11 @@ include __DIR__ . '/partials/frontend_header.php';
     </section>
   </main>
 
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('services-page');
+    document.body.classList.add('has-custom-cursor');
+    document.getElementById('gwNav').classList.add('dark-hero');
+  });
+  </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

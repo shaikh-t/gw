@@ -288,5 +288,11 @@ include __DIR__ . '/partials/frontend_header.php';
       </div>
     </section>
   </main>
-
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('service-detail-page');
+    document.body.classList.add('has-custom-cursor');
+    document.getElementById('gwNav').classList.add('dark-hero');
+});
+</script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

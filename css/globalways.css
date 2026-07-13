@@ -4032,15 +4032,15 @@ body {
   color: #374151;
   background: #FFFFFF;
 }
-.vendors-page .filter-pill-btn.active,
-.pricing-page .filter-pill-btn.active {
+ .filter-pill-btn.active,
+.filter-pill-btn.active {
   background: #0C0C0C;
   border-color: #0C0C0C;
   color: #FFFFFF;
 }
 
-.vendors-page .vendors-type-tabs,
-.pricing-page .pricing-service-tabs {
+.vendors-type-tabs,
+.pricing-service-tabs {
   margin-bottom: 12px;
 }
 .section-tabs-divider {
@@ -4048,9 +4048,9 @@ body {
   border-top-color: #E8E5DE;
 }
 
-.vendors-page .vendors-found-count,
-.pricing-page .vendors-found-count,
-.services-page .services-found-count {
+.vendors-found-count,
+.vendors-found-count,
+.services-found-count {
   font-size: 10px;
   line-height: 15px;
   color: #9CA3AF;

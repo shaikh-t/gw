@@ -17,12 +17,12 @@ include __DIR__ . '/partials/frontend_header.php';
     <section class="hiw-hero">
       <div class="container-xl">
         <div class="hiw-hero-inner fade-in">
-          <p class="label-mono mb-2"><?= htmlspecialchars($cms['hero_kicker'] ?? 'How It Works') ?></p>
-          <h1 class="font-serif mb-2"><?= nl2br(htmlspecialchars($cms['hero_title'] ?? '')) ?></h1>
-          <p class="text-secondary mb-4"><?= htmlspecialchars($cms['hero_sub'] ?? '') ?></p>
+          <p class="label-mono mb-2">How It Works</p>
+          <h1 class="font-serif mb-2">From Application to<br>Approval in 4 Steps</h1>
+          <p class="text-secondary mb-4">We've simplified UAE bureaucracy into a transparent, guaranteed process — whether you need a visa, a trade license, or an Emirates ID.</p>
           <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="register.php" class="btn btn-gw-dark">Get Started Free</a>
-            <a href="services.php" class="btn btn-gw-outline">Browse Services</a>
+            <a href="register.html" class="btn btn-gw-dark">Get Started Free</a>
+            <a href="services.html" class="btn btn-gw-outline">Browse Services</a>
           </div>
         </div>
       </div>
@@ -131,5 +131,10 @@ include __DIR__ . '/partials/frontend_header.php';
       </div>
     </section>
   </main>
-
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('how-it-works-page');
+    document.body.classList.add('has-custom-cursor');
+});
+</script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

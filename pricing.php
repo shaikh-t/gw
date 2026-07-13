@@ -121,7 +121,7 @@ include __DIR__ . '/partials/frontend_header.php';
                 <span class="price-chip"><?= $index === 0 ? 'Best Value' : ($is_featured ? 'Fastest' : 'Premium') ?></span>
                 <div class="d-flex align-items-center gap-3 mb-3">
                   <?php if (!empty($card['logo'])): ?>
-                    <img src="<?= htmlspecialchars($card['logo']) ?>" style="width:48px;height:48px;object-fit:cover;border-radius:50%;">
+                    <img src="<?= htmlspecialchars($domain.$card['logo']) ?>" style="width:48px;height:48px;object-fit:contain;border-radius:50%;">
                   <?php else: ?>
                     <span class="avatar-circle pricing-avatar" style="background:#0C0C0C;"><?= htmlspecialchars($initials) ?></span>
                   <?php endif; ?>
@@ -212,5 +212,11 @@ include __DIR__ . '/partials/frontend_header.php';
       </div>
     </section>
   </main>
-
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('pricing-page');
+    document.body.classList.add('has-custom-cursor');
+    document.getElementById('gwNav').classList.add('dark-hero');
+  });
+  </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

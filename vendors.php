@@ -248,7 +248,7 @@ include __DIR__ . '/partials/frontend_header.php';
                       <div class="vnd-price-from"><span>From</span><strong><?= htmlspecialchars($vnd_price) ?></strong></div>
                       <div class="vnd-card-head">
                         <?php if (!empty($vnd['logo'])): ?>
-                          <img src="<?= htmlspecialchars($vnd['logo']) ?>" style="width:48px;height:48px;object-fit:cover;border-radius:50%;margin-right:12px;">
+                          <img src="<?= htmlspecialchars($domain.$vnd['logo']) ?>" style="width:48px;height:48px;object-fit:contain;border-radius:50%;margin-right:12px;">
                         <?php else: ?>
                           <span class="vnd-avatar"><?= htmlspecialchars($initials) ?></span>
                         <?php endif; ?>
@@ -323,6 +323,10 @@ include __DIR__ . '/partials/frontend_header.php';
         });
       });
     });
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('vendors-page');
+    document.body.classList.add('has-custom-cursor');
+    document.getElementById('gwNav').classList.add('dark-hero');
+  });
   </script>
-
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>
