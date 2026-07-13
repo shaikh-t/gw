@@ -22,13 +22,6 @@ if ($features_res) {
 // Fetch dynamic services
 $featured_services = services_paginated(1, 8, ['status' => 'published']);
 
-$testi_head_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 and stars>=4 ORDER BY RAND()  LIMIT 1");
-$testi_head = [];
-if ($testi_head_res) {
-    while($row = $testi_head_res->fetch_assoc()) $testi_head[] = $row;
-}
-
-
 include __DIR__ . '/partials/frontend_header.php';
 ?>
 
