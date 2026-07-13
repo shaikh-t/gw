@@ -375,4 +375,236 @@ if ($cnt_row['cnt'] == 0) {
     echo "Sample blog posts seeded.\n";
 }
 
+// 9. Create menus table
+$sql = "CREATE TABLE IF NOT EXISTS `menus` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `location` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+if ($mysqli->query($sql)) {
+    echo "menus table checked/created successfully.\n";
+} else {
+    die("Error creating menus table: " . $mysqli->error . "\n");
+}
+
+// 10. Create menu_items table
+$sql = "CREATE TABLE IF NOT EXISTS `menu_items` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `menu_id` INT UNSIGNED NOT NULL,
+  `parent_id` INT UNSIGNED DEFAULT NULL,
+  `title` VARCHAR(150) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
+  `sort_order` INT DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_menu_id` (`menu_id`),
+  CONSTRAINT `fk_menu_items_menu` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+if ($mysqli->query($sql)) {
+    echo "menu_items table checked/created successfully.\n";
+} else {
+    die("Error creating menu_items table: " . $mysqli->error . "\n");
+}
+
+// 11. Add columns to services table if not exists
+$columns_to_add_services = [
+    'icon_class' => "VARCHAR(100) DEFAULT 'bi-award'",
+    'duration_text' => "VARCHAR(100) DEFAULT '5–7 days'"
+];
+foreach ($columns_to_add_services as $col => $definition) {
+    $res = $mysqli->query("SHOW COLUMNS FROM services LIKE '$col'");
+    if ($res && $res->num_rows === 0) {
+        if ($mysqli->query("ALTER TABLE services ADD COLUMN `$col` $definition")) {
+            echo "Column '$col' added to services.\n";
+        } else {
+            echo "Error adding column '$col' to services: " . $mysqli->error . "\n";
+        }
+    } else {
+        echo "Column '$col' already exists in services.\n";
+    }
+}
+
+// 12. Insert / Update new settings keys in site_settings
+$new_settings = [
+    'hero_title_gradient' => ['value' => 'Measurable', 'label' => 'Hero Title Gradient Word', 'type' => 'text'],
+    'hero_title_rest' => ['value' => 'Performance for businesses', 'label' => 'Hero Title Rest of Text', 'type' => 'text'],
+    'trust_bar_partners' => ['value' => 'Dubai Economy, GDRFA, Ministry of Labour, MOHRE, AMER Centers, Tas\'heel, ICP UAE', 'label' => 'Trust Bar Partners (comma-separated)', 'type' => 'text'],
+    'stat_result_label' => ['value' => 'Consultancy Result', 'label' => 'Stat Section Label', 'type' => 'text'],
+    'stat_result_heading_gradient' => ['value' => '99.8%', 'label' => 'Stat Heading Gradient Word', 'type' => 'text'],
+    'stat_result_heading_rest' => ['value' => 'success rate across every UAE service. Once we verify your vendor, track your application, and secure your payment — friction disappears.', 'label' => 'Stat Heading Rest of Text', 'type' => 'longtext'],
+    'stat_card1_number' => ['value' => '500+', 'label' => 'Stat Card 1 Number', 'type' => 'text'],
+    'stat_card1_label' => ['value' => 'Verified Partners', 'label' => 'Stat Card 1 Label', 'type' => 'text'],
+    'stat_card1_desc' => ['value' => 'By connecting you with verified vendors, removing redundant searches, and aligning your needs around a unified marketplace model.', 'label' => 'Stat Card 1 Description', 'type' => 'longtext'],
+    'stat_card2_number' => ['value' => '3x', 'label' => 'Stat Card 2 Number', 'type' => 'text'],
+    'stat_card2_label' => ['value' => 'Faster Processing', 'label' => 'Stat Card 2 Label', 'type' => 'text'],
+    'stat_card2_desc' => ['value' => 'Our framework reduces ambiguity and brings clarity to every layer of the application.', 'label' => 'Stat Card 2 Description', 'type' => 'longtext'],
+    'stat_card3_number' => ['value' => '150+', 'label' => 'Stat Card 3 Number', 'type' => 'text'],
+    'stat_card3_label' => ['value' => 'Supported Globally', 'label' => 'Stat Card 3 Label', 'type' => 'text'],
+    'stat_card3_desc' => ['value' => 'We\'ve worked with customers across SaaS, fintech, agencies, and high-growth companies worldwide.', 'label' => 'Stat Card 3 Description', 'type' => 'longtext']
+];
+
+foreach ($new_settings as $key => $meta) {
+    $stmt = $mysqli->prepare("INSERT INTO site_settings (`key`, `value`, `label`, `type`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `label` = VALUES(`label`), `type` = VALUES(`type`)");
+    $stmt->bind_param('ssss', $key, $meta['value'], $meta['label'], $meta['type']);
+    $stmt->execute();
+    $stmt->close();
+}
+echo "Site settings keys updated/inserted successfully.\n";
+
+// 13. Seed default menus & menu items
+$default_menus = [
+    'header' => 'Header Menu',
+    'footer_pages' => 'Footer Pages',
+    'footer_services' => 'Footer Services',
+    'footer_utility' => 'Footer Utility'
+];
+
+$menu_ids = [];
+foreach ($default_menus as $location => $name) {
+    $stmt = $mysqli->prepare("INSERT INTO menus (name, location) VALUES (?, ?) ON DUPLICATE KEY UPDATE name = VALUES(name)");
+    $stmt->bind_param('ss', $name, $location);
+    if ($stmt->execute()) {
+        $res = $mysqli->query("SELECT id FROM menus WHERE location = '$location' LIMIT 1");
+        if ($res && $row = $res->fetch_assoc()) {
+            $menu_ids[$location] = $row['id'];
+        }
+    }
+    $stmt->close();
+}
+
+$default_items = [
+    'header' => [
+        ['title' => 'Services', 'url' => 'services.php', 'sort_order' => 1],
+        ['title' => 'Vendors', 'url' => 'vendors.php', 'sort_order' => 2],
+        ['title' => 'Pricing', 'url' => 'pricing.php', 'sort_order' => 3],
+        ['title' => 'How It Works', 'url' => 'how-it-works.php', 'sort_order' => 4],
+        ['title' => 'Insights', 'url' => 'blog.php', 'sort_order' => 5],
+        ['title' => 'About', 'url' => 'about.php', 'sort_order' => 6],
+    ],
+    'footer_pages' => [
+        ['title' => 'Home', 'url' => 'index.php', 'sort_order' => 1],
+        ['title' => 'About', 'url' => 'about.php', 'sort_order' => 2],
+        ['title' => 'Services', 'url' => 'services.php', 'sort_order' => 3],
+        ['title' => 'Case Studies', 'url' => 'blog.php', 'sort_order' => 4],
+        ['title' => 'Pricing', 'url' => 'pricing.php', 'sort_order' => 5],
+        ['title' => 'Insights', 'url' => 'blog.php', 'sort_order' => 6],
+        ['title' => 'Contact', 'url' => 'contact.php', 'sort_order' => 7],
+    ],
+    'footer_services' => [
+        ['title' => 'Golden Visa', 'url' => 'services.php', 'sort_order' => 1],
+        ['title' => 'Business Setup', 'url' => 'services.php', 'sort_order' => 2],
+        ['title' => 'Family Visa', 'url' => 'services.php', 'sort_order' => 3],
+        ['title' => 'Emirates ID', 'url' => 'services.php', 'sort_order' => 4],
+        ['title' => 'PRO Services', 'url' => 'services.php', 'sort_order' => 5],
+        ['title' => 'Work Permit', 'url' => 'services.php', 'sort_order' => 6],
+    ],
+    'footer_utility' => [
+        ['title' => 'Terms & Conditions', 'url' => '#', 'sort_order' => 1],
+        ['title' => 'Privacy Policy', 'url' => '#', 'sort_order' => 2],
+        ['title' => 'Compliance', 'url' => '#', 'sort_order' => 3],
+        ['title' => 'License', 'url' => '#', 'sort_order' => 4],
+        ['title' => 'Style Guide', 'url' => '#', 'sort_order' => 5],
+        ['title' => 'Change Log', 'url' => '#', 'sort_order' => 6],
+    ],
+];
+
+foreach ($default_items as $location => $items) {
+    if (isset($menu_ids[$location])) {
+        $mid = $menu_ids[$location];
+        // Check if items already exist for this menu
+        $res = $mysqli->query("SELECT COUNT(*) as cnt FROM menu_items WHERE menu_id = $mid");
+        $row = $res->fetch_assoc();
+        if ($row['cnt'] == 0) {
+            foreach ($items as $item) {
+                $stmt = $mysqli->prepare("INSERT INTO menu_items (menu_id, title, url, sort_order) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param('issi', $mid, $item['title'], $item['url'], $item['sort_order']);
+                $stmt->execute();
+                $stmt->close();
+            }
+            echo "Seeded default menu items for location '$location'.\n";
+        }
+    }
+}
+
+// 14. Seed 8 core services if services table is mostly empty
+$res_serv = $mysqli->query("SELECT COUNT(*) as cnt FROM services");
+$cnt_serv = $res_serv->fetch_assoc();
+if ($cnt_serv['cnt'] <= 1) {
+    $core_services = [
+        [
+            'title' => 'Golden Visa',
+            'slug' => 'golden-visa',
+            'short' => 'Long-term residency for investors & talent',
+            'price' => 5000.00,
+            'icon' => 'bi-award',
+            'duration' => '5–7 days'
+        ],
+        [
+            'title' => 'Business Setup',
+            'slug' => 'business-setup',
+            'short' => 'Full company formation & bank account opening',
+            'price' => 8000.00,
+            'icon' => 'bi-building',
+            'duration' => '3–5 days'
+        ],
+        [
+            'title' => 'Family Visa',
+            'slug' => 'family-visa',
+            'short' => 'Sponsor your family with streamlined processing',
+            'price' => 3000.00,
+            'icon' => 'bi-heart',
+            'duration' => '5–7 days'
+        ],
+        [
+            'title' => 'Emirates ID',
+            'slug' => 'emirates-id',
+            'short' => 'National ID, biometrics & renewal',
+            'price' => 500.00,
+            'icon' => 'bi-credit-card',
+            'duration' => '2–3 days'
+        ],
+        [
+            'title' => 'PRO Services',
+            'slug' => 'pro-services',
+            'short' => 'Government liaison, attestation & stamping',
+            'price' => 1500.00,
+            'icon' => 'bi-clipboard-check',
+            'duration' => '1–2 days'
+        ],
+        [
+            'title' => 'Work Permit',
+            'slug' => 'work-permit',
+            'short' => 'Employment visa for all nationalities & sectors',
+            'price' => 2500.00,
+            'icon' => 'bi-person-hard-hat',
+            'duration' => '4–6 days'
+        ],
+        [
+            'title' => 'Mainland License',
+            'slug' => 'mainland-license',
+            'short' => 'Trade license & mainland company formation',
+            'price' => 12000.00,
+            'icon' => 'bi-shop',
+            'duration' => '7–10 days'
+        ],
+        [
+            'title' => 'Free Zone Setup',
+            'slug' => 'free-zone-setup',
+            'short' => '100% foreign ownership in 40+ free zones',
+            'price' => 9500.00,
+            'icon' => 'bi-bank',
+            'duration' => '5–7 days'
+        ]
+    ];
+
+    foreach ($core_services as $cs) {
+        $suuid = generate_uuid();
+        $stmt = $mysqli->prepare("INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, icon_class, duration_text, status) VALUES (?, 1, 1, ?, ?, ?, '-', ?, 'AED', 0, ?, ?, 'published')");
+        $stmt->bind_param('ssssdss', $suuid, $cs['title'], $cs['slug'], $cs['short'], $cs['price'], $cs['icon'], $cs['duration']);
+        $stmt->execute();
+        $stmt->close();
+    }
+    echo "Seeded 8 core services.\n";
+}
+
 echo "Database migrations completed successfully.\n";

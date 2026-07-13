@@ -30,8 +30,18 @@ include __DIR__ . '/../../partials/sidebar.php';
         <div class="card mb-4">
             <div class="card-header bg-white"><strong>Hero Section</strong></div>
             <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><?= $settings['hero_title_gradient']['label'] ?></label>
+                        <input type="text" name="settings[hero_title_gradient]" class="form-control" value="<?= htmlspecialchars($settings['hero_title_gradient']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><?= $settings['hero_title_rest']['label'] ?></label>
+                        <input type="text" name="settings[hero_title_rest]" class="form-control" value="<?= htmlspecialchars($settings['hero_title_rest']['value'] ?? '') ?>">
+                    </div>
+                </div>
                 <div class="mb-3">
-                    <label class="form-label"><?= $settings['hero_title']['label'] ?></label>
+                    <label class="form-label"><?= $settings['hero_title']['label'] ?> (Fallback/Legacy)</label>
                     <input type="text" name="settings[hero_title]" class="form-control" value="<?= htmlspecialchars($settings['hero_title']['value']) ?>">
                 </div>
                 <div class="mb-3">
@@ -47,8 +57,83 @@ include __DIR__ . '/../../partials/sidebar.php';
         </div>
 
         <div class="card mb-4">
-            <div class="card-header bg-white"><strong>Stats Bar</strong></div>
+            <div class="card-header bg-white"><strong>Stats & Trust Bar Section</strong></div>
             <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong><?= htmlspecialchars($settings['trust_bar_partners']['label'] ?? 'Trust Bar Partners') ?></strong> (Comma-separated names)</label>
+                    <input type="text" name="settings[trust_bar_partners]" class="form-control" value="<?= htmlspecialchars($settings['trust_bar_partners']['value'] ?? '') ?>">
+                </div>
+
+                <hr>
+                <h5 class="mb-3">Rich Stats Section Heading</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?= htmlspecialchars($settings['stat_result_label']['label'] ?? 'Stat Section Label') ?></label>
+                        <input type="text" name="settings[stat_result_label]" class="form-control" value="<?= htmlspecialchars($settings['stat_result_label']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?= htmlspecialchars($settings['stat_result_heading_gradient']['label'] ?? 'Stat Heading Gradient Word') ?></label>
+                        <input type="text" name="settings[stat_result_heading_gradient]" class="form-control" value="<?= htmlspecialchars($settings['stat_result_heading_gradient']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?= htmlspecialchars($settings['stat_result_heading_rest']['label'] ?? 'Stat Heading Rest') ?></label>
+                        <input type="text" name="settings[stat_result_heading_rest]" class="form-control" value="<?= htmlspecialchars($settings['stat_result_heading_rest']['value'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <hr>
+                <h5 class="mb-3">Rich Stat Cards</h5>
+
+                <div class="row mb-3">
+                    <h6>Stat Card 1 (Mint)</h6>
+                    <div class="col-md-3">
+                        <label class="form-label">Number / Value</label>
+                        <input type="text" name="settings[stat_card1_number]" class="form-control" value="<?= htmlspecialchars($settings['stat_card1_number']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Label</label>
+                        <input type="text" name="settings[stat_card1_label]" class="form-control" value="<?= htmlspecialchars($settings['stat_card1_label']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="settings[stat_card1_desc]" class="form-control" value="<?= htmlspecialchars($settings['stat_card1_desc']['value'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <h6>Stat Card 2 (Warm)</h6>
+                    <div class="col-md-3">
+                        <label class="form-label">Number / Value</label>
+                        <input type="text" name="settings[stat_card2_number]" class="form-control" value="<?= htmlspecialchars($settings['stat_card2_number']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Label</label>
+                        <input type="text" name="settings[stat_card2_label]" class="form-control" value="<?= htmlspecialchars($settings['stat_card2_label']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="settings[stat_card2_desc]" class="form-control" value="<?= htmlspecialchars($settings['stat_card2_desc']['value'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <h6>Stat Card 3 (Dark)</h6>
+                    <div class="col-md-3">
+                        <label class="form-label">Number / Value</label>
+                        <input type="text" name="settings[stat_card3_number]" class="form-control" value="<?= htmlspecialchars($settings['stat_card3_number']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Label</label>
+                        <input type="text" name="settings[stat_card3_label]" class="form-control" value="<?= htmlspecialchars($settings['stat_card3_label']['value'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="settings[stat_card3_desc]" class="form-control" value="<?= htmlspecialchars($settings['stat_card3_desc']['value'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <hr>
+                <h5 class="mb-3">Legacy Stats (Fallback)</h5>
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label"><?= $settings['stat_vendors']['label'] ?></label>

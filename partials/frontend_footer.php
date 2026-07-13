@@ -1,6 +1,26 @@
 <?php
 require_once __DIR__ . '/../lib/settings_helper.php';
+require_once __DIR__ . '/../lib/db_mysqli.php';
 $footer_settings = get_all_settings();
+
+// Fetch Footer Menus
+$footer_pages = [];
+$res1 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_pages' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res1) {
+    while ($row = $res1->fetch_assoc()) $footer_pages[] = $row;
+}
+
+$footer_services = [];
+$res2 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_services' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res2) {
+    while ($row = $res2->fetch_assoc()) $footer_services[] = $row;
+}
+
+$footer_utility = [];
+$res3 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_utility' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res3) {
+    while ($row = $res3->fetch_assoc()) $footer_utility[] = $row;
+}
 ?>
   <!-- Footer -->
   <footer class="gw-footer">
@@ -24,34 +44,25 @@ $footer_settings = get_all_settings();
       <div class="col-6 col-lg-2">
         <h4 class="footer-col-title">Pages</h4>
         <ul class="list-unstyled footer-links">
-          <li><a href="index.php">Home</a></li>
-          <li><a href="about.php">About</a></li>
-          <li><a href="services.php">Marketplace</a></li>
-          <li><a href="#">Case Studies</a></li>
-          <li><a href="#">Insights</a></li>
-          <li><a href="#">Contact</a></li>
+          <?php foreach ($footer_pages as $item): ?>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
+          <?php endforeach; ?>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
         <h4 class="footer-col-title">Services</h4>
         <ul class="list-unstyled footer-links">
-          <li><a href="services.php">Golden Visa</a></li>
-          <li><a href="services.php">Business Setup</a></li>
-          <li><a href="services.php">Family Visa</a></li>
-          <li><a href="services.php">Emirates ID</a></li>
-          <li><a href="services.php">PRO Services</a></li>
-          <li><a href="services.php">Work Permit</a></li>
+          <?php foreach ($footer_services as $item): ?>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
+          <?php endforeach; ?>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
         <h4 class="footer-col-title">Utility</h4>
         <ul class="list-unstyled footer-links">
-          <li><a href="#">Terms &amp; Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Compliance</a></li>
-          <li><a href="#">License</a></li>
-          <li><a href="#">Style Guide</a></li>
-          <li><a href="#">Change Log</a></li>
+          <?php foreach ($footer_utility as $item): ?>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
+          <?php endforeach; ?>
         </ul>
       </div>
       <div class="col-lg-3">
