@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/db_mysqli.php';
+require_once __DIR__ . '/../lib/permissions.php';
 $current_user = current_user();
 
 // Fetch dynamic header menu items
