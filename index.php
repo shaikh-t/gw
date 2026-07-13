@@ -22,6 +22,13 @@ if ($features_res) {
 // Fetch dynamic services
 $featured_services = services_paginated(1, 8, ['status' => 'published']);
 
+$testi_head_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 and stars>=4 ORDER BY RAND()  LIMIT 1");
+$testi_head = [];
+if ($testi_head_res) {
+    while($row = $testi_head_res->fetch_assoc()) $testi_head[] = $row;
+}
+
+
 include __DIR__ . '/partials/frontend_header.php';
 ?>
 
@@ -79,7 +86,59 @@ include __DIR__ . '/partials/frontend_header.php';
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
+<section class="hero-section d-flex align-items-center bg-white">
+      <div class="hero-blob" style="top:-12rem;right:-12rem;width:680px;height:680px;background:radial-gradient(circle,rgba(17,101,239,0.07),rgba(112,165,247,0.03),transparent 70%)"></div>
+      <div class="container-xl py-5 position-relative fade-in visible">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6 fade-in visible">
+            <div class="badge-gw d-inline-flex align-items-center gap-2 mb-4">
+              <span class="rounded-circle bg-primary" style="width:6px;height:6px"></span>
+              Consultancy Agency
+            </div>
+            <h1 class="font-serif mb-4" style="font-size:clamp(2.6rem,5vw,4.2rem);line-height:1.04">
+             <?= htmlspecialchars($s['hero_title'] ?? '') ?>
+            </h1>
+            <p class="text-secondary mb-4 pe-lg-4">
+          <?= htmlspecialchars($s['hero_subtitle'] ?? '') ?>  
+          </p>
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+              <a href="<?= htmlspecialchars($s['hero_cta_url'] ?? 'services.php') ?>" class="btn btn-gw-dark"><?= htmlspecialchars($s['hero_cta_text'] ?? 'Start a Free Meeting') ?> <i class="bi bi-arrow-right ms-1"></i></a>
+              <div class="d-flex align-items-center gap-2">
+                <div class="d-flex" style="margin-left:-0.5rem">
+                  <span class="avatar-circle border border-2 border-white" style="background:#1165EF;margin-left:-0.5rem">AH</span>
+                  <span class="avatar-circle border border-2 border-white" style="background:#3F83F4;margin-left:-0.5rem">ST</span>
+                  <span class="avatar-circle border border-2 border-white" style="background:#70A5F7;margin-left:-0.5rem">PS</span>
+                </div>
+                <span class="font-mono text-uppercase text-muted" style="font-size:0.65rem;letter-spacing:0.15em">Trusted worldwide</span>
+              </div>
+            </div>
+            <form class="hero-search d-flex align-items-center bg-white shadow-sm" action="services.html">
+              <i class="bi bi-search text-muted ms-3"></i>
+              <input type="search" class="form-control" placeholder="Search for Golden Visa, Business Setup…">
+              <button type="submit" class="btn btn-gw-blue m-1">Search</button>
+            </form>
+          </div>
+          <div class="col-lg-6 d-none d-lg-block position-relative fade-in visible">
+            <div class="rounded-4 overflow-hidden" style="height:520px">
+              <img src="<?= htmlspecialchars($s['hero_bg_image'] ?? '') ?>" alt="Professional consultation" class="w-100 h-100 object-fit-cover">
+            </div>
+            <!-- <?php echo '<pre>';
+            print_r($testimonials);
+            echo '</pre>';
+            ?> -->
+          <!-- <div class="col-md-6 col-lg-4 fade-in">
+            <div class="testimonial-card">
+              <div class="text-warning small mb-3">
+                  <?php for($i=0; $i<$t['stars']; $i++): ?><i class="bi bi-star-fill"></i><?php endfor; ?>
+              </div>
+              <p class="small fst-italic mb-4">"<?= htmlspecialchars($t['quote']) ?>"</p>
+              <div class="d-flex align-items-center gap-3 border-top pt-3">
+                <span class="avatar-circle bg-blk"><?= htmlspecialchars($t['avatar_text']) ?></span>
+                <div><div class="small fw-medium font-serif"><?= htmlspecialchars($t['client_name']) ?></div><div class="font-mono text-muted" style="font-size:0.65rem"><?= htmlspecialchars($t['client_role']) ?> · <?= htmlspecialchars($t['client_location']) ?></div></div>
+              </div>
+            </div>
+          </div> -->
 
     <!-- Trust bar -->
     <section class="trust-bar py-3">

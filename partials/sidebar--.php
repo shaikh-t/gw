@@ -83,6 +83,21 @@ if (can('services.view')) {
 if (can('reviews.view')) {
     nav_item($domain . '/admin/reviews/index.php', 'Reviews', '', $current === 'admin/reviews/index.php' ? 'active' : '');
 }
+
+// CMS Pages
+if (can('cms.manage')) {
+    nav_item($domain . '/admin/cms/index.php', 'Page CMS', '', $current === 'admin/cms/index.php' ? 'active' : '');
+}
+
+// Blog Posts
+if (can('blog.manage')) {
+    nav_item($domain . '/admin/blog/index.php', 'Blog Posts', '', $current === 'admin/blog/index.php' ? 'active' : '');
+}
+
+// Contact Messages / Inquiries
+if (can('messages.manage')) {
+    nav_item($domain . '/admin/messages/index.php', 'Inquiries', '', $current === 'admin/messages/index.php' ? 'active' : '');
+}
 ?>
 
 
@@ -100,9 +115,6 @@ if (can('reviews.view')) {
 
     <?php if (can('settings.view')): ?>
       <?php nav_item($domain . '/admin/settings/landing_page.php', 'Website Settings', '', $current === 'admin/settings/landing_page.php' ? 'active' : ''); ?>
-      <?php nav_item($domain . '/admin/settings/menus.php', 'Menu Builder', '', $current === 'admin/settings/menus.php' ? 'active' : ''); ?>
-      <?php nav_item($domain . '/admin/settings/features.php', 'Landing Features', '', $current === 'admin/settings/features.php' ? 'active' : ''); ?>
-      <?php nav_item($domain . '/admin/settings/testimonials.php', 'Testimonials', '', $current === 'admin/settings/testimonials.php' ? 'active' : ''); ?>
     <?php endif; ?>
   </ul>
 
