@@ -21,7 +21,9 @@ $data = [
   'duration_minutes' => $_POST['duration_minutes'] ?? null,
   'category_id' => $_POST['category_id'] ?? null,
   'status' => $_POST['status'] ?? null,
-  'tag_ids' => $_POST['tag_ids'] ?? []
+  'tag_ids' => $_POST['tag_ids'] ?? [],
+  'icon_class' => $_POST['icon_class'] ?? null,
+  'duration_text' => $_POST['duration_text'] ?? null
 ];
 
 if (!empty($_FILES['images'])) {

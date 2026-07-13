@@ -139,15 +139,18 @@ function service_create(array $data) {
         }
     }
 
+    $icon_class = $mysqli->real_escape_string(trim($data['icon_class'] ?? 'bi-award'));
+    $duration_text = $mysqli->real_escape_string(trim($data['duration_text'] ?? '5–7 days'));
+
     $uuid = generate_uuid();
-    $sql = "INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, created_at)
+    $sql = "INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, icon_class, duration_text, created_at)
             VALUES ('$uuid', " . intval($provider_id) . ", " . ($category_id === 'NULL' ? 'NULL' : intval($category_id)) . ",
                     '" . $title . "', '" . $mysqli->real_escape_string($slug) . "',
                     '" . $short . "', '" . $desc . "',
                     " . ($price === 'NULL' ? 'NULL' : $price) . ",
                     '" . $currency . "', " . ($duration === 'NULL' ? 'NULL' : $duration) . ",
                     '" . $mysqli->real_escape_string(json_encode($images)) . "',
-                    '" . $status . "', NOW())";
+                    '" . $status . "', '$icon_class', '$duration_text', NOW())";
     if ($mysqli->query($sql)) {
         $sid = $mysqli->insert_id;
         // sync tags
@@ -173,6 +176,8 @@ function service_update(int $id, array $data) {
     if (isset($data['duration_minutes'])) $sets[] = "duration_minutes = " . (intval($data['duration_minutes']) ?: "NULL");
     if (isset($data['status'])) $sets[] = "status = '" . $mysqli->real_escape_string($data['status']) . "'";
     if (isset($data['category_id'])) $sets[] = "category_id = " . (intval($data['category_id']) ?: "NULL");
+    if (isset($data['icon_class'])) $sets[] = "icon_class = '" . $mysqli->real_escape_string(trim($data['icon_class'])) . "'";
+    if (isset($data['duration_text'])) $sets[] = "duration_text = '" . $mysqli->real_escape_string(trim($data['duration_text'])) . "'";
 
     // images: append new images if provided
     if (!empty($data['image_files']) && is_array($data['image_files'])) {

@@ -1,20 +1,26 @@
 <?php
 require_once __DIR__ . '/../lib/settings_helper.php';
 require_once __DIR__ . '/../lib/db_mysqli.php';
-
 $footer_settings = get_all_settings();
 
-function get_menu_items($name) {
-    global $mysqli;
-    $res = $mysqli->query("SELECT label, url FROM menu_items WHERE menu_id = (SELECT id FROM menus WHERE name = '$name') ORDER BY sort_order ASC");
-    $items = [];
-    while ($m = $res->fetch_assoc()) $items[] = $m;
-    return $items;
+// Fetch Footer Menus
+$footer_pages = [];
+$res1 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_pages' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res1) {
+    while ($row = $res1->fetch_assoc()) $footer_pages[] = $row;
 }
 
-$footer_pages = get_menu_items('footer_pages');
-$footer_services = get_menu_items('footer_services');
-$footer_utility = get_menu_items('footer_utility');
+$footer_services = [];
+$res2 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_services' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res2) {
+    while ($row = $res2->fetch_assoc()) $footer_services[] = $row;
+}
+
+$footer_utility = [];
+$res3 = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'footer_utility' ORDER BY mi.sort_order ASC, mi.id ASC");
+if ($res3) {
+    while ($row = $res3->fetch_assoc()) $footer_utility[] = $row;
+}
 ?>
   <!-- Footer -->
   <footer class="gw-footer">
@@ -39,7 +45,7 @@ $footer_utility = get_menu_items('footer_utility');
         <h4 class="footer-col-title">Pages</h4>
         <ul class="list-unstyled footer-links">
           <?php foreach ($footer_pages as $item): ?>
-            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['label']) ?></a></li>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
           <?php endforeach; ?>
         </ul>
       </div>
@@ -47,7 +53,7 @@ $footer_utility = get_menu_items('footer_utility');
         <h4 class="footer-col-title">Services</h4>
         <ul class="list-unstyled footer-links">
           <?php foreach ($footer_services as $item): ?>
-            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['label']) ?></a></li>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
           <?php endforeach; ?>
         </ul>
       </div>
@@ -55,7 +61,7 @@ $footer_utility = get_menu_items('footer_utility');
         <h4 class="footer-col-title">Utility</h4>
         <ul class="list-unstyled footer-links">
           <?php foreach ($footer_utility as $item): ?>
-            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['label']) ?></a></li>
+            <li><a href="<?= htmlspecialchars($item['url']) ?>"><?= htmlspecialchars($item['title']) ?></a></li>
           <?php endforeach; ?>
         </ul>
       </div>

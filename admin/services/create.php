@@ -75,6 +75,17 @@ include __DIR__ . '/../../partials/sidebar.php';
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Icon Class (e.g., bi-award, bi-building, bi-credit-card)</label>
+        <input name="icon_class" class="form-control" value="bi-award">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Duration Text (e.g., 5–7 days, 3–5 days)</label>
+        <input name="duration_text" class="form-control" value="5–7 days">
+      </div>
+    </div>
+
     <div class="mb-3">
       <label class="form-label">Category</label>
       <select name="category_id" class="form-select">

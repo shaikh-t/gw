@@ -17,7 +17,9 @@ $data = [
   'duration_minutes' => $_POST['duration_minutes'] ?? null,
   'category_id' => $_POST['category_id'] ?? null,
   'status' => $_POST['status'] ?? 'draft',
-  'tag_ids' => $_POST['tag_ids'] ?? []
+  'tag_ids' => $_POST['tag_ids'] ?? [],
+  'icon_class' => $_POST['icon_class'] ?? 'bi-award',
+  'duration_text' => $_POST['duration_text'] ?? '5–7 days'
 ];
 
 if (!empty($_FILES['images'])) {
