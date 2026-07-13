@@ -29,3 +29,12 @@
 [Mon Jul 13 09:18:54 2026] 127.0.0.1:46948 Accepted
 [Mon Jul 13 09:18:54 2026] 127.0.0.1:46948 [200]: GET /js/main.js
 [Mon Jul 13 09:18:54 2026] 127.0.0.1:46948 Closing
+[Mon Jul 13 09:58:19 2026] 127.0.0.1:44498 Accepted
+[Mon Jul 13 09:58:19 2026] 127.0.0.1:44498 [404]: HEAD /gw2/index.php - No such file or directory
+[Mon Jul 13 09:58:19 2026] 127.0.0.1:44498 Closing
+[Mon Jul 13 09:59:19 2026] 127.0.0.1:36892 Accepted
+[Mon Jul 13 09:59:19 2026] 127.0.0.1:36892 [200]: HEAD /index.php
+[Mon Jul 13 09:59:19 2026] 127.0.0.1:36892 Closing
+[Mon Jul 13 10:00:08 2026] 127.0.0.1:37334 Accepted
+[Mon Jul 13 10:00:08 2026] 127.0.0.1:37334 [200]: GET /index.php
+[Mon Jul 13 10:00:08 2026] 127.0.0.1:37334 Closing

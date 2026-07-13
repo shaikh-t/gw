@@ -24,7 +24,7 @@ include __DIR__ . '/../../partials/sidebar.php';
         <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?></div>
     <?php endif; ?>
 
-    <form action="<?php echo $domain;?>/admin/settings/update.php" method="POST" enctype="multipart/form-data">
+    <form action="/admin/settings/update.php" method="POST" enctype="multipart/form-data">
         <?= csrf_field(); ?>
 
         <div class="card mb-4">
