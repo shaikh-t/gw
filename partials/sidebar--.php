@@ -83,6 +83,21 @@ if (can('services.view')) {
 if (can('reviews.view')) {
     nav_item($domain . '/admin/reviews/index.php', 'Reviews', '', $current === 'admin/reviews/index.php' ? 'active' : '');
 }
+
+// CMS Pages
+if (can('cms.manage')) {
+    nav_item($domain . '/admin/cms/index.php', 'Page CMS', '', $current === 'admin/cms/index.php' ? 'active' : '');
+}
+
+// Blog Posts
+if (can('blog.manage')) {
+    nav_item($domain . '/admin/blog/index.php', 'Blog Posts', '', $current === 'admin/blog/index.php' ? 'active' : '');
+}
+
+// Contact Messages / Inquiries
+if (can('messages.manage')) {
+    nav_item($domain . '/admin/messages/index.php', 'Inquiries', '', $current === 'admin/messages/index.php' ? 'active' : '');
+}
 ?>
 
 
@@ -99,20 +114,7 @@ if (can('reviews.view')) {
     <?php endif; ?>
 
     <?php if (can('settings.view')): ?>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center <?php echo (strpos($current, 'admin/settings') !== false) ? 'active' : ''; ?>" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="false" aria-controls="settingsSubmenu">
-          <span class="me-2 nav-icon"><i class="bi bi-gear"></i></span>
-          <span class="nav-label">Settings</span>
-          <i class="bi bi-chevron-down ms-auto small"></i>
-        </a>
-        <div class="collapse <?php echo (strpos($current, 'admin/settings') !== false) ? 'show' : ''; ?>" id="settingsSubmenu">
-          <ul class="nav flex-column ps-4 small">
-            <li class="nav-item"><a class="nav-link" href="<?php echo $domain; ?>/admin/settings/landing_page.php">Landing Page</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $domain; ?>/admin/settings/menus.php">Menus</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $domain; ?>/admin/settings.php">General Settings</a></li>
-          </ul>
-        </div>
-      </li>
+      <?php nav_item($domain . '/admin/settings/landing_page.php', 'Website Settings', '', $current === 'admin/settings/landing_page.php' ? 'active' : ''); ?>
     <?php endif; ?>
   </ul>
 
