@@ -35,7 +35,7 @@ function providers_paginated(int $page = 1, int $perPage = 20, array $filters = 
     $where = [];
     if (!empty($filters['status'])) $where[] = "status = '" . $mysqli->real_escape_string($filters['status']) . "'";
     if (!empty($filters['city'])) $where[] = "city = '" . $mysqli->real_escape_string($filters['city']) . "'";
-    $sql = "SELECT id, owner_user_id, name, slug, city, state, country, logo, status, verification_status, created_at
+    $sql = "SELECT id,uuid, owner_user_id, name, slug, city, state, country, logo, status, verification_status, created_at
             FROM providers" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where)) . "
             ORDER BY created_at DESC LIMIT $offset, $perPage";
     $out = [];
@@ -239,7 +239,7 @@ function provider_dashboard_metrics($provider_id): array {
 function provider_summary_list(int $limit = 50): array {
     global $mysqli;
     $out = [];
-    $res = $mysqli->query("SELECT p.id, p.name, p.owner_user_id,
+    $res = $mysqli->query("SELECT p.id,p.uuid, p.name, p.owner_user_id,
         (SELECT COUNT(*) FROM services s WHERE s.provider_id = p.id) AS services_count,
         (SELECT AVG(rating) FROM reviews rv WHERE rv.provider_id = p.id AND rv.status='published') AS avg_rating
         FROM providers p ORDER BY p.created_at DESC LIMIT " . intval($limit));

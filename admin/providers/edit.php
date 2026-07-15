@@ -22,13 +22,13 @@ include __DIR__ . '/../../partials/sidebar.php';
 <div class="card mt-4 p-4">
   <h4>Edit provider</h4>
   <?php if (!empty($_SESSION['flash_errors'])): ?>
-    <div class="alert alert-danger"><?php foreach ($_SESSION['flash_errors'] as $e) echo htmlspecialchars($e, ENT_QUOTES) . '<br>'; unset($_SESSION['flash_errors']); ?></div>
+    <div class="alert alert-danger"><?php if (isset($_SESSION['flash_errors'])) foreach ($_SESSION['flash_errors'] as $e) echo htmlspecialchars($e, ENT_QUOTES) . '<br>'; unset($_SESSION['flash_errors']); ?></div>
   <?php endif; ?>
   <?php if (!empty($_SESSION['flash_success'])): ?>
     <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['flash_success'], ENT_QUOTES); unset($_SESSION['flash_success']); ?></div>
   <?php endif; ?>
 
-  <form method="post" action="/admin/providers/update.php" enctype="multipart/form-data">
+  <form method="post" action="<?php echo $domain;?>/admin/providers/update.php" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($provider['uuid'] ?? $provider['id']); ?>">
 

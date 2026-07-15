@@ -7,29 +7,30 @@ require_once __DIR__ . '/../../lib/providers_helpers.php';
 require_once __DIR__ . '/../../lib/users_helpers.php';
 
 $current = current_user();
-$provider_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$provider_id = $_GET['uuid'] ?? $_GET['id'] ?? 0;
+// isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($provider_id <= 0) {
     $_SESSION['flash_errors'] = 'Provider id is required.';
-    header('Location: /admin/provider_overview.php');
+    header('Location: '.$domain.'/admin/provider_overview.php');
     exit;
 }
 
 // fetch provider
-$provRes = $mysqli->query("SELECT * FROM providers WHERE id = " . $provider_id . " LIMIT 1");
+$provRes = $mysqli->query("SELECT * FROM providers WHERE uuid = '" . $provider_id . "' LIMIT 1");
 if (!$provRes || $provRes->num_rows === 0) {
     $_SESSION['flash_errors'] = 'Provider not found.';
-    header('Location: /admin/provider_overview.php');
+    header('Location: '.$domain.'/admin/provider_overview.php');
     exit;
 }
 $provider = $provRes->fetch_assoc();
 $provRes->free();
-
+$provider_id=$provider['id'];
 // metrics and recent items
 $metrics = provider_dashboard_metrics($provider_id);
 
 // recent services (latest 10)
 $recentServices = [];
-$sq = "SELECT id, title, status, price, updated_at, created_at FROM services WHERE provider_id = " . $provider_id . " ORDER BY updated_at DESC, created_at DESC LIMIT 10";
+$sq = "SELECT id,uuid, title, status, price, updated_at, created_at FROM services WHERE provider_id = " . $provider_id . " ORDER BY updated_at DESC, created_at DESC LIMIT 10";
 if ($sr = $mysqli->query($sq)) {
     while ($s = $sr->fetch_assoc()) $recentServices[] = $s;
     $sr->free();
@@ -54,7 +55,7 @@ if ($or = $mysqli->query($oq)) {
 
 // recent reviews (latest 10)
 $recentReviews = [];
-$rq = "SELECT r.id, r.rating, r.title, r.body, r.status, r.created_at, u.name AS user_name
+$rq = "SELECT r.id,r.uuid, r.rating, r.title, r.body, r.status, r.created_at, u.name AS user_name
        FROM reviews r LEFT JOIN users u ON u.id = r.user_id
        WHERE r.provider_id = " . $provider_id . "
        ORDER BY r.created_at DESC LIMIT 10";
