@@ -1134,4 +1134,77 @@ CREATE TABLE `provider_team_members` (
   CONSTRAINT `fk_provider_team_members_provider` FOREIGN KEY (`provider_id`) REFERENCES `providers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Table structure for table `cases`
+--
+
+DROP TABLE IF EXISTS `cases`;
+CREATE TABLE `cases` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) NOT NULL,
+  `customer_user_id` int(10) unsigned NOT NULL,
+  `provider_id` int(10) unsigned NOT NULL,
+  `service_id` int(10) unsigned NOT NULL,
+  `status` enum('Pending','Quoted','Booked','Declined') NOT NULL DEFAULT 'Pending',
+  `customer_message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `customer_user_id` (`customer_user_id`),
+  KEY `provider_id` (`provider_id`),
+  KEY `service_id` (`service_id`),
+  CONSTRAINT `fk_cases_customer` FOREIGN KEY (`customer_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cases_provider` FOREIGN KEY (`provider_id`) REFERENCES `providers` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cases_service` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `payment_gateways`
+--
+
+DROP TABLE IF EXISTS `payment_gateways`;
+CREATE TABLE `payment_gateways` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `public_key` varchar(255) DEFAULT NULL,
+  `secret_key` varchar(255) DEFAULT NULL,
+  `sandbox_mode` tinyint(1) NOT NULL DEFAULT 1,
+  `is_enabled` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `payment_gateways`
+--
+
+LOCK TABLES `payment_gateways` WRITE;
+INSERT INTO `payment_gateways` (`id`, `name`, `public_key`, `secret_key`, `sandbox_mode`, `is_enabled`) VALUES
+(1,'Stripe','pk_test_mock','sk_test_mock',1,1),
+(2,'PayPal','pk_test_mock','sk_test_mock',1,1),
+(3,'Authorize.net','pk_test_mock','sk_test_mock',1,1);
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE `notifications` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `target_url` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_notifications_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Dump completed on 2026-07-15  9:42:30
