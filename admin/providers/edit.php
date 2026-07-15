@@ -130,7 +130,67 @@ include __DIR__ . '/../../partials/sidebar.php';
 
   <hr>
 
-  <h5>Verification documents</h5>
+  <h5>Structured Verification Documents</h5>
+  <?php
+    $structured_docs = provider_documents_find_by_provider($provider['id']);
+    if (!empty($structured_docs)):
+  ?>
+    <div class="table-responsive mb-4">
+      <table class="table table-sm table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Document Title</th>
+            <th>File Link</th>
+            <th>Uploaded At</th>
+            <th>Verification Status</th>
+            <th>Show on Frontend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($structured_docs as $sd): ?>
+            <tr>
+              <td class="text-start"><strong><?php echo htmlspecialchars($sd['title'], ENT_QUOTES); ?></strong></td>
+              <td>
+                <a href="<?php echo htmlspecialchars($domain . $sd['file_path'], ENT_QUOTES); ?>" target="_blank" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-file-earmark-arrow-down"></i> View / Download
+                </a>
+              </td>
+              <td><?php echo htmlspecialchars($sd['created_at'], ENT_QUOTES); ?></td>
+              <td>
+                <form method="post" action="<?php echo $domain; ?>/admin/providers/verify_document.php" class="d-inline-flex gap-1 align-items-center">
+                  <?php echo csrf_field(); ?>
+                  <input type="hidden" name="doc_uuid" value="<?php echo htmlspecialchars($sd['uuid'], ENT_QUOTES); ?>">
+                  <input type="hidden" name="action" value="status">
+                  <select name="status" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <option value="pending" <?php if ($sd['status'] === 'pending') echo 'selected'; ?>>Pending</option>
+                    <option value="verified" <?php if ($sd['status'] === 'verified') echo 'selected'; ?>>Verified</option>
+                    <option value="rejected" <?php if ($sd['status'] === 'rejected') echo 'selected'; ?>>Rejected</option>
+                  </select>
+                </form>
+              </td>
+              <td>
+                <form method="post" action="<?php echo $domain; ?>/admin/providers/verify_document.php" class="d-inline-flex gap-1 align-items-center">
+                  <?php echo csrf_field(); ?>
+                  <input type="hidden" name="doc_uuid" value="<?php echo htmlspecialchars($sd['uuid'], ENT_QUOTES); ?>">
+                  <input type="hidden" name="action" value="toggle_frontend">
+                  <select name="show_on_frontend" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <option value="0" <?php if ($sd['show_on_frontend'] == 0) echo 'selected'; ?>>No</option>
+                    <option value="1" <?php if ($sd['show_on_frontend'] == 1) echo 'selected'; ?>>Yes (Show on Profile)</option>
+                  </select>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php else: ?>
+    <p class="text-muted">No structured documents uploaded by this provider.</p>
+  <?php endif; ?>
+
+  <hr>
+
+  <h5>Verification documents (Legacy)</h5>
   <?php
     $docs = json_decode($provider['verification_docs'] ?? '[]', true) ?: [];
     if (!empty($docs)):
@@ -141,7 +201,7 @@ include __DIR__ . '/../../partials/sidebar.php';
       <?php endforeach; ?>
     </ul>
   <?php else: ?>
-    <p>No documents uploaded.</p>
+    <p>No legacy documents uploaded.</p>
   <?php endif; ?>
 
   <hr>

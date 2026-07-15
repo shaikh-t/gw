@@ -47,6 +47,7 @@ $provider = provider_find($providers[0]['uuid']);
         <a class="nav-link active" href="cases.php"><i class="bi bi-briefcase"></i> Cases <span class="badge rounded-pill">0</span></a>
         <a class="nav-link" href="crm.php"><i class="bi bi-people"></i> CRM</a>
         <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
+        <a class="nav-link" href="team.php"><i class="bi bi-person-badge"></i> My Team</a>
       </nav>
       <div class="p-3 border-top border-secondary border-opacity-25"><a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-left"></i> Logout</a></div>
     </aside>

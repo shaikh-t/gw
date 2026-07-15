@@ -236,7 +236,8 @@ INSERT INTO `menu_items` VALUES
 (22,4,NULL,'Compliance','#',3),
 (23,4,NULL,'License','#',4),
 (24,4,NULL,'Style Guide','#',5),
-(25,4,NULL,'Change Log','#',6);
+(25,4,NULL,'Change Log','#',6),
+(26,4,NULL,'Become a Partner','register-vendor.php',7);
 /*!40000 ALTER TABLE `menu_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -712,7 +713,8 @@ INSERT INTO `roles` VALUES
 (1,'20044733-5f4b-43be-9f1d-5b8f81db6173','admin','Administrator','Full system access','2026-01-12 11:50:49'),
 (2,'a86cb5e4-752d-4519-a82b-58db6ba1a9d1','manager','Manager','Manage operations','2026-01-12 11:50:49'),
 (3,'01741da9-0710-421e-8e02-5b572bfcab02','viewer','Viewer','Read-only access','2026-01-12 11:50:49'),
-(4,'99e998fe-7b10-464e-ad7b-1391d8ef07b7','Super Admin','Full Control','This user controls all','2026-01-14 07:58:34');
+(4,'99e998fe-7b10-464e-ad7b-1391d8ef07b7','Super Admin','Full Control','This user controls all','2026-01-14 07:58:34'),
+(5,'7c9e6679-dec5-4423-a5c9-9430c00d4567','provider','Provider','Service Provider Owner','2026-07-15 10:38:51');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1089,5 +1091,47 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+--
+-- Table structure for table `provider_documents`
+--
+
+DROP TABLE IF EXISTS `provider_documents`;
+CREATE TABLE `provider_documents` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) NOT NULL,
+  `provider_id` int(10) unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `status` enum('pending','verified','rejected') NOT NULL DEFAULT 'pending',
+  `show_on_frontend` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `provider_id` (`provider_id`),
+  CONSTRAINT `fk_provider_documents_provider` FOREIGN KEY (`provider_id`) REFERENCES `providers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `provider_team_members`
+--
+
+DROP TABLE IF EXISTS `provider_team_members`;
+CREATE TABLE `provider_team_members` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(36) NOT NULL,
+  `provider_id` int(10) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `specialties` text DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `provider_id` (`provider_id`),
+  CONSTRAINT `fk_provider_team_members_provider` FOREIGN KEY (`provider_id`) REFERENCES `providers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dump completed on 2026-07-15  9:42:30

@@ -46,6 +46,60 @@ function providers_paginated(int $page = 1, int $perPage = 20, array $filters = 
     return $out;
 }
 
+/** Documents helpers */
+function provider_documents_find_by_provider(int $provider_id): array {
+    global $mysqli;
+    $provider_id = intval($provider_id);
+    $out = [];
+    $res = $mysqli->query("SELECT * FROM provider_documents WHERE provider_id = $provider_id ORDER BY created_at DESC");
+    if ($res) {
+        while ($row = $res->fetch_assoc()) $out[] = $row;
+        $res->free();
+    }
+    return $out;
+}
+
+function provider_document_find($idOrUuid) {
+    global $mysqli;
+    if (is_numeric($idOrUuid)) {
+        $res = $mysqli->query("SELECT * FROM provider_documents WHERE id = " . intval($idOrUuid) . " LIMIT 1");
+    } else {
+        $res = $mysqli->query("SELECT * FROM provider_documents WHERE uuid = '" . $mysqli->real_escape_string($idOrUuid) . "' LIMIT 1");
+    }
+    if ($res && $row = $res->fetch_assoc()) {
+        $res->free();
+        return $row;
+    }
+    return null;
+}
+
+/** Team Members helpers */
+function provider_team_members_find_by_provider(int $provider_id): array {
+    global $mysqli;
+    $provider_id = intval($provider_id);
+    $out = [];
+    $res = $mysqli->query("SELECT * FROM provider_team_members WHERE provider_id = $provider_id ORDER BY created_at DESC");
+    if ($res) {
+        while ($row = $res->fetch_assoc()) $out[] = $row;
+        $res->free();
+    }
+    return $out;
+}
+
+function provider_team_member_find($idOrUuid) {
+    global $mysqli;
+    if (is_numeric($idOrUuid)) {
+        $res = $mysqli->query("SELECT * FROM provider_team_members WHERE id = " . intval($idOrUuid) . " LIMIT 1");
+    } else {
+        $res = $mysqli->query("SELECT * FROM provider_team_members WHERE uuid = '" . $mysqli->real_escape_string($idOrUuid) . "' LIMIT 1");
+    }
+    if ($res && $row = $res->fetch_assoc()) {
+        $res->free();
+        return $row;
+    }
+    return null;
+}
+
 function provider_find($idOrUuidOrSlug) {
     global $mysqli;
     if (is_numeric($idOrUuidOrSlug)) {
@@ -121,9 +175,11 @@ function provider_create(array $data) {
     return ['ok' => false, 'error' => $mysqli->error];
 }
 
-function provider_update(int $id, array $data) {
+function provider_update($idOrUuid, array $data) {
     global $mysqli;
-    $id = intval($id);
+    $p = provider_find($idOrUuid);
+    if (!$p) return ['ok' => false, 'error' => 'Provider not found'];
+    $id = intval($p['id']);
     $sets = [];
 
     if (isset($data['verification_docs'])) {
