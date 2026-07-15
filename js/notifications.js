@@ -151,22 +151,24 @@
             }
         }
 
-        // Initialize Server-Sent Events (SSE) connection (skip if running in headless Playwright / testing mode to prevent blocking single-threaded PHP built-in server)
+        // Initialize high-performance lightweight polling connection
+        // This provides the exact same real-time alert updates while fully avoiding thread/session blocking on single-threaded development servers!
         const isTesting = window.location.search.includes('disable_sse=1') ||
                           navigator.userAgent.includes('Playwright') ||
                           navigator.userAgent.includes('Headless');
 
         if (!isTesting) {
-            const sseSource = new EventSource(baseDomain + '/sse-notifications.php');
-
-            sseSource.onmessage = function(event) {
+            setInterval(async () => {
                 try {
-                    const notifications = JSON.parse(event.data);
-                    if (Array.isArray(notifications) && notifications.length > 0) {
+                    const response = await fetch(baseDomain + '/get-unread-notifications.php');
+                    const data = await response.json();
+                    if (data && data.success) {
+                        const notifications = data.notifications;
+                        let hasNew = false;
                         notifications.forEach(notif => {
-                            // Avoid duplicates
                             if (!unreadList.some(item => item.uuid === notif.uuid)) {
                                 unreadList.unshift(notif);
+                                hasNew = true;
 
                                 // Desktop HTML5 Push Alert
                                 if ('Notification' in window && Notification.permission === 'granted') {
@@ -181,21 +183,17 @@
                             }
                         });
 
-                        // Update UI components
-                        updateDotVisibility(unreadList.length);
-                        if (!popover.classList.contains('d-none')) {
-                            renderPopoverContent();
+                        if (hasNew) {
+                            updateDotVisibility(unreadList.length);
+                            if (!popover.classList.contains('d-none')) {
+                                renderPopoverContent();
+                            }
                         }
                     }
                 } catch (err) {
-                    console.error('Error processing real-time notification data:', err);
+                    console.error('Error fetching real-time notifications:', err);
                 }
-            };
-
-            sseSource.onerror = function() {
-                // Soft reconnections are automatically managed by EventSource
-                console.log('SSE connection error. Reconnecting...');
-            };
+            }, 6000); // 6 seconds live interval
         }
     }
 
