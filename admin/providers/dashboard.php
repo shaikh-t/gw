@@ -219,10 +219,10 @@ include __DIR__ . '/../../partials/sidebar.php';
 
       <div class="card">
         <div class="card-header"><strong>Quick Actions</strong></div>
-        <div class="card-body">
-          <a href="<?php echo $domain;?>/admin/services/create.php?provider_uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-primary mb-2">Create Service</a>
-          <a href="<?php echo $domain;?>/admin/providers/impersonate.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary mb-2">Impersonate Provider</a>
-          <a href="<?php echo $domain;?>/admin/providers/export.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-success mb-2">Export CSV</a>
+        <div class="card-body d-flex flex-column gap-2">
+          <a href="<?php echo $domain;?>/admin/providers/assign_service.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-primary">Assign Master Service</a>
+          <a href="<?php echo $domain;?>/admin/providers/impersonate.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-secondary">Impersonate Provider</a>
+          <a href="<?php echo $domain;?>/admin/providers/export.php?uuid=<?php echo htmlspecialchars($provider['uuid']); ?>" class="btn btn-outline-success">Export CSV</a>
         </div>
       </div>
     </div>

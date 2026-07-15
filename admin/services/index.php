@@ -7,7 +7,9 @@ require_once __DIR__ . '/../../lib/services_helpers.php';
 $page = max(1, intval($_GET['page'] ?? 1));
 $perPage = 20;
 $filters = [];
-if (!empty($_GET['provider_id'])) $filters['provider_id'] = intval($_GET['provider_id']);
+// Admin services page is for managing Master Services (templates)
+$filters['master_only'] = true;
+
 if (!empty($_GET['status'])) $filters['status'] = $_GET['status'];
 if (!empty($_GET['category_id'])) $filters['category_id'] = intval($_GET['category_id']);
 
@@ -20,9 +22,9 @@ include __DIR__ . '/../../partials/sidebar.php';
 ?>
 <div class="card mt-4 p-3">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Services</h4>
+    <h4 class="mb-0">Master Services</h4>
     <?php if (can('services.manage')): ?>
-      <a href="<?php echo $domain;?>/admin/services/create.php" class="btn btn-primary">Create service</a>
+      <a href="<?php echo $domain;?>/admin/services/create.php" class="btn btn-primary">Create master service</a>
     <?php endif; ?>
   </div>
 
@@ -49,19 +51,23 @@ include __DIR__ . '/../../partials/sidebar.php';
   </form>
 
   <table class="table table-hover">
-    <thead><tr><th>Title</th><th>Provider</th><th>Category</th><th>Price</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+    <thead><tr><th>Title</th><th>Category</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
     <tbody>
       <?php foreach ($services as $s): ?>
         <tr>
-          <td><?php echo htmlspecialchars($s['title'], ENT_QUOTES); ?></td>
-          <td><?php echo htmlspecialchars($s['provider_name'], ENT_QUOTES); ?></td>
+          <td>
+             <div class="d-flex align-items-center gap-2">
+               <?php $imgs = $s['images'] ?: []; ?>
+               <img src="<?php echo htmlspecialchars($imgs[0] ?? '/public/assets/img/service-placeholder.png', ENT_QUOTES); ?>" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">
+               <span><?php echo htmlspecialchars($s['title'], ENT_QUOTES); ?></span>
+             </div>
+          </td>
           <td><?php echo htmlspecialchars($s['category_name'] ?? '', ENT_QUOTES); ?></td>
-          <td><?php echo $s['price'] !== null ? htmlspecialchars($s['currency'] . ' ' . $s['price'], ENT_QUOTES) : '-'; ?></td>
-          <td><?php echo htmlspecialchars($s['status'], ENT_QUOTES); ?></td>
+          <td><span class="badge <?php echo $s['status'] === 'published' ? 'bg-success' : 'bg-secondary'; ?>"><?php echo htmlspecialchars($s['status'], ENT_QUOTES); ?></span></td>
           <td class="text-end">
             <a href="<?php echo $domain;?>/admin/services/edit.php?uuid=<?php echo htmlspecialchars($s['uuid']); ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
             <?php if (can('services.manage')): ?>
-              <form method="post" action="<?php echo $domain;?>/admin/services/delete.php" class="d-inline-block" onsubmit="return confirm('Delete service?');">
+              <form method="post" action="<?php echo $domain;?>/admin/services/delete.php" class="d-inline-block" onsubmit="return confirm('Delete master service?');">
                 <?php echo csrf_field(); ?>
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($s['uuid']); ?>">
                 <button class="btn btn-sm btn-danger">Delete</button>
