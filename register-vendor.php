@@ -73,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt_prov->execute();
                 $stmt_prov->close();
 
+                // Notify Admin about new vendor registration
+                require_once __DIR__ . '/lib/notifications_helper.php';
+                notify_admins('New Vendor Registered', "Vendor account was created for $companyName (Contact: $fullName, $email).", 'admin/providers/index.php');
+
                 // Auto login
                 $_SESSION['user'] = [
                     'id' => $user_id,
@@ -83,6 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
 
                 $_SESSION['flash_success'] = 'Vendor account created successfully! Welcome to your Vendor Dashboard.';
+
+                if (!empty($_SESSION['redirect_after_login'])) {
+                    $redirect = $_SESSION['redirect_after_login'];
+                    unset($_SESSION['redirect_after_login']);
+                    header('Location: ' . $redirect);
+                    exit;
+                }
+
                 header('Location: vendor/index.php');
                 exit;
             } else {

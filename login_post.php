@@ -14,6 +14,14 @@ $password = $_POST['password'] ?? '';
 if (attempt_login($email, $password)) {
     $mysqli->query("UPDATE users SET last_login = NOW() WHERE uuid = '" . $mysqli->real_escape_string($_SESSION['user']['uuid']) . "'");
 
+    // If we have a target redirection page in session, redirect there
+    if (!empty($_SESSION['redirect_after_login'])) {
+        $redirect = $_SESSION['redirect_after_login'];
+        unset($_SESSION['redirect_after_login']);
+        header('Location: ' . $redirect);
+        exit;
+    }
+
     // Redirect based on role
     if (is_role('admin') || is_role('Super Admin')) {
         header('Location: ' . $domain . '/admin/dashboard.php');

@@ -58,6 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // In roles, role with id 1 is 'admin', role 2 is 'manager', etc. Let's assign default user role (or first user role)
                 $mysqli->query("INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, 3)"); // default to Viewer / Customer role
 
+                // Notify Admin about new customer
+                require_once __DIR__ . '/lib/notifications_helper.php';
+                notify_admins('New Customer Registered', "Customer account was created for $fullName ($email).", 'admin/users/index.php');
+
                 // Auto login
                 $_SESSION['user'] = [
                     'id' => $user_id,
@@ -68,6 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
 
                 $_SESSION['flash_success'] = 'Account created successfully! Welcome to GlobalWays.';
+
+                if (!empty($_SESSION['redirect_after_login'])) {
+                    $redirect = $_SESSION['redirect_after_login'];
+                    unset($_SESSION['redirect_after_login']);
+                    header('Location: ' . $redirect);
+                    exit;
+                }
+
                 header('Location: index.php');
                 exit;
             } else {

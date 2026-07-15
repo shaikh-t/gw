@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a class="nav-link" href="index.php"><i class="bi bi-grid-1x2"></i> Dashboard</a>
         <a class="nav-link" href="services.php"><i class="bi bi-box-seam"></i> Services</a>
         <a class="nav-link" href="quotations.php"><i class="bi bi-file-earmark-richtext"></i> Quotations</a>
+        <a class="nav-link" href="quote-requests.php"><i class="bi bi-chat-quote"></i> Quote Requests</a>
         <a class="nav-link" href="cases.php"><i class="bi bi-briefcase"></i> Cases <span class="badge rounded-pill">0</span></a>
         <a class="nav-link" href="crm.php"><i class="bi bi-people"></i> CRM</a>
         <a class="nav-link active" href="profile.php"><i class="bi bi-person"></i> Profile</a>

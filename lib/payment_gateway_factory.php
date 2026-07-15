@@ -1,0 +1,181 @@
+<?php
+// lib/payment_gateway_factory.php
+require_once __DIR__ . '/db_mysqli.php';
+
+interface PaymentGatewayInterface {
+    public function getName(): string;
+    public function isEnabled(): bool;
+    public function isSandbox(): bool;
+    public function initializePayment(float $amount, string $currency, string $case_uuid): array;
+    public function processPayment(array $post_data): array;
+}
+
+abstract class AbstractPaymentGateway implements PaymentGatewayInterface {
+    protected $name;
+    protected $public_key;
+    protected $secret_key;
+    protected $sandbox_mode;
+    protected $is_enabled;
+
+    public function __construct(string $name) {
+        global $mysqli;
+        $this->name = $name;
+
+        // Fetch settings from db
+        $stmt = $mysqli->prepare("SELECT * FROM `payment_gateways` WHERE `name` = ? LIMIT 1");
+        $stmt->bind_param('s', $name);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($row = $res->fetch_assoc()) {
+            $this->public_key = $row['public_key'];
+            $this->secret_key = $row['secret_key'];
+            $this->sandbox_mode = (bool)$row['sandbox_mode'];
+            $this->is_enabled = (bool)$row['is_enabled'];
+        } else {
+            $this->public_key = '';
+            $this->secret_key = '';
+            $this->sandbox_mode = true;
+            $this->is_enabled = false;
+        }
+        $stmt->close();
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function isEnabled(): bool {
+        return $this->is_enabled;
+    }
+
+    public function isSandbox(): bool {
+        return $this->sandbox_mode;
+    }
+}
+
+class StripeGateway extends AbstractPaymentGateway {
+    public function __construct() {
+        parent::__construct('Stripe');
+    }
+
+    public function initializePayment(float $amount, string $currency, string $case_uuid): array {
+        // Generate mock payment intent token
+        return [
+            'gateway' => 'Stripe',
+            'amount' => $amount,
+            'currency' => $currency,
+            'case_uuid' => $case_uuid,
+            'payment_intent_id' => 'pi_mock_' . bin2hex(random_bytes(12)),
+            'client_secret' => 'seti_mock_' . bin2hex(random_bytes(16))
+        ];
+    }
+
+    public function processPayment(array $post_data): array {
+        $force_result = $post_data['force_result'] ?? 'success';
+        if ($force_result === 'fail') {
+            return [
+                'success' => false,
+                'message' => 'Stripe payment was declined. Insufficient funds.'
+            ];
+        }
+        return [
+            'success' => true,
+            'transaction_id' => 'ch_' . bin2hex(random_bytes(12)),
+            'message' => 'Stripe payment authorized and completed successfully!'
+        ];
+    }
+}
+
+class PayPalGateway extends AbstractPaymentGateway {
+    public function __construct() {
+        parent::__construct('PayPal');
+    }
+
+    public function initializePayment(float $amount, string $currency, string $case_uuid): array {
+        return [
+            'gateway' => 'PayPal',
+            'amount' => $amount,
+            'currency' => $currency,
+            'case_uuid' => $case_uuid,
+            'order_id' => 'EC-MOCK' . strtoupper(bin2hex(random_bytes(8)))
+        ];
+    }
+
+    public function processPayment(array $post_data): array {
+        $force_result = $post_data['force_result'] ?? 'success';
+        if ($force_result === 'fail') {
+            return [
+                'success' => false,
+                'message' => 'PayPal checkout process was cancelled or failed.'
+            ];
+        }
+        return [
+            'success' => true,
+            'transaction_id' => 'PAY-' . strtoupper(bin2hex(random_bytes(10))),
+            'message' => 'PayPal order captured successfully!'
+        ];
+    }
+}
+
+class AuthorizeNetGateway extends AbstractPaymentGateway {
+    public function __construct() {
+        parent::__construct('Authorize.net');
+    }
+
+    public function initializePayment(float $amount, string $currency, string $case_uuid): array {
+        return [
+            'gateway' => 'Authorize.net',
+            'amount' => $amount,
+            'currency' => $currency,
+            'case_uuid' => $case_uuid,
+            'payment_profile_id' => 'prof_mock_' . bin2hex(random_bytes(8))
+        ];
+    }
+
+    public function processPayment(array $post_data): array {
+        $force_result = $post_data['force_result'] ?? 'success';
+        if ($force_result === 'fail') {
+            return [
+                'success' => false,
+                'message' => 'Authorize.net transaction error: 200 - The card was declined.'
+            ];
+        }
+        return [
+            'success' => true,
+            'transaction_id' => 'trans_' . bin2hex(random_bytes(10)),
+            'message' => 'Authorize.net transaction completed successfully!'
+        ];
+    }
+}
+
+class PaymentGatewayFactory {
+    public static function getGateway(string $name): ?PaymentGatewayInterface {
+        switch ($name) {
+            case 'Stripe':
+                return new StripeGateway();
+            case 'PayPal':
+                return new PayPalGateway();
+            case 'Authorize.net':
+                return new AuthorizeNetGateway();
+            default:
+                return null;
+        }
+    }
+
+    public static function getEnabledGateways(): array {
+        global $mysqli;
+        $gateways = [];
+        $res = $mysqli->query("SELECT name FROM `payment_gateways` WHERE `is_enabled` = 1 ORDER BY id ASC");
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $gw = self::getGateway($row['name']);
+                if ($gw) {
+                    $gateways[] = $gw;
+                }
+            }
+            $res->free();
+        }
+        return $gateways;
+    }
+}
+?>

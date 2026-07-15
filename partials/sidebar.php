@@ -115,6 +115,7 @@ if (can('messages.manage')) {
 
     <?php if (can('settings.view')): ?>
       <?php nav_item($domain . '/admin/settings/landing_page.php', 'Website Settings', '', $current === 'admin/settings/landing_page.php' ? 'active' : ''); ?>
+      <?php nav_item($domain.'/admin/settings/payment-gateways.php', 'Payment Settings', '', $current === 'admin/settings/payment-gateways.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/menus.php', 'Menu Builder', '', $current === 'admin/settings/menus.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/features.php', 'Landing Features', '', $current === 'admin/settings/features.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/testimonials.php', 'Testimonials', '', $current === 'admin/settings/testimonials.php' ? 'active' : ''); ?>
