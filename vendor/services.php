@@ -12,11 +12,26 @@ $provider = provider_find($providers[0]['uuid']);
 global $mysqli;
 $pid = (int)$provider['id'];
 $services = [];
-$res = $mysqli->query("SELECT * FROM services WHERE provider_id = $pid ORDER BY created_at DESC");
+$res = $mysqli->query("SELECT s.id, s.uuid, s.provider_id, s.master_service_id, s.price, s.currency, s.duration_minutes, s.created_at, s.updated_at,
+                              COALESCE(m.title, s.title) AS title,
+                              COALESCE(m.slug, s.slug) AS slug,
+                              COALESCE(m.short_description, s.short_description) AS short_description,
+                              COALESCE(m.icon_class, s.icon_class) AS icon_class,
+                              COALESCE(m.status, s.status) AS status,
+                              COALESCE(s.duration_text, m.duration_text) AS duration_text
+                       FROM services s
+                       LEFT JOIN services m ON s.master_service_id = m.id
+                       WHERE s.provider_id = $pid
+                       ORDER BY s.created_at DESC");
 if ($res) {
     while ($row = $res->fetch_assoc()) $services[] = $row;
     $res->free();
 }
+
+// Flash messages
+$flashSuccess = $_SESSION['flash_success'] ?? null;
+$flashErrors = $_SESSION['flash_errors'] ?? null;
+unset($_SESSION['flash_success'], $_SESSION['flash_errors']);
 ?>
 
 <!DOCTYPE html>
@@ -67,20 +82,50 @@ if ($res) {
         <div class="d-flex align-items-center gap-2"><button class="btn btn-light"><i class="bi bi-bell"></i></button><span class="avatar-circle bg-dark"><?= strtoupper(substr($user['name'], 0, 2)) ?></span></div>
       </header>
       <main class="p-4 p-lg-5">
+        <?php if ($flashSuccess): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($flashSuccess) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <?php endif; ?>
+        <?php if ($flashErrors): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php
+              if (is_array($flashErrors)) {
+                  foreach($flashErrors as $e) echo htmlspecialchars($e) . "<br>";
+              } else {
+                  echo htmlspecialchars($flashErrors);
+              }
+            ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <?php endif; ?>
+
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div><h1 class="font-serif h2 mb-1">Service Management</h1><p class="text-muted mb-0">Manage your service offerings and pricing</p></div>
-          <button class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg me-1"></i> Add Service</button>
+          <a href="services_add.php" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg me-1"></i> Add Service</a>
         </div>
         <div class="row g-3">
           <?php foreach($services as $s): ?>
           <div class="col-md-6 col-xl-4">
             <div class="card border-0 shadow-sm h-100">
               <div class="card-body">
-                <div class="d-flex justify-content-between mb-3"><div class="stat-tile-icon"><i class="bi bi-award"></i></div><span class="badge bg-success-subtle text-success"><?= ucfirst($s['status']) ?></span></div>
+                <div class="d-flex justify-content-between mb-3">
+                  <div class="stat-tile-icon"><i class="bi <?= htmlspecialchars($s['icon_class'] ?: 'bi-award') ?>"></i></div>
+                  <span class="badge bg-success-subtle text-success"><?= ucfirst($s['status']) ?></span>
+                </div>
                 <h3 class="h5"><?= htmlspecialchars($s['title']) ?></h3>
-                <p class="text-muted small"><?= htmlspecialchars($s['short_description']) ?></p>
-                <div class="d-flex justify-content-between small mb-3"><span>Starting from</span><strong><?= $s['currency'] ?> <?= number_format($s['price'], 2) ?></strong></div>
-                <div class="d-flex gap-2"><button class="btn btn-sm btn-outline-primary flex-grow-1">Edit</button><button class="btn btn-sm btn-light"><i class="bi bi-three-dots"></i></button></div>
+                <p class="text-muted small"><?= htmlspecialchars($s['short_description'] ?? '') ?></p>
+                <div class="mb-2 text-muted small"><i class="bi bi-clock me-1"></i> <?= htmlspecialchars($s['duration_text'] ?? '5-7 days') ?></div>
+                <div class="d-flex justify-content-between small mb-3"><span>Starting from</span><strong><?= htmlspecialchars($s['currency']) ?> <?= number_format($s['price'], 2) ?></strong></div>
+                <div class="d-flex gap-2">
+                  <a href="services_edit.php?uuid=<?= htmlspecialchars($s['uuid']) ?>" class="btn btn-sm btn-outline-primary flex-grow-1">Edit</a>
+                  <form method="post" action="services_delete.php" class="d-inline-block flex-grow-1" onsubmit="return confirm('Remove this service from your offerings?');">
+                    <?php require_once __DIR__ . '/../lib/csrf.php'; echo csrf_field(); ?>
+                    <input type="hidden" name="uuid" value="<?= htmlspecialchars($s['uuid']) ?>">
+                    <button class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-trash"></i> Remove</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -91,12 +136,14 @@ if ($res) {
           <?php endif; ?>
 
           <div class="col-md-6 col-xl-4">
-            <div class="card border-0 shadow-sm h-100 border-dashed">
-              <div class="card-body d-flex flex-column align-items-center justify-content-center text-center text-muted" style="min-height:200px">
-                <i class="bi bi-plus-circle fs-2 mb-2"></i>
-                <div>Add New Service</div>
+            <a href="services_add.php" class="text-decoration-none">
+              <div class="card border-0 shadow-sm h-100 border-dashed hover-card">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center text-muted" style="min-height:200px">
+                  <i class="bi bi-plus-circle fs-2 mb-2 text-primary"></i>
+                  <div class="fw-semibold">Add New Service</div>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </main>

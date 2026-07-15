@@ -3,17 +3,11 @@
 require_once __DIR__ . '/../../lib/middleware.php';
 require_permission_or_die('services.manage');
 require_once __DIR__ . '/../../lib/services_helpers.php';
-require_once __DIR__ . '/../../lib/providers_helpers.php';
 
 $id_val = $_GET['uuid'] ?? $_GET['id'] ?? '';
 $service = service_find($id_val);
 if (!$service) { http_response_code(404); echo 'Service not found'; exit; }
 
-$providers = [];
-if (can('providers.view')) {
-    $sql = "SELECT id, name FROM providers ORDER BY name LIMIT 200";
-    if ($res = $mysqli->query($sql)) { while ($r = $res->fetch_assoc()) $providers[] = $r; $res->free(); }
-}
 $categories = service_categories_all();
 $tags = service_tags_all();
 
@@ -21,19 +15,23 @@ include __DIR__ . '/../../partials/header.php';
 include __DIR__ . '/../../partials/sidebar.php';
 ?>
 <div class="card mt-4 p-4">
-  <h4>Edit service</h4>
+  <h4>Edit Master Service</h4>
+  <?php if (!empty($_SESSION['flash_errors'])): ?>
+  <div id="flashErrors" class="alert alert-danger">
+    <?php
+      $errors = $_SESSION['flash_errors'];
+      if (is_array($errors)) {
+          foreach ($errors as $e) echo '<div>' . htmlspecialchars($e, ENT_QUOTES) . '</div>';
+      } else {
+          echo '<div>' . htmlspecialchars($errors, ENT_QUOTES) . '</div>';
+      }
+      unset($_SESSION['flash_errors']);
+    ?>
+  </div>
+<?php endif; ?>
   <form method="post" action="<?php echo $domain;?>/admin/services/update.php" enctype="multipart/form-data">
     <?php echo csrf_field(); ?>
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($service['uuid'] ?? $service['id']); ?>">
-
-    <div class="mb-3">
-      <label class="form-label">Provider</label>
-      <select name="provider_id" class="form-select" required>
-        <?php foreach ($providers as $p): ?>
-          <option value="<?php echo intval($p['id']); ?>" <?php echo ($service['provider_id']==$p['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($p['name'], ENT_QUOTES); ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
 
     <div class="mb-3">
       <label class="form-label">Title</label>
@@ -50,30 +48,9 @@ include __DIR__ . '/../../partials/sidebar.php';
       <textarea name="description" class="form-control" rows="6"><?php echo htmlspecialchars($service['description'] ?? '', ENT_QUOTES); ?></textarea>
     </div>
 
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Price</label>
-        <input name="price" class="form-control" value="<?php echo htmlspecialchars($service['price'] ?? '', ENT_QUOTES); ?>">
-      </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Currency</label>
-        <input name="currency" class="form-control" value="<?php echo htmlspecialchars($service['currency'] ?? 'USD', ENT_QUOTES); ?>">
-      </div>
-      <div class="col-md-4 mb-3">
-        <label class="form-label">Duration (minutes)</label>
-        <input name="duration_minutes" class="form-control" value="<?php echo htmlspecialchars($service['duration_minutes'] ?? '', ENT_QUOTES); ?>">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Icon Class (e.g., bi-award, bi-building, bi-credit-card)</label>
-        <input name="icon_class" class="form-control" value="<?php echo htmlspecialchars($service['icon_class'] ?? 'bi-award', ENT_QUOTES); ?>">
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">Duration Text (e.g., 5–7 days, 3–5 days)</label>
-        <input name="duration_text" class="form-control" value="<?php echo htmlspecialchars($service['duration_text'] ?? '5–7 days', ENT_QUOTES); ?>">
-      </div>
+    <div class="mb-3">
+      <label class="form-label">Icon Class (e.g., bi-award, bi-building, bi-credit-card)</label>
+      <input name="icon_class" class="form-control" value="<?php echo htmlspecialchars($service['icon_class'] ?? 'bi-award', ENT_QUOTES); ?>">
     </div>
 
     <div class="mb-3">
@@ -81,7 +58,7 @@ include __DIR__ . '/../../partials/sidebar.php';
       <select name="category_id" class="form-select">
         <option value="">-- none --</option>
         <?php foreach ($categories as $c): ?>
-          <option value="<?php echo intval($c['id']); ?>" <?php echo ($service['category_id']==$c['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($c['name'], ENT_QUOTES); ?></option>
+          <option value="<?php echo intval($c['id']); ?>" <?php echo ($service['category_id'] == $c['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($c['name'], ENT_QUOTES); ?></option>
         <?php endforeach; ?>
       </select>
     </div>

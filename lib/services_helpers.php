@@ -52,10 +52,22 @@ function service_tag_create($name) {
 function services_count(array $filters = []): int {
     global $mysqli;
     $where = [];
-    if (!empty($filters['provider_id'])) $where[] = "s.provider_id = " . intval($filters['provider_id']);
-    if (!empty($filters['status'])) $where[] = "s.status = '" . $mysqli->real_escape_string($filters['status']) . "'";
-    if (!empty($filters['category_id'])) $where[] = "s.category_id = " . intval($filters['category_id']);
-    $sql = "SELECT COUNT(*) AS cnt FROM services" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where));
+    if (!empty($filters['provider_id'])) {
+        $where[] = "s.provider_id = " . intval($filters['provider_id']);
+    } elseif (isset($filters['master_only']) && $filters['master_only'] === true) {
+        $where[] = "s.provider_id IS NULL";
+    } else {
+        $where[] = "s.provider_id IS NOT NULL";
+    }
+
+    if (!empty($filters['status'])) {
+        $where[] = "COALESCE(m.status, s.status) = '" . $mysqli->real_escape_string($filters['status']) . "'";
+    }
+    if (!empty($filters['category_id'])) {
+        $where[] = "COALESCE(m.category_id, s.category_id) = " . intval($filters['category_id']);
+    }
+
+    $sql = "SELECT COUNT(*) AS cnt FROM services s LEFT JOIN services m ON s.master_service_id = m.id" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where));
     $res = $mysqli->query($sql);
     if (!$res) return 0;
     $row = $res->fetch_assoc(); $res->free();
@@ -67,13 +79,36 @@ function services_paginated(int $page = 1, int $perPage = 20, array $filters = [
     $page = max(1, intval($page)); $perPage = max(1, intval($perPage));
     $offset = ($page - 1) * $perPage;
     $where = [];
-    if (!empty($filters['provider_id'])) $where[] = "s.provider_id = " . intval($filters['provider_id']);
-    if (!empty($filters['status'])) $where[] = "s.status = '" . $mysqli->real_escape_string($filters['status']) . "'";
-    if (!empty($filters['category_id'])) $where[] = "s.category_id = " . intval($filters['category_id']);
-    $sql = "SELECT s.*, p.name AS provider_name, c.name AS category_name
+    if (!empty($filters['provider_id'])) {
+        $where[] = "s.provider_id = " . intval($filters['provider_id']);
+    } elseif (isset($filters['master_only']) && $filters['master_only'] === true) {
+        $where[] = "s.provider_id IS NULL";
+    } else {
+        $where[] = "s.provider_id IS NOT NULL";
+    }
+
+    if (!empty($filters['status'])) {
+        $where[] = "COALESCE(m.status, s.status) = '" . $mysqli->real_escape_string($filters['status']) . "'";
+    }
+    if (!empty($filters['category_id'])) {
+        $where[] = "COALESCE(m.category_id, s.category_id) = " . intval($filters['category_id']);
+    }
+
+    $sql = "SELECT s.id, s.uuid, s.provider_id, s.master_service_id, s.price, s.currency, s.duration_minutes, s.created_at, s.updated_at, s.rating_avg, s.rating_count,
+                   COALESCE(m.title, s.title) AS title,
+                   s.slug AS slug,
+                   COALESCE(m.short_description, s.short_description) AS short_description,
+                   COALESCE(m.description, s.description) AS description,
+                   COALESCE(m.icon_class, s.icon_class) AS icon_class,
+                   COALESCE(m.category_id, s.category_id) AS category_id,
+                   COALESCE(m.images, s.images) AS images,
+                   COALESCE(m.status, s.status) AS status,
+                   COALESCE(s.duration_text, m.duration_text) AS duration_text,
+                   p.name AS provider_name, c.name AS category_name
             FROM services s
+            LEFT JOIN services m ON s.master_service_id = m.id
             LEFT JOIN providers p ON p.id = s.provider_id
-            LEFT JOIN service_categories c ON c.id = s.category_id" .
+            LEFT JOIN service_categories c ON c.id = COALESCE(m.category_id, s.category_id)" .
             (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where)) .
             " ORDER BY s.created_at DESC LIMIT $offset, $perPage";
     $out = [];
@@ -86,16 +121,38 @@ function services_paginated(int $page = 1, int $perPage = 20, array $filters = [
 
 function service_find($idOrUuidOrSlug) {
     global $mysqli;
+    $select = "s.id, s.uuid, s.provider_id, s.master_service_id, s.price, s.currency, s.duration_minutes, s.created_at, s.updated_at, s.rating_avg, s.rating_count,
+               COALESCE(m.title, s.title) AS title,
+               s.slug AS slug,
+               COALESCE(m.short_description, s.short_description) AS short_description,
+               COALESCE(m.description, s.description) AS description,
+               COALESCE(m.icon_class, s.icon_class) AS icon_class,
+               COALESCE(m.category_id, s.category_id) AS category_id,
+               COALESCE(m.images, s.images) AS images,
+               COALESCE(m.status, s.status) AS status,
+               COALESCE(s.duration_text, m.duration_text) AS duration_text,
+               p.name AS provider_name, p.slug AS provider_slug";
+
     if (is_numeric($idOrUuidOrSlug)) {
-        $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.id = " . intval($idOrUuidOrSlug) . " LIMIT 1");
+        $sql = "SELECT $select FROM services s
+                LEFT JOIN services m ON s.master_service_id = m.id
+                LEFT JOIN providers p ON p.id = s.provider_id
+                WHERE s.id = " . intval($idOrUuidOrSlug) . " LIMIT 1";
     } else {
         $val = $mysqli->real_escape_string($idOrUuidOrSlug);
         if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $val)) {
-            $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.uuid = '$val' LIMIT 1");
+            $sql = "SELECT $select FROM services s
+                    LEFT JOIN services m ON s.master_service_id = m.id
+                    LEFT JOIN providers p ON p.id = s.provider_id
+                    WHERE s.uuid = '$val' LIMIT 1";
         } else {
-            $res = $mysqli->query("SELECT s.*, p.name AS provider_name FROM services s JOIN providers p ON p.id = s.provider_id WHERE s.slug = '$val' LIMIT 1");
+            $sql = "SELECT $select FROM services s
+                    LEFT JOIN services m ON s.master_service_id = m.id
+                    LEFT JOIN providers p ON p.id = s.provider_id
+                    WHERE s.slug = '$val' LIMIT 1";
         }
     }
+    $res = $mysqli->query($sql);
     if (!$res) return null;
     $row = $res->fetch_assoc(); $res->free();
     if ($row) {
@@ -110,7 +167,9 @@ function service_find($idOrUuidOrSlug) {
 
 function service_create(array $data) {
     global $mysqli;
-    $provider_id = intval($data['provider_id']);
+    $provider_id = isset($data['provider_id']) && $data['provider_id'] !== '' ? intval($data['provider_id']) : 'NULL';
+    $master_service_id = isset($data['master_service_id']) && $data['master_service_id'] !== '' ? intval($data['master_service_id']) : 'NULL';
+
     $title = $mysqli->real_escape_string(trim($data['title'] ?? ''));
     if ($title === '') return ['ok' => false, 'error' => 'Title required'];
     $slugBase = service_slugify($title);
@@ -121,21 +180,23 @@ function service_create(array $data) {
         if ($res) $res->free();
         $slug = $slugBase . '-' . $i++;
     }
-    $category_id = isset($data['category_id']) ? intval($data['category_id']) : 'NULL';
+    $category_id = isset($data['category_id']) && $data['category_id'] !== '' ? intval($data['category_id']) : 'NULL';
     $short = $mysqli->real_escape_string(trim($data['short_description'] ?? ''));
     $desc = $mysqli->real_escape_string(trim($data['description'] ?? ''));
     $price = isset($data['price']) && $data['price'] !== '' ? $mysqli->real_escape_string($data['price']) : 'NULL';
     $currency = $mysqli->real_escape_string($data['currency'] ?? 'USD');
-    $duration = isset($data['duration_minutes']) ? intval($data['duration_minutes']) : 'NULL';
+    $duration = isset($data['duration_minutes']) && $data['duration_minutes'] !== '' ? intval($data['duration_minutes']) : 'NULL';
     $status = $mysqli->real_escape_string($data['status'] ?? 'draft');
 
     // handle images upload (multiple)
     $images = [];
     if (!empty($data['image_files']) && is_array($data['image_files'])) {
         foreach ($data['image_files'] as $file) {
-            $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
-            if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
-            $images[] = '/public/uploads/services/' . $resUp['filename'];
+            if (isset($file['size']) && $file['size'] > 0) {
+                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
+                if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
+                $images[] = '/public/uploads/services/' . $resUp['filename'];
+            }
         }
     }
 
@@ -143,14 +204,14 @@ function service_create(array $data) {
     $duration_text = $mysqli->real_escape_string(trim($data['duration_text'] ?? '5–7 days'));
 
     $uuid = generate_uuid();
-    $sql = "INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, icon_class, duration_text, created_at)
-            VALUES ('$uuid', " . intval($provider_id) . ", " . ($category_id === 'NULL' ? 'NULL' : intval($category_id)) . ",
+    $sql = "INSERT INTO services (uuid, provider_id, category_id, title, slug, short_description, description, price, currency, duration_minutes, images, status, icon_class, duration_text, created_at, master_service_id)
+            VALUES ('$uuid', " . ($provider_id === 'NULL' ? 'NULL' : $provider_id) . ", " . ($category_id === 'NULL' ? 'NULL' : $category_id) . ",
                     '" . $title . "', '" . $mysqli->real_escape_string($slug) . "',
                     '" . $short . "', '" . $desc . "',
                     " . ($price === 'NULL' ? 'NULL' : $price) . ",
                     '" . $currency . "', " . ($duration === 'NULL' ? 'NULL' : $duration) . ",
                     '" . $mysqli->real_escape_string(json_encode($images)) . "',
-                    '" . $status . "', '$icon_class', '$duration_text', NOW())";
+                    '" . $status . "', '$icon_class', '$duration_text', NOW(), " . ($master_service_id === 'NULL' ? 'NULL' : $master_service_id) . ")";
     if ($mysqli->query($sql)) {
         $sid = $mysqli->insert_id;
         // sync tags
@@ -168,7 +229,7 @@ function service_update(int $id, array $data) {
     global $mysqli;
     $id = intval($id);
     $sets = [];
-    if (isset($data['title']) && trim($data['title']) !== '') $sets[] = "title = '" . $mysqli->real_escape_string(trim($data['title'])) . "'";
+    if (isset($data['title'])) $sets[] = "title = " . ($data['title'] === '' ? "NULL" : "'" . $mysqli->real_escape_string(trim($data['title'])) . "'");
     if (isset($data['short_description'])) $sets[] = "short_description = '" . $mysqli->real_escape_string(trim($data['short_description'])) . "'";
     if (isset($data['description'])) $sets[] = "description = '" . $mysqli->real_escape_string(trim($data['description'])) . "'";
     if (isset($data['price'])) $sets[] = "price = " . ($data['price'] === '' ? "NULL" : $mysqli->real_escape_string($data['price']));
@@ -178,6 +239,8 @@ function service_update(int $id, array $data) {
     if (isset($data['category_id'])) $sets[] = "category_id = " . (intval($data['category_id']) ?: "NULL");
     if (isset($data['icon_class'])) $sets[] = "icon_class = '" . $mysqli->real_escape_string(trim($data['icon_class'])) . "'";
     if (isset($data['duration_text'])) $sets[] = "duration_text = '" . $mysqli->real_escape_string(trim($data['duration_text'])) . "'";
+    if (isset($data['master_service_id'])) $sets[] = "master_service_id = " . (intval($data['master_service_id']) ?: "NULL");
+    if (isset($data['provider_id'])) $sets[] = "provider_id = " . (intval($data['provider_id']) ?: "NULL");
 
     // images: append new images if provided
     if (!empty($data['image_files']) && is_array($data['image_files'])) {
@@ -185,10 +248,10 @@ function service_update(int $id, array $data) {
         $res = $mysqli->query("SELECT images FROM services WHERE id = $id LIMIT 1");
         if ($res) { $row = $res->fetch_assoc(); $existing = json_decode($row['images'] ?? '[]', true) ?: []; $res->free(); }
         foreach ($data['image_files'] as $file) {
-            if ($file['size']>0) {
-            $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
-            if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
-            $existing[] = '/public/uploads/services/' . $resUp['filename'];
+            if (isset($file['size']) && $file['size'] > 0) {
+                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
+                if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
+                $existing[] = '/public/uploads/services/' . $resUp['filename'];
             }
         }
         $sets[] = "images = '" . $mysqli->real_escape_string(json_encode(array_values($existing))) . "'";
