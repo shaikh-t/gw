@@ -69,6 +69,14 @@ if (!empty($_SESSION['impersonator_id'])):
 
 
     <div class="d-flex align-items-center ms-auto">
+      <!-- Notification bell icon for admin -->
+      <div class="me-3 position-relative d-inline-block">
+        <button class="btn btn-sm btn-outline-secondary position-relative cp-bell-btn" type="button" id="adminBellBtn">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle cp-badge-dot d-none"></span>
+        </button>
+      </div>
+
       <?php if ($user):
         $avatar = $user['avatar'] ?? $domain.'/public/assets/img/avatar-placeholder.png';
       ?>

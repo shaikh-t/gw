@@ -12,11 +12,30 @@ if (is_role('provider') || is_role('admin') || is_role('Super Admin')) {
     exit;
 }
 
+require_once __DIR__ . '/../lib/db_mysqli.php';
+
 $user = current_user();
 $userId = (int)$user['id'];
 
 $apps = get_customer_applications($userId);
 $messages = get_customer_messages($userId);
+
+// Fetch customer cases / quote requests from db
+$customer_cases_sql = "SELECT c.*, p.name as provider_name, s.title as service_title, s.price as service_price, s.currency as service_currency
+                       FROM `cases` c
+                       JOIN `providers` p ON p.id = c.provider_id
+                       JOIN `services` s ON s.id = c.service_id
+                       WHERE c.customer_user_id = ?
+                       ORDER BY c.created_at DESC";
+$stmt_cases = $mysqli->prepare($customer_cases_sql);
+$stmt_cases->bind_param('i', $userId);
+$stmt_cases->execute();
+$res_cases = $stmt_cases->get_result();
+$customer_cases = [];
+while ($row = $res_cases->fetch_assoc()) {
+    $customer_cases[] = $row;
+}
+$stmt_cases->close();
 
 // Unread messages count
 $unread_msgs_count = 0;
@@ -120,7 +139,7 @@ foreach ($apps as $a) {
           </div>
         </div>
 
-        <div id="appsList">
+        <div id="appsList" class="mb-5">
           <?php if (empty($filtered_apps)): ?>
             <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
               <p class="text-muted mb-0">No applications found matching your criteria.</p>
@@ -169,6 +188,68 @@ foreach ($apps as $a) {
               </a>
             <?php endforeach; ?>
           <?php endif; ?>
+        </div>
+
+        <!-- My Quote Requests (Cases) Section -->
+        <div class="mt-5">
+          <h2 class="cp-page-title h3 mb-1">My <span class="text-gradient-blue">Quote Requests</span></h2>
+          <p class="cp-page-sub mb-4">View status of your submitted cases, review pricing, and book your vendor</p>
+
+          <div class="d-flex flex-column gap-3">
+            <?php if (empty($customer_cases)): ?>
+              <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
+                <i class="bi bi-chat-quote fs-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-0">You have not submitted any quote requests yet.</p>
+              </div>
+            <?php else: ?>
+              <?php foreach ($customer_cases as $cc):
+                  $case_status = $cc['status'];
+                  $badge_class = 'cp-badge-outline';
+                  if ($case_status === 'Pending') $badge_class = 'bg-warning text-dark';
+                  elseif ($case_status === 'Quoted') $badge_class = 'bg-info text-dark';
+                  elseif ($case_status === 'Booked') $badge_class = 'bg-success text-white';
+                  elseif ($case_status === 'Declined') $badge_class = 'bg-danger text-white';
+
+                  $price_formatted = !empty($cc['service_price']) ? htmlspecialchars($cc['service_currency'] . ' ' . number_format($cc['service_price'], 2)) : 'Price on request';
+              ?>
+                <div class="card border-0 shadow-sm p-4 bg-white rounded-4 app-item">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-md-5">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <h4 class="font-serif h5 mb-0 text-dark app-service-name"><?= htmlspecialchars($cc['service_title']) ?></h4>
+                        <span class="badge rounded-pill <?= $badge_class ?>" style="font-size: 0.75rem; padding: 0.35em 0.65em;"><?= $case_status ?></span>
+                      </div>
+                      <div class="small text-muted app-vendor-name">Vendor: <strong><?= htmlspecialchars($cc['provider_name']) ?></strong></div>
+                      <div class="small text-muted">Submitted: <?= date('M d, Y', strtotime($cc['created_at'])) ?></div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="small text-muted mb-1">Price Quote</div>
+                      <span class="font-mono fw-bold text-dark fs-5"><?= $price_formatted ?></span>
+                    </div>
+
+                    <div class="col-md-4 text-md-end">
+                      <?php if ($case_status === 'Quoted'): ?>
+                        <a href="checkout.php?case_id=<?= htmlspecialchars($cc['uuid']) ?>" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
+                          <i class="bi bi-credit-card-2-front me-1"></i> Book This Vendor
+                        </a>
+                      <?php elseif ($case_status === 'Booked'): ?>
+                        <span class="text-success small fw-semibold"><i class="bi bi-check-circle-fill"></i> Secured in Escrow</span>
+                      <?php elseif ($case_status === 'Declined'): ?>
+                        <span class="text-muted small">Declined by Vendor</span>
+                      <?php else: ?>
+                        <span class="text-secondary small"><i class="bi bi-hourglass-split"></i> Awaiting Vendor Quote</span>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+
+                  <div class="mt-3 p-3 bg-light rounded-3 small text-secondary">
+                    <strong>My Requirements:</strong> <?= nl2br(htmlspecialchars($cc['customer_message'])) ?>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
         </div>
       </main>
     </div>

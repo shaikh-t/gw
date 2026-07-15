@@ -239,7 +239,7 @@ include __DIR__ . '/partials/frontend_header.php';
                 <li><i class="bi bi-clock"></i><span>Responds in &lt; 2 hours</span></li>
                 <li><i class="bi bi-people"></i><span><?= htmlspecialchars($languages) ?></span></li>
               </ul>
-              <a href="contact.php" class="vp-btn-primary"><i class="bi bi-chat-dots"></i> Request Quote</a>
+              <a href="create-case.php?vendor_id=<?= htmlspecialchars($provider['uuid']) ?>" class="vp-btn-primary"><i class="bi bi-chat-dots"></i> Request Quote</a>
               <a href="#vendorTeam" class="vp-btn-secondary"><i class="bi bi-globe"></i> View Profile</a>
             </div>
 
