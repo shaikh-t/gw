@@ -9,7 +9,9 @@ if (!csrf_check($_POST['_csrf'] ?? '')) { die('Invalid CSRF'); }
 
 $id_val = $_POST['id'] ?? '';
 $service = service_find($id_val);
-if (!$service) { $_SESSION['flash_errors'] = ['Invalid service id']; header('Location: ' . $domain . '/admin/services'); exit; }
+if (!$service) { $_SESSION['flash_errors'] = ['Invalid service id']; 
+header('Location: ' . $domain . '/admin/services'); 
+exit; }
 $id = (int)$service['id'];
 $uuid = $service['uuid'];
 $data = [
@@ -42,8 +44,10 @@ if (!empty($_FILES['images'])) {
 
 $res = service_update($id, $data);
 if (!$res['ok']) {
+    echo $res['error'].'----<br>';
     $_SESSION['flash_errors'] = [$res['error']];
-    header('Location: ' . $domain . '/admin/services/edit.php?uuid=' . $uuid); exit;
+    echo "2";
+  //  header('Location: ' . $domain . '/admin/services/edit.php?uuid=' . $uuid); exit;
 }
 
 $_SESSION['flash_success'] = 'Service updated';

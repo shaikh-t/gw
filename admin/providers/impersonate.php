@@ -12,7 +12,9 @@ require_permission_or_die('providers.manage');
 
 $current = current_user();
 
-$provider_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// $provider_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$provider_id = $_GET['uuid'] ?? $_GET['id'] ?? '';
+
 if ($provider_id <= 0) {
     $_SESSION['flash_errors'] = 'Provider id is required.';
     header('Location: '.$domain.'/admin/provider_overview.php');
@@ -20,7 +22,7 @@ if ($provider_id <= 0) {
 }
 
 // Fetch provider and owner
-$provStmt = $mysqli->query("SELECT id, name, owner_user_id FROM providers WHERE id = " . $provider_id . " LIMIT 1");
+$provStmt = $mysqli->query("SELECT id, name, owner_user_id FROM providers WHERE uuid = '" . $provider_id . "' LIMIT 1");
 if (!$provStmt || $provStmt->num_rows === 0) {
     $_SESSION['flash_errors'] = 'Provider not found.';
     header('Location: '.$domain.'/admin/provider_overview.php');

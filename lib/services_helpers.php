@@ -185,9 +185,11 @@ function service_update(int $id, array $data) {
         $res = $mysqli->query("SELECT images FROM services WHERE id = $id LIMIT 1");
         if ($res) { $row = $res->fetch_assoc(); $existing = json_decode($row['images'] ?? '[]', true) ?: []; $res->free(); }
         foreach ($data['image_files'] as $file) {
+            if ($file['size']>0) {
             $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
             if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
             $existing[] = '/public/uploads/services/' . $resUp['filename'];
+            }
         }
         $sets[] = "images = '" . $mysqli->real_escape_string(json_encode(array_values($existing))) . "'";
     }
