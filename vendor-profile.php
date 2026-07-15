@@ -71,12 +71,14 @@ $team_size = !empty($provider['team_size']) ? $provider['team_size'] : '12';
 $city = !empty($provider['city']) ? $provider['city'] : 'Dubai';
 $since_year = !empty($provider['created_at']) ? date('Y', strtotime($provider['created_at'])) : '2020';
 
-// Default Team Mockup
-$defaultTeam = [
-    ['initials' => 'MA', 'name' => 'Mohammed Al-Rashid', 'role' => 'Founder & CEO', 'specialties' => 'Immigration Law, Business Setup'],
-    ['initials' => 'FH', 'name' => 'Fatima Hassan', 'role' => 'Visa Specialist', 'specialties' => 'Family Visa, Golden Visa'],
-    ['initials' => 'RK', 'name' => 'Raj Kumar', 'role' => 'Documentation Manager', 'specialties' => 'Attestation, Certificates']
-];
+// Fetch actual team members for this provider
+$p_id_int = intval($provider['id']);
+$team_res = $mysqli->query("SELECT * FROM provider_team_members WHERE provider_id = $p_id_int ORDER BY id ASC");
+$provider_team = [];
+if ($team_res) {
+    while ($tr = $team_res->fetch_assoc()) $provider_team[] = $tr;
+    $team_res->free();
+}
 
 include __DIR__ . '/partials/frontend_header.php';
 ?>
@@ -200,13 +202,23 @@ include __DIR__ . '/partials/frontend_header.php';
               </div>
             </div>
 
+            <?php if (!empty($provider_team)): ?>
             <div class="vp-card fade-in" id="vendorTeam">
               <p class="vp-section-kicker">The People</p>
               <h2 class="vp-card-title font-serif">Our Team</h2>
               <div class="vp-team-grid" id="vendorTeamGrid">
-                <?php foreach ($defaultTeam as $tm): ?>
+                <?php foreach ($provider_team as $tm):
+                    $words = explode(' ', $tm['name']);
+                    $initials = '';
+                    foreach ($words as $w) $initials .= mb_substr($w, 0, 1);
+                    $initials = mb_strtoupper(mb_substr($initials, 0, 2));
+                ?>
                   <div class="vp-team-card">
-                    <span class="vp-team-avatar"><?= htmlspecialchars($tm['initials']) ?></span>
+                    <?php if (!empty($tm['avatar'])): ?>
+                      <img src="<?= htmlspecialchars($domain . $tm['avatar']) ?>" class="avatar-circle mb-2" style="width:50px;height:50px;object-fit:cover;border-radius:50%;margin:0 auto 10px auto;">
+                    <?php else: ?>
+                      <span class="vp-team-avatar"><?= htmlspecialchars($initials) ?></span>
+                    <?php endif; ?>
                     <strong class="font-serif"><?= htmlspecialchars($tm['name']) ?></strong>
                     <span class="vp-team-role"><?= htmlspecialchars($tm['role']) ?></span>
                     <span class="vp-team-specialties"><?= htmlspecialchars($tm['specialties']) ?></span>
@@ -214,6 +226,7 @@ include __DIR__ . '/partials/frontend_header.php';
                 <?php endforeach; ?>
               </div>
             </div>
+            <?php endif; ?>
           </div>
 
           <div class="col-lg-4">
@@ -234,9 +247,30 @@ include __DIR__ . '/partials/frontend_header.php';
               <p class="vp-section-kicker">Trust &amp; Credentials</p>
               <h3 class="vp-sidebar-title font-serif">Certifications</h3>
               <div class="vp-cert-list" id="vendorCerts">
-                <div class="vp-cert-pill"><i class="bi bi-award"></i> Dubai Chamber Certified</div>
-                <div class="vp-cert-pill"><i class="bi bi-shield-check"></i> UAE Government Licensed</div>
-                <div class="vp-cert-pill"><i class="bi bi-patch-check"></i> GlobalWays Verified Partner</div>
+                <?php
+                // Fetch public verified documents for this provider
+                $p_id_int = intval($provider['id']);
+                $doc_res = $mysqli->query("SELECT * FROM provider_documents WHERE provider_id = $p_id_int AND status = 'verified' AND show_on_frontend = 1");
+                $public_docs = [];
+                if ($doc_res) {
+                    while ($dr = $doc_res->fetch_assoc()) $public_docs[] = $dr;
+                    $doc_res->free();
+                }
+                ?>
+                <?php if (empty($public_docs)): ?>
+                  <div class="vp-cert-pill"><i class="bi bi-award"></i> Dubai Chamber Certified</div>
+                  <div class="vp-cert-pill"><i class="bi bi-shield-check"></i> UAE Government Licensed</div>
+                  <div class="vp-cert-pill"><i class="bi bi-patch-check"></i> GlobalWays Verified Partner</div>
+                <?php else: ?>
+                  <?php foreach ($public_docs as $pd): ?>
+                    <div class="vp-cert-pill">
+                      <i class="bi bi-patch-check-fill text-success"></i>
+                      <a href="<?= htmlspecialchars($domain . $pd['file_path']) ?>" target="_blank" class="text-decoration-none text-dark fw-medium">
+                        <?= htmlspecialchars($pd['title']) ?>
+                      </a>
+                    </div>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </div>
             </div>
           </div>
