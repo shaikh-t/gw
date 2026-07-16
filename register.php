@@ -73,9 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt_insert->execute()) {
                 $user_id = $stmt_insert->insert_id;
 
-                // Assign default role (Manager or client role)
-                // In roles, role with id 1 is 'admin', role 2 is 'manager', etc. Let's assign default user role (or first user role)
-                $mysqli->query("INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, 3)"); // default to Viewer / Customer role
+                // Assign default role (Viewer / Customer role) securely by name subquery
+                $stmt_role = $mysqli->prepare("INSERT INTO user_roles (user_id, role_id) SELECT ?, id FROM roles WHERE name = 'viewer' LIMIT 1");
+                $stmt_role->bind_param('i', $user_id);
+                $stmt_role->execute();
+                $stmt_role->close();
 
                 // Notify Admin about new customer
                 require_once __DIR__ . '/lib/notifications_helper.php';

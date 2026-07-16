@@ -105,6 +105,75 @@ function has_url_links(string $str): bool {
 }
 
 /**
+ * Dynamically check and create the login_attempts database table if it doesn't exist.
+ */
+function ensure_login_attempts_table($mysqli) {
+    $sql = "CREATE TABLE IF NOT EXISTS `login_attempts` (
+        `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `ip_address` VARCHAR(45) NOT NULL,
+        `attempt_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+    $mysqli->query($sql);
+}
+
+/**
+ * Checks if the IP has exceeded 5 failed login attempts in 5 minutes.
+ * Returns true if blocked, false if allowed.
+ */
+function is_login_throttled($mysqli): bool {
+    ensure_login_attempts_table($mysqli);
+
+    $ip = get_client_ip();
+    $minutes_threshold = 5;
+    $max_attempts = 5;
+
+    $stmt = $mysqli->prepare("
+        SELECT COUNT(*)
+        FROM `login_attempts`
+        WHERE `ip_address` = ?
+          AND `attempt_time` > DATE_SUB(NOW(), INTERVAL ? MINUTE)
+    ");
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('si', $ip, $minutes_threshold);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    return $count >= $max_attempts;
+}
+
+/**
+ * Logs a failed login attempt for the current IP.
+ */
+function log_failed_login($mysqli): void {
+    ensure_login_attempts_table($mysqli);
+    $ip = get_client_ip();
+    $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`ip_address`) VALUES (?)");
+    if ($stmt) {
+        $stmt->bind_param('s', $ip);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
+/**
+ * Clears failed login attempts history for the current IP after a successful login.
+ */
+function clear_failed_logins($mysqli): void {
+    ensure_login_attempts_table($mysqli);
+    $ip = get_client_ip();
+    $stmt = $mysqli->prepare("DELETE FROM `login_attempts` WHERE `ip_address` = ?");
+    if ($stmt) {
+        $stmt->bind_param('s', $ip);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
+/**
  * Detects if the email domain is in a blocklist of disposable email services.
  */
 function is_disposable_email(string $email): bool {

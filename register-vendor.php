@@ -71,8 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt_insert->execute()) {
                 $user_id = $stmt_insert->insert_id;
 
-                // Assign provider role (ID 5)
-                $mysqli->query("INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, 5)");
+                // Assign provider role securely by name subquery
+                $stmt_role = $mysqli->prepare("INSERT INTO user_roles (user_id, role_id) SELECT ?, id FROM roles WHERE name = 'provider' LIMIT 1");
+                $stmt_role->bind_param('i', $user_id);
+                $stmt_role->execute();
+                $stmt_role->close();
 
                 // Create provider profile
                 $provUuid = generate_uuid();

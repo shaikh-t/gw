@@ -13,14 +13,18 @@ function current_user(): ?array {
     if (empty($_SESSION['user'])) return null;
     $user = $_SESSION['user'];
 
-    // Resolve internal ID if needed by legacy code
+    // Resolve internal ID if needed by legacy code using parameterized prepared statement
     if (empty($user['id']) && !empty($user['uuid'])) {
-        $uuid = $mysqli->real_escape_string($user['uuid']);
-        $res = $mysqli->query("SELECT id FROM users WHERE uuid = '$uuid' LIMIT 1");
-        if ($res && $row = $res->fetch_assoc()) {
-            $user['id'] = (int)$row['id'];
+        $stmt = $mysqli->prepare("SELECT id FROM users WHERE uuid = ? LIMIT 1");
+        if ($stmt) {
+            $stmt->bind_param('s', $user['uuid']);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($row = $res->fetch_assoc()) {
+                $user['id'] = (int)$row['id'];
+            }
+            $stmt->close();
         }
-        if ($res && !is_bool($res)) $res->free();
     }
 
     return $user;
@@ -38,27 +42,43 @@ function login_user_by_id(int $userId): bool {
     global $mysqli;
     $id = intval($userId);
 
-    $sql = "SELECT id, uuid, name, email, avatar FROM users WHERE id = $id LIMIT 1";
-    $res = $mysqli->query($sql);
-    if (!$res) return false;
+    // Retrieve user via prepared statement
+    $stmt = $mysqli->prepare("SELECT id, uuid, name, email, avatar FROM users WHERE id = ? LIMIT 1");
+    if (!$stmt) return false;
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
     $u = $res->fetch_assoc();
-    $res->free();
+    $stmt->close();
     if (!$u) return false;
 
-    // load role names
+    // load role names via prepared statement
     $roleNames = [];
-    $r = $mysqli->query("SELECT r.name FROM user_roles ur JOIN roles r ON ur.role_id = r.id WHERE ur.user_id = $id");
-    if ($r) {
-        while ($rw = $r->fetch_assoc()) $roleNames[] = $rw['name'];
-        $r->free();
+    $stmt_roles = $mysqli->prepare("
+        SELECT r.name
+        FROM user_roles ur
+        JOIN roles r ON ur.role_id = r.id
+        WHERE ur.user_id = ?
+    ");
+    if ($stmt_roles) {
+        $stmt_roles->bind_param('i', $id);
+        $stmt_roles->execute();
+        $r = $stmt_roles->get_result();
+        while ($rw = $r->fetch_assoc()) {
+            $roleNames[] = $rw['name'];
+        }
+        $stmt_roles->close();
     }
 
     $_SESSION['user'] = [
+        'id' => (int)$u['id'],
         'uuid' => $u['uuid'],
         'name' => $u['name'],
         'email' => $u['email'],
         'avatar' => $u['avatar'] ?? null
     ];
+
+    // session_regenerate_id(true) fires cleanly on successful login
     session_regenerate_id(true);
     return true;
 }
@@ -69,13 +89,18 @@ function login_user_by_id(int $userId): bool {
  */
 function attempt_login(string $email, string $password): bool {
     global $mysqli;
-    $emailEsc = $mysqli->real_escape_string(trim($email));
-    $sql = "SELECT id, password FROM users WHERE email = '" . $emailEsc . "' LIMIT 1";
-    $res = $mysqli->query($sql);
-    if (!$res) return false;
+    $trimmed_email = trim($email);
+
+    // Retrieve credentials via prepared statement
+    $stmt = $mysqli->prepare("SELECT id, password FROM users WHERE email = ? LIMIT 1");
+    if (!$stmt) return false;
+    $stmt->bind_param('s', $trimmed_email);
+    $stmt->execute();
+    $res = $stmt->get_result();
     $row = $res->fetch_assoc();
-    $res->free();
+    $stmt->close();
     if (!$row) return false;
+
     if (password_verify($password, $row['password'])) {
         return login_user_by_id((int)$row['id']);
     }
@@ -95,3 +120,4 @@ function logout_user(): void {
     unset($_SESSION['_csrf_token']);
     session_regenerate_id(true);
 }
+?>

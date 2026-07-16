@@ -17,27 +17,41 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface {
     protected $sandbox_mode;
     protected $is_enabled;
 
-    public function __construct(string $name) {
+    public function __construct(string $name, ?array $configData = null) {
         global $mysqli;
         $this->name = $name;
 
-        // Fetch settings from db
-        $stmt = $mysqli->prepare("SELECT * FROM `payment_gateways` WHERE `name` = ? LIMIT 1");
-        $stmt->bind_param('s', $name);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        if ($row = $res->fetch_assoc()) {
-            $this->public_key = $row['public_key'];
-            $this->secret_key = $row['secret_key'];
-            $this->sandbox_mode = (bool)$row['sandbox_mode'];
-            $this->is_enabled = (bool)$row['is_enabled'];
+        if ($configData !== null) {
+            $this->public_key = $configData['public_key'] ?? '';
+            $this->secret_key = $configData['secret_key'] ?? '';
+            $this->sandbox_mode = isset($configData['sandbox_mode']) ? (bool)$configData['sandbox_mode'] : true;
+            $this->is_enabled = isset($configData['is_enabled']) ? (bool)$configData['is_enabled'] : false;
         } else {
-            $this->public_key = '';
-            $this->secret_key = '';
-            $this->sandbox_mode = true;
-            $this->is_enabled = false;
+            // Fallback for single initialization
+            $stmt = $mysqli->prepare("SELECT * FROM `payment_gateways` WHERE `name` = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param('s', $name);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                if ($row = $res->fetch_assoc()) {
+                    $this->public_key = $row['public_key'];
+                    $this->secret_key = $row['secret_key'];
+                    $this->sandbox_mode = (bool)$row['sandbox_mode'];
+                    $this->is_enabled = (bool)$row['is_enabled'];
+                } else {
+                    $this->public_key = '';
+                    $this->secret_key = '';
+                    $this->sandbox_mode = true;
+                    $this->is_enabled = false;
+                }
+                $stmt->close();
+            } else {
+                $this->public_key = '';
+                $this->secret_key = '';
+                $this->sandbox_mode = true;
+                $this->is_enabled = false;
+            }
         }
-        $stmt->close();
     }
 
     public function getName(): string {
@@ -54,12 +68,11 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface {
 }
 
 class StripeGateway extends AbstractPaymentGateway {
-    public function __construct() {
-        parent::__construct('Stripe');
+    public function __construct(?array $configData = null) {
+        parent::__construct('Stripe', $configData);
     }
 
     public function initializePayment(float $amount, string $currency, string $case_uuid): array {
-        // Generate mock payment intent token
         return [
             'gateway' => 'Stripe',
             'amount' => $amount,
@@ -87,8 +100,8 @@ class StripeGateway extends AbstractPaymentGateway {
 }
 
 class PayPalGateway extends AbstractPaymentGateway {
-    public function __construct() {
-        parent::__construct('PayPal');
+    public function __construct(?array $configData = null) {
+        parent::__construct('PayPal', $configData);
     }
 
     public function initializePayment(float $amount, string $currency, string $case_uuid): array {
@@ -118,8 +131,8 @@ class PayPalGateway extends AbstractPaymentGateway {
 }
 
 class AuthorizeNetGateway extends AbstractPaymentGateway {
-    public function __construct() {
-        parent::__construct('Authorize.net');
+    public function __construct(?array $configData = null) {
+        parent::__construct('Authorize.net', $configData);
     }
 
     public function initializePayment(float $amount, string $currency, string $case_uuid): array {
@@ -149,14 +162,14 @@ class AuthorizeNetGateway extends AbstractPaymentGateway {
 }
 
 class PaymentGatewayFactory {
-    public static function getGateway(string $name): ?PaymentGatewayInterface {
+    public static function getGateway(string $name, ?array $configData = null): ?PaymentGatewayInterface {
         switch ($name) {
             case 'Stripe':
-                return new StripeGateway();
+                return new StripeGateway($configData);
             case 'PayPal':
-                return new PayPalGateway();
+                return new PayPalGateway($configData);
             case 'Authorize.net':
-                return new AuthorizeNetGateway();
+                return new AuthorizeNetGateway($configData);
             default:
                 return null;
         }
@@ -165,10 +178,11 @@ class PaymentGatewayFactory {
     public static function getEnabledGateways(): array {
         global $mysqli;
         $gateways = [];
-        $res = $mysqli->query("SELECT name FROM `payment_gateways` WHERE `is_enabled` = 1 ORDER BY id ASC");
+        // Single unified SQL query fetching all active gateways configurations at once to avoid N+1 query loops.
+        $res = $mysqli->query("SELECT * FROM `payment_gateways` WHERE `is_enabled` = 1 ORDER BY id ASC");
         if ($res) {
             while ($row = $res->fetch_assoc()) {
-                $gw = self::getGateway($row['name']);
+                $gw = self::getGateway($row['name'], $row);
                 if ($gw) {
                     $gateways[] = $gw;
                 }
