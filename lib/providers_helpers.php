@@ -148,7 +148,7 @@ function provider_create(array $data) {
 
     $logoPath = null;
     if (!empty($data['logo_file']) && is_array($data['logo_file'])) {
-        $resUpload = avatar_upload_handle($data['logo_file'], __DIR__ . '/../public/uploads/providers');
+        $resUpload = avatar_upload_handle($data['logo_file'], __DIR__ . '/../public/uploads/providers',900);
         if (!$resUpload['ok']) return ['ok' => false, 'error' => 'Logo: ' . $resUpload['error']];
         $logoPath = '/public/uploads/providers/' . $resUpload['filename'];
     }
@@ -202,7 +202,7 @@ function provider_update($idOrUuid, array $data) {
     if (isset($data['owner_user_id'])) $sets[] = "owner_user_id = " . (intval($data['owner_user_id']) ?: "NULL");
 
     if (!empty($data['logo_file']) && is_array($data['logo_file'])) {
-        $resUpload = avatar_upload_handle($data['logo_file'], __DIR__ . '/../public/uploads/providers');
+        $resUpload = avatar_upload_handle($data['logo_file'], __DIR__ . '/../public/uploads/providers',900);
         if (!$resUpload['ok']) return ['ok' => false, 'error' => 'Logo: ' . $resUpload['error']];
         $logoPath = '/public/uploads/providers/' . $resUpload['filename'];
         $sets[] = "logo = '" . $mysqli->real_escape_string($logoPath) . "'";

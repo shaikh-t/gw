@@ -10,12 +10,12 @@
 
     // Base path helper to ensure relative paths are correct in all environments
     // Check if we are inside vendor, customer, or admin subfolders to resolve relative root
-    let baseDomain = '';
+    let baseDomain = './';
     const path = window.location.pathname;
     if (path.includes('/vendor/') || path.includes('/customer/')) {
         baseDomain = '..';
     } else if (path.includes('/admin/')) {
-        baseDomain = '../..';
+        baseDomain = '../';
     }
 
     // Find notification elements in the current page
@@ -38,6 +38,8 @@
     // Check if user is logged in and fetch unread notifications
     async function checkNotifications() {
         try {
+            // console.log(domain);
+            // console.log(baseDomain);
             const response = await fetch(baseDomain + '/get-unread-notifications.php');
             const data = await response.json();
             if (data && data.success) {

@@ -296,12 +296,12 @@
 
     // Dynamically load the real-time notification listener
     const base = document.documentElement.dataset.base || '';
-    let scriptPath = '/js/notifications.js';
+    let scriptPath = 'js/notifications.js';
     const currentPath = window.location.pathname;
     if (currentPath.includes('/vendor/') || currentPath.includes('/customer/')) {
         scriptPath = '../js/notifications.js';
     } else if (currentPath.includes('/admin/')) {
-        scriptPath = '../../js/notifications.js';
+        scriptPath = '../js/notifications.js';
     }
     const script = document.createElement('script');
     script.src = scriptPath;

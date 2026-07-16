@@ -193,7 +193,7 @@ function service_create(array $data) {
     if (!empty($data['image_files']) && is_array($data['image_files'])) {
         foreach ($data['image_files'] as $file) {
             if (isset($file['size']) && $file['size'] > 0) {
-                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
+                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services',900);
                 if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
                 $images[] = '/public/uploads/services/' . $resUp['filename'];
             }
@@ -249,7 +249,7 @@ function service_update(int $id, array $data) {
         if ($res) { $row = $res->fetch_assoc(); $existing = json_decode($row['images'] ?? '[]', true) ?: []; $res->free(); }
         foreach ($data['image_files'] as $file) {
             if (isset($file['size']) && $file['size'] > 0) {
-                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services');
+                $resUp = avatar_upload_handle($file, __DIR__ . '/../public/uploads/services',900);
                 if (!$resUp['ok']) return ['ok' => false, 'error' => 'Image upload: ' . $resUp['error']];
                 $existing[] = '/public/uploads/services/' . $resUp['filename'];
             }

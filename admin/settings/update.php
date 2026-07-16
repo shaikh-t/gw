@@ -26,18 +26,6 @@ $file_map = [
     'cta_banner_file' => 'cta_banner_bg'
 ];
 
-foreach ($file_map as $file_input => $setting_key) {
-    if (!empty($_FILES[$file_input]) && $_FILES[$file_input]['error'] === UPLOAD_ERR_OK) {
-        $res = avatar_upload_handle($_FILES[$file_input], $upload_dir);
-        if ($res['ok']) {
-            $path = '/public/uploads/site/' . $res['filename'];
-            $stmt = $mysqli->prepare("UPDATE site_settings SET value = ? WHERE `key` = ?");
-            $stmt->bind_param('ss', $path, $setting_key);
-            $stmt->execute();
-        }
-    }
-}
-
 // Handle text settings
 if (!empty($_POST['settings']) && is_array($_POST['settings'])) {
     foreach ($_POST['settings'] as $key => $value) {
@@ -47,6 +35,19 @@ if (!empty($_POST['settings']) && is_array($_POST['settings'])) {
     }
 }
 
+foreach ($file_map as $file_input => $setting_key) {
+    if (!empty($_FILES[$file_input]) && $_FILES[$file_input]['error'] === UPLOAD_ERR_OK) {
+        $res = avatar_upload_handle($_FILES[$file_input], $upload_dir,900);
+        if ($res['ok']) {
+            $path = $domain.'/public/uploads/site/' . $res['filename'];
+            $stmt = $mysqli->prepare("UPDATE site_settings SET value = ? WHERE `key` = ?");
+            $stmt->bind_param('ss', $path, $setting_key);
+            $stmt->execute();
+        }
+    }
+}
+
+
 $_SESSION['flash_success'] = 'Settings updated successfully.';
-header('Location: /admin/settings/landing_page.php');
+header('Location: '.$domain.'/admin/settings/landing_page.php');
 exit;

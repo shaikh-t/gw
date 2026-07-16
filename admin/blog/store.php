@@ -58,7 +58,7 @@ if (!empty($_FILES['cover_file']) && $_FILES['cover_file']['error'] === UPLOAD_E
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
-    $resUp = avatar_upload_handle($_FILES['cover_file'], $upload_dir);
+    $resUp = avatar_upload_handle($_FILES['cover_file'], $upload_dir,900);
     if ($resUp['ok']) {
         $image_url = '/public/uploads/blog/' . $resUp['filename'];
     } else {

@@ -33,7 +33,7 @@ function enqueue_file_for_scan(string $filepath, array $meta = []): bool {
  * Generic file upload handler supporting images and PDFs.
  * Returns ['ok'=>true,'path'=>..., 'filename'=>..., 'pending_scan'=>bool] or ['ok'=>false,'error'=>...]
  */
-function file_upload_handle(array $file, string $destDir, int $maxBytes = 5 * 1024 * 1024, bool $asyncScan = true): array {
+function file_upload_handle(array $file, string $destDir, int $maxBytes = 5 * 1024 * 1024, bool $asyncScan = true, $max=400): array {
     if (!isset($file['error']) || is_array($file['error'])) {
         return ['ok' => false, 'error' => 'Invalid upload'];
     }
@@ -74,7 +74,7 @@ function file_upload_handle(array $file, string $destDir, int $maxBytes = 5 * 10
         $info = getimagesize($file['tmp_name']);
         if ($info) {
             list($w, $h) = $info;
-            $max = 400;
+            // $max = 400;
             if ($w > $max || $h > $max) {
                 $ratio = min($max / $w, $max / $h);
                 $nw = (int)($w * $ratio);
@@ -133,6 +133,6 @@ function file_upload_handle(array $file, string $destDir, int $maxBytes = 5 * 10
 /**
  * Backwards-compatible avatar upload wrapper
  */
-function avatar_upload_handle(array $file, string $destDir, int $maxBytes = 2 * 1024 * 1024): array {
-    return file_upload_handle($file, $destDir, $maxBytes, true);
+function avatar_upload_handle(array $file, string $destDir, $max=400, int $maxBytes = 2 * 1024 * 1024): array {
+    return file_upload_handle($file, $destDir, $maxBytes, true, $max);
 }

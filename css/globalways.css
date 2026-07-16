@@ -1193,8 +1193,19 @@ body {
   border: 1px solid #E5E7EB;
   border-right: none;
   border-radius: 0.65rem 0 0 0.65rem;
+  border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   font-size: 0.85rem;
   gap: 0.35rem;
+}
+.phone-input-group .input-group-dd {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  /* border-right: none; */
+  border-radius: 0.65rem 0 0 0.65rem !important;
+  font-size: 0.85rem;
+  z-index:100;
+  /* gap: 0.35rem; */
 }
 .phone-input-group .form-control {
   border-left: none;
