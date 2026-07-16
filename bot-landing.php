@@ -3,7 +3,13 @@
 require_once __DIR__ . '/lib/auth.php';
 require_once __DIR__ . '/lib/db_mysqli.php';
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 $current_user = current_user();
+
+// 1. Server-Side Context Verification: Read global bot_page_context tracking variables
+$session_context = $_SESSION['bot_page_context'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -215,6 +221,11 @@ $current_user = current_user();
 </head>
 <body>
 
+<!-- Global context object exported from server to javascript on page load -->
+<script>
+  window.botPageContext = <?php echo json_encode($session_context); ?>;
+</script>
+
 <div class="ws-container">
   <!-- Left Column: Chat & Speech controls -->
   <aside class="ws-sidebar">
@@ -313,6 +324,41 @@ document.addEventListener('DOMContentLoaded', () => {
     currentLang = urlLang;
   }
 
+  // 2. Immediate Panel Pre-Hydration: Check if user arrived from a specific page and pre-hydrate
+  if (window.botPageContext && window.botPageContext.page_name) {
+    const page = window.botPageContext.page_name;
+    let preHydrateUrl = '';
+
+    if (page === 'vendor-profile.php' && window.botPageContext.vendor_uuid) {
+      preHydrateUrl = 'vendor-profile.php?id=' + encodeURIComponent(window.botPageContext.vendor_uuid);
+    } else if (page === 'service-detail.php' && window.botPageContext.service_slug) {
+      preHydrateUrl = 'service-detail.php?id=' + encodeURIComponent(window.botPageContext.service_slug);
+    } else if (page === 'services.php') {
+      preHydrateUrl = 'services.php';
+    } else if (page === 'vendors.php') {
+      preHydrateUrl = 'vendors.php';
+    }
+
+    if (preHydrateUrl) {
+      document.getElementById('wsContextPage').innerText = `Pre-Hydrating Layout (${page})...`;
+      fetch(preHydrateUrl)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newMain = doc.querySelector('#main-content-layout');
+          if (newMain) {
+            document.getElementById('bot-workspace-view').innerHTML = newMain.innerHTML;
+            document.getElementById('wsContextPage').innerText = `${page} (Synchronized)`;
+          }
+        })
+        .catch(err => {
+          console.error('Immediate layout pre-hydration failed:', err);
+          document.getElementById('wsContextPage').innerText = `Failed to pre-hydrate (${page})`;
+        });
+    }
+  }
+
   // Initialize Speech components
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -346,14 +392,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Sync / Resume exact conversational nodes
-  if (botSessionToken) {
+  if (window.botPageContext && window.botPageContext.page_name) {
+    // 3. Contextual Dialogue Handshake: Bypasses generic welcome, transmits contextual data immediately
+    sendQueryToController('', null, '', true);
+  } else if (botSessionToken) {
     sendQueryToController('', null, '');
   } else {
     sendQueryToController('', 1, '');
   }
 });
 
-function sendQueryToController(messageText, nodeId = null, userInputText = '') {
+function sendQueryToController(messageText, nodeId = null, userInputText = '', forceBadgeContext = false) {
   let pageName = 'bot-landing.php';
   let payload = {
     session_token: botSessionToken,
@@ -364,6 +413,11 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '') {
       url: window.location.href
     }
   };
+
+  if (forceBadgeContext && window.botPageContext) {
+    payload.badge_click = true;
+    payload.page_context = array_merge_payloads(payload.page_context, window.botPageContext);
+  }
 
   fetch('api/bot-controller.php', {
     method: 'POST',
@@ -378,7 +432,8 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '') {
       currentLang = data.language_iso || 'en';
 
       // Update workspace context preview bar
-      document.getElementById('wsContextPage').innerText = `Workspace (${currentLang.toUpperCase()})`;
+      const contextLabel = window.botPageContext ? window.botPageContext.page_name : 'General';
+      document.getElementById('wsContextPage').innerText = `${contextLabel} (Active: ${currentLang.toUpperCase()})`;
 
       // Render Bot outcome message
       addMessageToStream('bot', data.display_text);
@@ -392,6 +447,10 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '') {
     }
   })
   .catch(err => console.error('Workspace controller connection failure:', err));
+}
+
+function array_merge_payloads(obj1, obj2) {
+  return Object.assign({}, obj1, obj2);
 }
 
 function renderOptions(options) {
