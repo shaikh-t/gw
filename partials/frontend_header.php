@@ -83,3 +83,4 @@ if ($h_res) {
       </div>
     </div>
   </nav>
+  <div id="main-content-layout">

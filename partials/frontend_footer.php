@@ -22,6 +22,7 @@ if ($res3) {
     while ($row = $res3->fetch_assoc()) $footer_utility[] = $row;
 }
 ?>
+  </div><!-- /#main-content-layout -->
   <!-- Footer -->
   <footer class="gw-footer">
   <div class="container-xl pt-5 pb-4">
@@ -90,5 +91,6 @@ if ($res3) {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
+  <?php include __DIR__ . '/../templates/bot-widget.php'; ?>
 </body>
 </html>
