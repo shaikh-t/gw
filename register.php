@@ -4,6 +4,7 @@ require_once __DIR__ . '/lib/db_mysqli.php';
 require_once __DIR__ . '/lib/auth.php';
 require_once __DIR__ . '/lib/csrf.php';
 require_once __DIR__ . '/lib/uuid_helper.php';
+require_once __DIR__ . '/lib/anti_spam_helper.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
@@ -16,6 +17,11 @@ if (!empty($_SESSION['user'])) {
 $error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Honeypot System check: silently exit on any payload
+    if (!empty($_POST['website_url_verification'])) {
+        exit;
+    }
+
     if (!csrf_check($_POST['_csrf'] ?? '')) {
         die('Invalid CSRF');
     }
@@ -32,6 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($firstName === '' || $lastName === '' || $email === '' || $password === '') {
         $error_message = 'Please fill all required fields.';
+    } elseif (!check_rate_limit($mysqli)) {
+        // 2. Form Submission Throttling (Rate Limiting)
+        $error_message = 'Too many registration attempts from this connection. Please wait a few minutes before trying again.';
+    } elseif (has_url_links($firstName) || has_url_links($lastName)) {
+        // 3. String Input Sanity Filters: Name checks
+        $error_message = 'Names cannot contain website links or URLs.';
+    } elseif (is_disposable_email($email)) {
+        // 3. String Input Sanity Filters: Email checks
+        $error_message = 'Registration requires a valid, permanent email address.';
+    } elseif (!verify_recaptcha($_POST['recaptcha_token'] ?? '', get_client_ip())) {
+        // 4. Invisible Google reCAPTCHA v3 Integration
+        $error_message = 'Security verification failed. Please refresh the page and try again.';
     } else {
         $fullName = $firstName . ' ' . $lastName;
 
@@ -102,8 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/globalways.css" rel="stylesheet">
   <!-- 1. Ensure the CDN library scripts are explicitly loaded first -->
-<script src="js/slimselect.js"></script>
-    <link href="css/slimselect.css" rel="stylesheet">
+  <script src="js/slimselect.js"></script>
+  <link href="css/slimselect.css" rel="stylesheet">
+  <!-- Google reCAPTCHA v3 Integration -->
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= RECAPTCHA_SITE_KEY ?>"></script>
 </head>
 <body class="register-page">
 
@@ -231,6 +251,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option>Other</option>
                   </select>
                 </div>
+
+                <!-- Honeypot System Field (Invisible bot protection) -->
+                <div style="display: none;">
+                  <label for="website_url_verification">Leave this field blank</label>
+                  <input type="text" id="website_url_verification" name="website_url_verification" autocomplete="off" tabindex="-1">
+                </div>
+
                 <div class="mb-4">
                   <label for="regPassword" class="auth-form-label">Password *</label>
                   <div class="input-group auth-input-group">
@@ -481,6 +508,28 @@ document.addEventListener('DOMContentLoaded', () => {
               }
               // Call the dynamic loop executor
               initializeSlimSelect();
+
+              // Invisible Google reCAPTCHA v3 Token Request & Form Injection
+              const registerFormElement = document.getElementById('registerForm');
+              if (registerFormElement) {
+                registerFormElement.addEventListener('submit', function(e) {
+                  e.preventDefault();
+                  grecaptcha.ready(function() {
+                    grecaptcha.execute('<?= RECAPTCHA_SITE_KEY ?>', {action: 'register'}).then(function(token) {
+                      let tokenInput = document.getElementById('recaptcha_token');
+                      if (!tokenInput) {
+                        tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = 'recaptcha_token';
+                        tokenInput.id = 'recaptcha_token';
+                        registerFormElement.appendChild(tokenInput);
+                      }
+                      tokenInput.value = token;
+                      registerFormElement.submit();
+                    });
+                  });
+                });
+              }
               });
   </script>
 </body>
