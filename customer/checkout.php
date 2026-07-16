@@ -22,6 +22,7 @@ $case_uuid = trim($_GET['case_id'] ?? '');
 $case_data = null;
 
 if ($case_uuid !== '') {
+    // Dynamic read of pricing & details from the 'services' table using JOIN on the case's service_id
     $stmt = $mysqli->prepare("SELECT c.*, p.name as provider_name, p.owner_user_id as provider_owner_id,
                                      s.title as service_title, s.price as service_price, s.currency as service_currency
                               FROM `cases` c

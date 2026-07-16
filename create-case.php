@@ -32,6 +32,14 @@ if (!$provider) {
     exit;
 }
 
+// Validate that the vendor profile status is explicitly 'active' or 'published'
+$provider_status = strtolower($provider['status'] ?? '');
+if ($provider_status !== 'active' && $provider_status !== 'published') {
+    http_response_code(403);
+    echo "<h3>Access Denied</h3><p>This vendor is currently unavailable or draft. Please select an active provider.</p><p><a href='vendors.php'>Go back to Vendors</a></p>";
+    exit;
+}
+
 $provider_id = (int)$provider['id'];
 
 // Fetch services offered by this vendor
