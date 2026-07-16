@@ -64,6 +64,25 @@ if (!isset($mysqli)) {
     ], 500);
 }
 
+// Global Super Admin AI Bot Kill-Switch Validation
+$ai_global_status = 'enabled';
+$stmt_kill = $mysqli->prepare("SELECT `value` FROM `site_settings` WHERE `key` = 'ai_bot_global_status' LIMIT 1");
+if ($stmt_kill) {
+    $stmt_kill->execute();
+    $res_kill = $stmt_kill->get_result();
+    if ($row_kill = $res_kill->fetch_assoc()) {
+        $ai_global_status = $row_kill['value'];
+    }
+    $stmt_kill->close();
+}
+
+if ($ai_global_status === 'disabled') {
+    send_json_response([
+        'status' => 'error',
+        'message' => 'The AI Assistant is currently disabled globally by the system administrator.'
+    ], 403);
+}
+
 $session_token = isset($input['session_token']) ? trim($input['session_token']) : '';
 $node_id = isset($input['node_id']) ? (int)$input['node_id'] : null;
 $message_content = isset($input['message']) ? trim($input['message']) : '';
