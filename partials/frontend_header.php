@@ -4,6 +4,27 @@ require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/permissions.php';
 $current_user = current_user();
 
+// Persistent dynamic bot page-context tracking loop
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+$page_name_tracked = basename($_SERVER['PHP_SELF']);
+$bot_context = [
+    'page_name' => $page_name_tracked,
+    'timestamp' => time()
+];
+
+if ($page_name_tracked === 'vendor-profile.php' && isset($provider)) {
+    $bot_context['vendor_uuid'] = $provider['uuid'] ?? '';
+    $bot_context['vendor_name'] = $provider['name'] ?? '';
+} elseif ($page_name_tracked === 'service-detail.php' && isset($service)) {
+    $bot_context['service_slug'] = $service['slug'] ?? '';
+    $bot_context['service_title'] = $service['title'] ?? '';
+    $bot_context['category_name'] = $service['category_name'] ?? '';
+}
+
+$_SESSION['bot_page_context'] = $bot_context;
+
 // Fetch dynamic header menu items
 $header_items = [];
 $h_res = $mysqli->query("SELECT mi.* FROM menu_items mi JOIN menus m ON m.id = mi.menu_id WHERE m.location = 'header' ORDER BY mi.sort_order ASC, mi.id ASC");

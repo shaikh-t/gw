@@ -65,8 +65,9 @@ if ($mysqli->query($sql)) {
 
 $mysqli->query("SET FOREIGN_KEY_CHECKS = 1;");
 
-// 4. Programmatically seed bot_nodes table
+// 4. Programmatically seed bot_nodes table with our brand-new dialogue and option matrix
 $nodes = [
+    // 1. Language Agnostic Welcome Root Node
     [
         'id' => 1,
         'parent_id' => null,
@@ -76,9 +77,52 @@ $nodes = [
         'spoken_text' => 'Welcome to GlobalWays! Please select your preferred language to begin.',
         'target_action' => null
     ],
+
+    // 2. English Welcome & Voice/Independent Choice Parent Tree
+    [
+        'id' => 10,
+        'parent_id' => 1,
+        'node_type' => 'voice_selection',
+        'language_iso' => 'en',
+        'display_text' => 'Thank you. Would you prefer to explore our platform with the assistance of our AI Voice Companion, or would you like to browse the site independently at your own pace?',
+        'spoken_text' => 'Thank you. Would you prefer to explore our platform with the assistance of our AI Voice Companion, or would you like to browse the site independently at your own pace?',
+        'target_action' => null
+    ],
+    // 3. French Welcome & Voice/Independent Choice Parent Tree
+    [
+        'id' => 11,
+        'parent_id' => 1,
+        'node_type' => 'voice_selection',
+        'language_iso' => 'fr',
+        'display_text' => 'Merci. Préféreriez-vous explorer notre plateforme avec l\'aide de notre compagnon vocal IA, ou préférez-vous naviguer sur le site de manière indépendante à votre propre rythme ?',
+        'spoken_text' => 'Merci. Préféreriez-vous explorer notre plateforme avec l\'aide de notre compagnon vocal IA, ou préférez-vous naviguer sur le site de manière indépendante à votre propre rythme ?',
+        'target_action' => null
+    ],
+    // 4. Arabic Welcome & Voice/Independent Choice Parent Tree
+    [
+        'id' => 12,
+        'parent_id' => 1,
+        'node_type' => 'voice_selection',
+        'language_iso' => 'ar',
+        'display_text' => 'شكراً لك. هل تفضل استكشاف منصتنا بمساعدة الرفيق الصوتي المدعوم بالذكاء الاصطناعي، أم ترغب في تصفح الموقع بشكل مستقل وبسرعتك الخاصة؟',
+        'spoken_text' => 'شكراً لك. هل تفضل استكشاف منصتنا بمساعدة الرفيق الصوتي المدعوم بالذكاء الاصطناعي، أم ترغب في تصفح الموقع بشكل مستقل وبسرعتك الخاصة؟',
+        'target_action' => null
+    ],
+    // 5. Urdu/Hindi Welcome & Voice/Independent Choice Parent Tree
+    [
+        'id' => 13,
+        'parent_id' => 1,
+        'node_type' => 'voice_selection',
+        'language_iso' => 'ur',
+        'display_text' => 'شکریہ۔ کیا آپ ہمارے AI وائس ساتھی کی مدد سے ہمارے پلیٹ فارم کو دریافت کرنا پسند کریں گے، یا آپ اپنی رفتار سے خود ویب سائٹ دیکھنا پسند کریں گے؟',
+        'spoken_text' => 'شکریہ۔ کیا آپ ہمارے AI وائس ساتھی کی مدد سے ہمارے پلیٹ فارم کو دریافت کرنا پسند کریں گے، یا آپ اپنی رفتار سے خود ویب سائٹ دیکھنا پسند کریں گے؟',
+        'target_action' => null
+    ],
+
+    // 6. Voice Onboarding Paths (Category Selectors)
     [
         'id' => 2,
-        'parent_id' => 1,
+        'parent_id' => 10,
         'node_type' => 'category_select',
         'language_iso' => 'en',
         'display_text' => 'Hello! Welcome to GlobalWays. We simplify UAE documentation. Please select a service category to get started.',
@@ -87,7 +131,7 @@ $nodes = [
     ],
     [
         'id' => 3,
-        'parent_id' => 1,
+        'parent_id' => 11,
         'node_type' => 'category_select',
         'language_iso' => 'fr',
         'display_text' => 'Bonjour! Bienvenue sur GlobalWays. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
@@ -96,7 +140,7 @@ $nodes = [
     ],
     [
         'id' => 4,
-        'parent_id' => 1,
+        'parent_id' => 12,
         'node_type' => 'category_select',
         'language_iso' => 'ar',
         'display_text' => 'مرحباً بك في غلوبال وايز! نحن نبسط الإجراءات والمعاملات الرسمية في دولة الإمارات العربية المتحدة. يرجى اختيار قسم الخدمة للبدء.',
@@ -105,13 +149,53 @@ $nodes = [
     ],
     [
         'id' => 5,
-        'parent_id' => 1,
+        'parent_id' => 13,
         'node_type' => 'category_select',
         'language_iso' => 'ur',
         'display_text' => 'گلوبل ویز میں خوش آمدید! ہم متحدہ عرب امارات کے کاغذی کام کو آسان بناتے ہیں۔ شروع کرنے کے لیے برائے مہربانی ایک سروس کیٹیگری منتخب کریں۔',
         'spoken_text' => 'گلوبل ویز میں خوش آمدید! ہم متحدہ عرب امارات کے کاغذی کام کو آسان بناتے ہیں۔ شروع کرنے کے لیے برائے مہربانی ایک سروس کیٹیگری منتخب کریں۔',
         'target_action' => 'fetch_categories'
     ],
+
+    // 7. Independent Browse Choice Paths
+    [
+        'id' => 20,
+        'parent_id' => 10,
+        'node_type' => 'independent_browse',
+        'language_iso' => 'en',
+        'display_text' => 'Understood. I will remain silently available in the bottom corner of your screen. As you browse our services, I will automatically keep track of your progress so that whenever you require guidance, we can seamlessly pick up exactly where you left off.',
+        'spoken_text' => 'Understood. I will remain silently available in the bottom corner of your screen. As you browse our services, I will automatically keep track of your progress so that whenever you require guidance, we can seamlessly pick up exactly where you left off.',
+        'target_action' => 'independent_browse'
+    ],
+    [
+        'id' => 21,
+        'parent_id' => 11,
+        'node_type' => 'independent_browse',
+        'language_iso' => 'fr',
+        'display_text' => 'Compris. Je resterai discrètement disponible dans le coin inférieur de votre écran. Pendant votre navigation, je suivrai automatiquement votre progression afin que, dès que vous aurez besoin de conseils, nous puissions reprendre exactement là où vous vous étiez arrêté.',
+        'spoken_text' => 'Compris. Je resterai discrètement disponible dans le coin inférieur de votre écran. Pendant votre navigation, je suivrai automatiquement votre progression afin que, dès que vous aurez besoin de conseils, nous puissions reprendre exactement là où vous vous étiez arrêté.',
+        'target_action' => 'independent_browse'
+    ],
+    [
+        'id' => 22,
+        'parent_id' => 12,
+        'node_type' => 'independent_browse',
+        'language_iso' => 'ar',
+        'display_text' => 'مفهوم. سأظل متاحاً بصمت في الزاوية السفلية من شاشتك. بينما تتصفح خدماتنا، سأتابع تقدمك تلقائياً حتى نتمكن من المتابعة من حيث توقفت تماماً كلما احتجت إلى توجيه.',
+        'spoken_text' => 'مفهوم. سأظل متاحاً بصمت في الزاوية السفلية من شاشتك. بينما تتصفح خدماتنا، سأتابع تقدمك تلقائياً حتى نتمكن من المتابعة من حيث توقفت تماماً كلما احتجت إلى توجيه.',
+        'target_action' => 'independent_browse'
+    ],
+    [
+        'id' => 23,
+        'parent_id' => 13,
+        'node_type' => 'independent_browse',
+        'language_iso' => 'ur',
+        'display_text' => 'سمجھ گیا۔ میں آپ کی اسکرین کے نچلے کونے میں خاموشی سے دستیاب رہوں گا۔ جیسے ہی آپ ہماری خدمات کو براؤز کریں گے، میں خود بخود آپ کی پیشرفت پر نظر رکھوں گا تاکہ جب بھی آپ کو رہنمائی کی ضرورت ہو، ہم وہیں سے بغیر کسی رکاوٹ کے شروع کر سکیں جہاں سے آپ نے چھوڑا تھا۔',
+        'spoken_text' => 'سمجھ گیا۔ میں آپ کی اسکرین کے نچلے کونے میں خاموشی سے دستیاب رہوں گا۔ جیسے ہی آپ ہماری خدمات کو براؤز کریں گے، میں خود بخود آپ کی پیشرفت پر نظر رکھوں گا تاکہ جب بھی آپ کو رہنمائی کی ضرورت ہو، ہم وہیں سے بغیر کسی رکاوٹ کے شروع کر سکیں جہاں سے آپ نے چھوڑا تھا۔',
+        'target_action' => 'independent_browse'
+    ],
+
+    // 8. Shared Handlers
     [
         'id' => 6,
         'parent_id' => null,
