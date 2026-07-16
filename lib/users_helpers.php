@@ -19,7 +19,7 @@ function users_paginated(int $page = 1, int $perPage = 20): array {
     $perPage = max(1, intval($perPage));
     $offset = ($page - 1) * $perPage;
     $out = [];
-    $sql = "SELECT id, name, email, avatar, phone, created_at FROM users ORDER BY created_at DESC LIMIT $offset, $perPage";
+    $sql = "SELECT id,uuid, name, email, avatar, phone, created_at FROM users ORDER BY created_at DESC LIMIT $offset, $perPage";
     if ($res = $mysqli->query($sql)) {
         while ($r = $res->fetch_assoc()) $out[] = $r;
         $res->free();

@@ -290,7 +290,7 @@
     await loadPartials();
     initNavbarScroll();
     highlightActiveNav();
-    initCustomCursor();
+    // initCustomCursor();
     enhanceScrollReveal();
     initCounters();
 

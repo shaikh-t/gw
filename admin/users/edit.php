@@ -4,10 +4,13 @@ require_permission_or_die('users.manage');
 require_once __DIR__ . '/../../lib/users_helpers.php';
 require_once __DIR__ . '/../../lib/role_helpers.php';
 
-$id = intval($_GET['id'] ?? 0);
+// $id = intval($_GET['id'] ?? 0);
+$id = $_GET['uuid'] ?? $_GET['id'] ?? '';
+
 $user_new = user_find($id);
 if (!$user_new) { http_response_code(404); echo 'Not found'; exit; }
-
+$id=$user_new['id'];
+// print_r($user_new);
 $roles = roles_all();
 // load assigned role ids
 $assigned = [];

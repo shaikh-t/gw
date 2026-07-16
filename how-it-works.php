@@ -134,7 +134,7 @@ include __DIR__ . '/partials/frontend_header.php';
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('how-it-works-page');
-    document.body.classList.add('has-custom-cursor');
+    // document.body.classList.add('has-custom-cursor');
 });
 </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>
