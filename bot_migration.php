@@ -46,6 +46,18 @@ if ($mysqli->query($sql)) {
     echo "Warning/Error creating bot_sessions table: " . $mysqli->error . "\n";
 }
 
+// Add 'entry_point' column to bot_sessions if not exists
+$res_col = $mysqli->query("SHOW COLUMNS FROM bot_sessions LIKE 'entry_point'");
+if ($res_col && $res_col->num_rows === 0) {
+    if ($mysqli->query("ALTER TABLE bot_sessions ADD COLUMN `entry_point` VARCHAR(150) DEFAULT NULL")) {
+        echo "Column 'entry_point' added to bot_sessions successfully.\n";
+    } else {
+        echo "Error adding column 'entry_point': " . $mysqli->error . "\n";
+    }
+} else {
+    echo "Column 'entry_point' already exists in bot_sessions.\n";
+}
+
 // 3. Create bot_chat_logs table
 $sql = "CREATE TABLE IF NOT EXISTS `bot_chat_logs` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -237,6 +249,26 @@ foreach ($nodes as $n) {
             $stmt->execute();
             $stmt->close();
         }
+    }
+}
+
+// Seed 'ai_bot_global_status' in site_settings if not exists
+$stmt_check = $mysqli->prepare("SELECT id FROM site_settings WHERE `key` = 'ai_bot_global_status' LIMIT 1");
+if ($stmt_check) {
+    $stmt_check->execute();
+    $res = $stmt_check->get_result();
+    $exists = ($res && $res->num_rows > 0);
+    $stmt_check->close();
+} else {
+    $exists = false;
+}
+
+if (!$exists) {
+    $stmt_ins = $mysqli->prepare("INSERT INTO site_settings (`key`, `value`, `label`, `type`) VALUES ('ai_bot_global_status', 'enabled', 'AI Bot Global Status', 'text')");
+    if ($stmt_ins) {
+        $stmt_ins->execute();
+        $stmt_ins->close();
+        echo "Default config key 'ai_bot_global_status' seeded successfully.\n";
     }
 }
 

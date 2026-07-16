@@ -292,6 +292,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadInitialMenu();
 });
 
+function getEntryPoint() {
+  const path = window.location.pathname.split('/').pop() || '';
+  if (path === '' || path === 'index.php') return 'home_page';
+  if (path.includes('vendor-profile')) return 'vendor_profile';
+  if (path.includes('service-detail')) return 'service_detail';
+  return path || 'general_page';
+}
+
 function toggleBotChat() {
   const container = document.getElementById('botChatContainer');
   const activeState = container.classList.toggle('active');
@@ -302,6 +310,7 @@ function toggleBotChat() {
     let payload = {
       session_token: botSessionToken,
       badge_click: true,
+      entry_point: getEntryPoint(),
       page_context: {
         page_name: pageName,
         url: window.location.href
@@ -356,6 +365,7 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '') {
     session_token: botSessionToken,
     node_id: nodeId,
     message: userInputText || messageText,
+    entry_point: getEntryPoint(),
     page_context: {
       page_name: pageName,
       url: window.location.href

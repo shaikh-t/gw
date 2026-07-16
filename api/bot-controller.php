@@ -69,6 +69,7 @@ $node_id = isset($input['node_id']) ? (int)$input['node_id'] : null;
 $message_content = isset($input['message']) ? trim($input['message']) : '';
 $page_context_input = isset($input['page_context']) && is_array($input['page_context']) ? $input['page_context'] : null;
 $badge_click = isset($input['badge_click']) && (bool)$input['badge_click'];
+$entry_point_input = isset($input['entry_point']) ? trim($input['entry_point']) : '';
 
 // Start session to access page context tracking or login user state
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -186,6 +187,7 @@ if ($is_mock_mode) {
             'session_token' => $session_token,
             'selected_language' => null,
             'current_node_id' => 1,
+            'entry_point' => $entry_point_input,
             'chat_logs' => []
         ];
     }
@@ -340,10 +342,10 @@ if (!$session) {
     $session_token = bin2hex(random_bytes(32));
     $user_id = isset($_SESSION['user']['id']) ? (int)$_SESSION['user']['id'] : null;
 
-    $stmt = $mysqli->prepare("INSERT INTO bot_sessions (session_token, user_id, current_node_id) VALUES (?, ?, ?)");
+    $stmt = $mysqli->prepare("INSERT INTO bot_sessions (session_token, user_id, current_node_id, entry_point) VALUES (?, ?, ?, ?)");
     if ($stmt) {
         $initial_node_id = 1;
-        $stmt->bind_param('sii', $session_token, $user_id, $initial_node_id);
+        $stmt->bind_param('siis', $session_token, $user_id, $initial_node_id, $entry_point_input);
         if ($stmt->execute()) {
             $session_id = $mysqli->insert_id;
             $session = [

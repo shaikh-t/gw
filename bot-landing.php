@@ -408,6 +408,7 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '', f
     session_token: botSessionToken,
     node_id: nodeId,
     message: userInputText || messageText,
+    entry_point: 'immersive_landing',
     page_context: {
       page_name: pageName,
       url: window.location.href
