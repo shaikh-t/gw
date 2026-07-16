@@ -16,6 +16,24 @@ if (!empty($_SESSION['user'])) {
 $error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $recaptcha_token = $_POST['recaptcha_token'] ?? '';
+
+    if (empty($recaptcha_token)) {
+        die("Security verification failed: Missing reCAPTCHA token.");
+    }
+
+    // 1. Fire an internal validation POST payload straight to Google
+    $secret_key = '6LcH4VYtAAAAAB7PMfTAal-_1HLP0hl53ZRNUG7i';
+    $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+    
+    $response = file_get_contents($verify_url . '?secret=' . $secret_key . '&response=' . $recaptcha_token);
+    $response_data = json_decode($response);
+
+    // 2. reCAPTCHA v3 returns a trust score between 0.0 (Bot) and 1.0 (Human)
+    if ($response_data->success && $response_data->score >= 0.5) {
+        // Human confirmed! Proceed with your database inserts or Jules workflows
+        // echo "Account successfully verified and processed.";
+    
     if (!csrf_check($_POST['_csrf'] ?? '')) {
         die('Invalid CSRF');
     }
@@ -89,6 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt_check->close();
     }
+
+} else {
+        // Bot activity or high risk detected. Terminate processing safely.
+        die("Spam protection trigger: Automated dummy account creation blocked.");
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -99,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Register — GlobalWays</title>
   <meta name="description" content="Create your free GlobalWays account to compare vendors and track UAE applications.">
   <link href="css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcH4VYtAAAAAKHSVcxZd4Vb6eiv6fHO0F0wN1uG"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/globalways.css" rel="stylesheet">
   <!-- 1. Ensure the CDN library scripts are explicitly loaded first -->
@@ -313,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </p>
                 <p class="small text-secondary text-center mb-0">Already have an account? <a href="login.php" class="text-dark fw-medium">Sign in</a></p>
               </div>
-
+ <input type="hidden" id="recaptcha-token" name="recaptcha_token">
             </form>
 
           </div>
@@ -387,6 +411,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById('selectedGoal').value = card.querySelector('.goal-label').textContent.trim();
       });
     });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Pause form submission temporarily
+    const form = this;
+
+    // Request an invisible bot analysis verification token from Google
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6LcH4VYtAAAAAKHSVcxZd4Vb6eiv6fHO0F0wN1uG', {action: 'registration'}).then(function(token) {
+            // Store the token inside our hidden input box
+            document.getElementById('recaptcha-token').value = token;
+            // Now fully release and submit the form payload to PHP
+            form.submit();
+        });
+    });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const countries = [
