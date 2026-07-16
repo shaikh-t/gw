@@ -6,10 +6,10 @@
 
 // Decoupled reCAPTCHA keys
 if (!defined('RECAPTCHA_SITE_KEY')) {
-    define('RECAPTCHA_SITE_KEY', 'YOUR_SITE_KEY');
+    define('RECAPTCHA_SITE_KEY', '6LcH4VYtAAAAAKHSVcxZd4Vb6eiv6fHO0F0wN1uG');
 }
 if (!defined('RECAPTCHA_SECRET_KEY')) {
-    define('RECAPTCHA_SECRET_KEY', 'YOUR_SECRET_KEY');
+    define('RECAPTCHA_SECRET_KEY', '6LcH4VYtAAAAAB7PMfTAal-_1HLP0hl53ZRNUG7i');
 }
 
 /**
