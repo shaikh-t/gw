@@ -60,6 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selected_gateway_name = trim($_POST['gateway_name'] ?? '');
     $force_result = trim($_POST['force_result'] ?? 'success');
 
+    // Secure Anti-Tampering Double-Check Verification (Appendix A Step 2)
+    // Always fetch the price directly from the database right before processing intent.
+    $stmt_chk = $mysqli->prepare("SELECT s.price FROM services s JOIN cases c ON c.service_id = s.id WHERE c.uuid = ? LIMIT 1");
+    if ($stmt_chk) {
+        $stmt_chk->bind_param('s', $case_uuid);
+        $stmt_chk->execute();
+        $res_chk = $stmt_chk->get_result();
+        if ($row_chk = $res_chk->fetch_assoc()) {
+            $service_price = (float)$row_chk['price'];
+        }
+        $stmt_chk->close();
+    }
+
     $gateway = null;
     if ($selected_gateway_name !== '') {
         $gateway = PaymentGatewayFactory::getGateway($selected_gateway_name);

@@ -1,73 +1,13 @@
-[Wed Jul 15 13:44:22 2026] PHP 8.3.6 Development Server (http://127.0.0.1:8000) started
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54400 Accepted
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54400 [302]: GET /login.php?action=demo_login
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54400 Closing
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54416 Accepted
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54416 [404]: GET /gw3/gw/customer/index.php - No such file or directory
-[Wed Jul 15 13:45:07 2026] 127.0.0.1:54416 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54430 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54430 [200]: GET /vendor-profile.php
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54430 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54442 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54450 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54456 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54442 [200]: GET /css/globalways.css
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54450 [200]: GET /assets/logo.png
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54456 [200]: GET /assets/logo-white.png
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54450 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54456 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54442 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54468 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54474 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54468 [404]: GET /gw3/gw/public/uploads/providers/a0805473647f28e0281c6f32.png - No such file or directory
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54468 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54474 [200]: GET /js/main.js
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:54474 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50464 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50464 [200]: GET /js/notifications.js
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50464 Closing
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50480 Accepted
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50480 [200]: GET /get-unread-notifications.php
-[Wed Jul 15 13:45:08 2026] 127.0.0.1:50480 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50494 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50494 [200]: GET /create-case.php?vendor_id=59ee7db4-44e7-4254-8b97-8fbe6c289005
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50494 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50500 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50506 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50518 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50500 [200]: GET /css/globalways.css
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50506 [200]: GET /assets/logo.png
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50518 [200]: GET /assets/logo-white.png
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50506 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50500 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50518 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50524 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50532 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50524 [404]: GET /gw3/gw/public/uploads/providers/a0805473647f28e0281c6f32.png - No such file or directory
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50524 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50532 [200]: GET /js/main.js
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50532 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50538 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50538 [200]: GET /js/notifications.js
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50538 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50552 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50552 [200]: GET /get-unread-notifications.php
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50552 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50560 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50560 [302]: POST /create-case.php?vendor_id=59ee7db4-44e7-4254-8b97-8fbe6c289005
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50560 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50564 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50564 [200]: GET /customer/index.php
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50564 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50578 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50578 [200]: GET /css/globalways.css
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50578 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50584 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50584 [200]: GET /js/main.js
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50584 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50592 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50592 [200]: GET /js/notifications.js
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50592 Closing
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50608 Accepted
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50608 [200]: GET /get-unread-notifications.php
-[Wed Jul 15 13:45:10 2026] 127.0.0.1:50608 Closing
+[Thu Jul 16 20:45:17 2026] PHP 8.3.6 Development Server (http://127.0.0.1:8000) started
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 Accepted
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 [200]: GET /bot-landing.php
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 Closing
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 Accepted
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 Accepted
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 [200]: GET /css/globalways.css
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 [200]: GET /assets/logo.png
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 Closing
+[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 Closing
+[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 Accepted
+[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 [200]: POST /api/bot-controller.php
+[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 Closing

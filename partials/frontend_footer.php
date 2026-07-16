@@ -22,6 +22,7 @@ if ($res3) {
     while ($row = $res3->fetch_assoc()) $footer_utility[] = $row;
 }
 ?>
+  </div><!-- /#main-content-layout -->
   <!-- Footer -->
   <footer class="gw-footer">
   <div class="container-xl pt-5 pb-4">
@@ -90,5 +91,21 @@ if ($res3) {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
+  <?php
+    $ai_bot_global_status = 'enabled';
+    $stmt_ai = $mysqli->prepare("SELECT `value` FROM `site_settings` WHERE `key` = 'ai_bot_global_status' LIMIT 1");
+    if ($stmt_ai) {
+        $stmt_ai->execute();
+        $res_ai = $stmt_ai->get_result();
+        if ($row_ai = $res_ai->fetch_assoc()) {
+            $ai_bot_global_status = $row_ai['value'];
+        }
+        $stmt_ai->close();
+    }
+
+    if ($ai_bot_global_status !== 'disabled'):
+  ?>
+    <?php include __DIR__ . '/../templates/bot-widget.php'; ?>
+  <?php endif; ?>
 </body>
 </html>

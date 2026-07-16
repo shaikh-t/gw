@@ -120,6 +120,9 @@ if (can('messages.manage')) {
       <?php nav_item($domain . '/admin/settings/features.php', 'Landing Features', '', $current === 'admin/settings/features.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/testimonials.php', 'Testimonials', '', $current === 'admin/settings/testimonials.php' ? 'active' : ''); ?>
     <?php endif; ?>
+    <?php if (is_role('Super Admin')): ?>
+      <?php nav_item($domain . '/admin/settings/ai_status.php', 'AI Global Kill-Switch', '<i class="bi bi-robot"></i>', $current === 'admin/settings/ai_status.php' ? 'active' : ''); ?>
+    <?php endif; ?>
   </ul>
 
   <div class="sidebar-footer mt-auto p-3 border-top">
