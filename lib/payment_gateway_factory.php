@@ -52,6 +52,24 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface {
                 $this->is_enabled = false;
             }
         }
+
+        // Production Escrow Override: Check and load configuration from central global constants if defined
+        $const_name = $name;
+        if ($const_name === 'Authorize.net') {
+            $const_prefix = 'AUTHORIZENET';
+        } else {
+            $const_prefix = strtoupper($const_name);
+        }
+
+        if (defined($const_prefix . '_PUBLIC_KEY')) {
+            $this->public_key = constant($const_prefix . '_PUBLIC_KEY');
+        }
+        if (defined($const_prefix . '_SECRET_KEY')) {
+            $this->secret_key = constant($const_prefix . '_SECRET_KEY');
+        }
+        if (defined($const_prefix . '_SANDBOX_MODE')) {
+            $this->sandbox_mode = (bool)constant($const_prefix . '_SANDBOX_MODE');
+        }
     }
 
     public function getName(): string {
