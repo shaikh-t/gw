@@ -251,10 +251,15 @@ function get_customer_applications(int $userId): array {
     global $mysqli;
     ensure_customer_seeded($userId);
     $apps = [];
-    $res = $mysqli->query("SELECT * FROM customer_applications WHERE user_id = $userId ORDER BY id DESC");
-    if ($res) {
-        while ($row = $res->fetch_assoc()) $apps[] = $row;
-        $res->free();
+    $stmt = $mysqli->prepare("SELECT * FROM customer_applications WHERE user_id = ? ORDER BY id DESC");
+    if ($stmt) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $apps[] = $row;
+        }
+        $stmt->close();
     }
     return $apps;
 }
@@ -265,12 +270,15 @@ function get_customer_applications(int $userId): array {
 function get_customer_application(int $userId, string $uuid): ?array {
     global $mysqli;
     ensure_customer_seeded($userId);
+    $app = null;
     $stmt = $mysqli->prepare("SELECT * FROM customer_applications WHERE user_id = ? AND uuid = ? LIMIT 1");
-    $stmt->bind_param('is', $userId, $uuid);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $app = $res->fetch_assoc();
-    $stmt->close();
+    if ($stmt) {
+        $stmt->bind_param('is', $userId, $uuid);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $app = $res->fetch_assoc();
+        $stmt->close();
+    }
     return $app;
 }
 
@@ -281,10 +289,15 @@ function get_customer_documents(int $userId): array {
     global $mysqli;
     ensure_customer_seeded($userId);
     $docs = [];
-    $res = $mysqli->query("SELECT * FROM customer_documents WHERE user_id = $userId ORDER BY status ASC, id DESC");
-    if ($res) {
-        while ($row = $res->fetch_assoc()) $docs[] = $row;
-        $res->free();
+    $stmt = $mysqli->prepare("SELECT * FROM customer_documents WHERE user_id = ? ORDER BY status ASC, id DESC");
+    if ($stmt) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $docs[] = $row;
+        }
+        $stmt->close();
     }
     return $docs;
 }
@@ -296,10 +309,15 @@ function get_customer_payments(int $userId): array {
     global $mysqli;
     ensure_customer_seeded($userId);
     $payments = [];
-    $res = $mysqli->query("SELECT * FROM customer_payments WHERE user_id = $userId ORDER BY payment_date DESC, id DESC");
-    if ($res) {
-        while ($row = $res->fetch_assoc()) $payments[] = $row;
-        $res->free();
+    $stmt = $mysqli->prepare("SELECT * FROM customer_payments WHERE user_id = ? ORDER BY payment_date DESC, id DESC");
+    if ($stmt) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $payments[] = $row;
+        }
+        $stmt->close();
     }
     return $payments;
 }
@@ -311,10 +329,15 @@ function get_customer_messages(int $userId): array {
     global $mysqli;
     ensure_customer_seeded($userId);
     $messages = [];
-    $res = $mysqli->query("SELECT * FROM customer_messages WHERE user_id = $userId ORDER BY created_at ASC");
-    if ($res) {
-        while ($row = $res->fetch_assoc()) $messages[] = $row;
-        $res->free();
+    $stmt = $mysqli->prepare("SELECT * FROM customer_messages WHERE user_id = ? ORDER BY created_at ASC");
+    if ($stmt) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($row = $res->fetch_assoc()) {
+            $messages[] = $row;
+        }
+        $stmt->close();
     }
     return $messages;
 }
