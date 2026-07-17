@@ -526,7 +526,20 @@ foreach ($default_items as $location => $items) {
     }
 }
 
-// 14. Seed 8 core services if services table is mostly empty
+// 14. Create payment_transactions table
+$sql = "CREATE TABLE IF NOT EXISTS `payment_transactions` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `transaction_id` VARCHAR(255) NOT NULL UNIQUE,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+if ($mysqli->query($sql)) {
+    echo "payment_transactions table checked/created successfully.\n";
+} else {
+    die("Error creating payment_transactions table: " . $mysqli->error . "\n");
+}
+
+// 15. Seed 8 core services if services table is mostly empty
 $res_serv = $mysqli->query("SELECT COUNT(*) as cnt FROM services");
 $cnt_serv = $res_serv->fetch_assoc();
 if ($cnt_serv['cnt'] <= 1) {

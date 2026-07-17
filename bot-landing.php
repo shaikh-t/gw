@@ -1,7 +1,88 @@
 <?php
 // bot-landing.php
-require_once __DIR__ . '/lib/auth.php';
 require_once __DIR__ . '/lib/db_mysqli.php';
+
+// Check global AI Kill-Switch status
+$ai_global_status = 'enabled';
+if (isset($mysqli) && !$mysqli->connect_errno) {
+    $stmt_kill = $mysqli->prepare("SELECT `value` FROM `site_settings` WHERE `key` = 'ai_bot_global_status' LIMIT 1");
+    if ($stmt_kill) {
+        $stmt_kill->execute();
+        $res_kill = $stmt_kill->get_result();
+        if ($row_kill = $res_kill->fetch_assoc()) {
+            $ai_global_status = $row_kill['value'];
+        }
+        $stmt_kill->close();
+    }
+}
+
+if ($ai_global_status === 'disabled') {
+    http_response_code(403);
+    header('HTTP/1.1 403 Forbidden');
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>AI Workspace Offline — GlobalWays®</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+      <style>
+        body {
+          background-color: #f9fafb;
+          font-family: system-ui, -apple-system, sans-serif;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0;
+        }
+        .maintenance-card {
+          background-color: #ffffff;
+          border-radius: 20px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+          padding: 40px;
+          max-width: 500px;
+          text-align: center;
+          border: 1px solid #e5e7eb;
+        }
+        .icon-box {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background-color: #fef3c7;
+          color: #d97706;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2.5rem;
+          margin: 0 auto 24px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="maintenance-card">
+        <div class="icon-box">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h1 class="h4 fw-bold text-dark mb-3">AI Workspace Offline</h1>
+        <p class="text-secondary mb-4">
+          The AI Assistant is currently undergoing routine maintenance. Please browse our website manually.
+        </p>
+        <div class="d-grid">
+          <a href="index.php" class="btn btn-primary py-2.5 rounded-pill fw-medium">
+            <i class="bi bi-house-door-fill me-1"></i> Return to Homepage
+          </a>
+        </div>
+      </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
+require_once __DIR__ . '/lib/auth.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();

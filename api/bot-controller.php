@@ -9,6 +9,35 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/uuid_helper.php';
 
+// Ensure database connection is active
+if (!isset($mysqli) || $mysqli->connect_errno) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Database connection is unavailable.'
+    ]);
+    exit;
+}
+
+// Global Super Admin AI Bot Kill-Switch Validation at absolute top
+$ai_global_status = 'enabled';
+$stmt_kill = $mysqli->prepare("SELECT `value` FROM `site_settings` WHERE `key` = 'ai_bot_global_status' LIMIT 1");
+if ($stmt_kill) {
+    $stmt_kill->execute();
+    $res_kill = $stmt_kill->get_result();
+    if ($row_kill = $res_kill->fetch_assoc()) {
+        $ai_global_status = $row_kill['value'];
+    }
+    $stmt_kill->close();
+}
+
+if ($ai_global_status === 'disabled') {
+    http_response_code(403);
+    header('HTTP/1.1 403 Forbidden');
+    exit;
+}
+
 // Appendix B: AI System Prompt Blueprint Master Constant
 define('AI_SYSTEM_PROMPT_BLUEPRINT', "ROLE AND CONTEXT:
 You are the highly sophisticated, multilingual AI Global Concierge for our premium consultancy and service marketplace. Your voice is welcoming, authoritative, concise, and professional. You operate exclusively as an intelligent router and helpful assistant, guiding customers through options before they book specialized service packages (Immigration, Visit Visas, and Business Setup).
@@ -56,39 +85,46 @@ if (!is_array($input)) {
     ], 400);
 }
 
-// Ensure database connection is active
-if (!isset($mysqli)) {
-    send_json_response([
-        'status' => 'error',
-        'message' => 'Database connection variable is not defined.'
-    ], 500);
-}
-
-// Global Super Admin AI Bot Kill-Switch Validation
-$ai_global_status = 'enabled';
-$stmt_kill = $mysqli->prepare("SELECT `value` FROM `site_settings` WHERE `key` = 'ai_bot_global_status' LIMIT 1");
-if ($stmt_kill) {
-    $stmt_kill->execute();
-    $res_kill = $stmt_kill->get_result();
-    if ($row_kill = $res_kill->fetch_assoc()) {
-        $ai_global_status = $row_kill['value'];
-    }
-    $stmt_kill->close();
-}
-
-if ($ai_global_status === 'disabled') {
-    send_json_response([
-        'status' => 'error',
-        'message' => 'The AI Assistant is currently disabled globally by the system administrator.'
-    ], 403);
-}
-
 $session_token = isset($input['session_token']) ? trim($input['session_token']) : '';
 $node_id = isset($input['node_id']) ? (int)$input['node_id'] : null;
+
+// Strongly Type and Sanitize spoken and textual inputs to prevent XSS
 $message_content = isset($input['message']) ? trim($input['message']) : '';
+if ($message_content !== '') {
+    $message_content = htmlspecialchars($message_content, ENT_QUOTES, 'UTF-8');
+}
+
+$spoken_input_message = isset($input['spoken_input_message']) ? trim($input['spoken_input_message']) : '';
+if ($spoken_input_message !== '') {
+    $spoken_input_message = htmlspecialchars($spoken_input_message, ENT_QUOTES, 'UTF-8');
+    // If message is empty but spoken is set, sync them
+    if ($message_content === '') {
+        $message_content = $spoken_input_message;
+    }
+}
+
+// Enforce strict regex validation for payload_value
+$payload_value = isset($input['payload_value']) ? trim($input['payload_value']) : '';
+if ($payload_value !== '') {
+    $is_uuid = preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $payload_value);
+    $is_alnum = preg_match('/^[a-zA-Z0-9_\-]+$/', $payload_value);
+    if (!$is_uuid && !$is_alnum) {
+        http_response_code(400);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Invalid payload format.'
+        ]);
+        exit;
+    }
+}
+
 $page_context_input = isset($input['page_context']) && is_array($input['page_context']) ? $input['page_context'] : null;
 $badge_click = isset($input['badge_click']) && (bool)$input['badge_click'];
 $entry_point_input = isset($input['entry_point']) ? trim($input['entry_point']) : '';
+if ($entry_point_input !== '') {
+    $entry_point_input = htmlspecialchars($entry_point_input, ENT_QUOTES, 'UTF-8');
+}
 
 // Start session to access page context tracking or login user state
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -216,7 +252,10 @@ if ($is_mock_mode) {
     if ($node_id === 1) {
         $session['current_node_id'] = 1;
         $session['selected_language'] = null;
+        $session['chat_logs'] = [];
         $node_id = null;
+        $_SESSION['bot_page_context'] = [];
+        session_regenerate_id(true);
     }
 
     // Dynamic Badge Click Context Restore
@@ -395,9 +434,18 @@ if ($node_id === 1) {
         $stmt->execute();
         $stmt->close();
     }
+    // Purge all active history nodes/chat logs for this session
+    $stmt_del = $mysqli->prepare("DELETE FROM bot_chat_logs WHERE session_id = ?");
+    if ($stmt_del) {
+        $stmt_del->bind_param('i', $session_id);
+        $stmt_del->execute();
+        $stmt_del->close();
+    }
     $session['current_node_id'] = 1;
     $session['selected_language'] = null;
     $node_id = null;
+    $_SESSION['bot_page_context'] = [];
+    session_regenerate_id(true);
 }
 
 // Badge Click Dynamic Restorative Interaction Logic
