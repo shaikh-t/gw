@@ -79,11 +79,16 @@ echo '<main class="main-content p-4">';
         <h2 class="h4 mb-1 fw-bold text-dark"><i class="bi bi-people-fill text-primary"></i> Customer CRM</h2>
         <p class="text-muted small mb-0">Manage and track unified customer activities, timelines, and accounts.</p>
       </div>
-      <?php if (can('users.manage')): ?>
-        <a href="<?php echo $domain;?>/admin/crm/create.php" class="btn btn-primary d-flex align-items-center gap-1">
-          <i class="bi bi-person-plus-fill"></i> Add New Customer
+      <div class="d-flex gap-2 align-items-center">
+        <a href="<?php echo $domain;?>/admin/crm/failed-questions.php" class="btn btn-outline-danger d-flex align-items-center gap-1">
+          <i class="bi bi-question-circle"></i> Failed Questions Log
         </a>
-      <?php endif; ?>
+        <?php if (can('users.manage')): ?>
+          <a href="<?php echo $domain;?>/admin/crm/create.php" class="btn btn-primary d-flex align-items-center gap-1">
+            <i class="bi bi-person-plus-fill"></i> Add New Customer
+          </a>
+        <?php endif; ?>
+      </div>
     </div>
 
     <!-- Search bar -->
