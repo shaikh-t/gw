@@ -3,11 +3,13 @@
 require_once __DIR__ . '/permissions.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/csrf.php';
+
 function require_permission_or_die(string $perm) {
     global $domain;
     if (!current_user()) {
         // not logged in
-        header('Location: '.$domain.'/login.php');
+        http_response_code(403);
+        header('Location: '.$domain.'/login.php', true, 403);
         exit;
     }
     if (!can($perm)) {

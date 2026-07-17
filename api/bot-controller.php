@@ -651,6 +651,78 @@ if ($is_mock_mode) {
         session_regenerate_id(true);
     }
 
+    // Local Document Retrieval (RAG) System & Fail-Closed Logging Hook for Mock Mode
+    $is_system_action = in_array(strtolower($message_content), ['reset', 'back', 'start fresh', 'ai voice companion', 'browse independently']);
+    if ($node_id === null && $message_content !== '' && !$is_system_action) {
+        $rag_context = "";
+        $has_rag_matches = false;
+        $source_files = [];
+        $language_iso = $session['selected_language'] ?: 'en';
+        $chunks = [];
+
+        $stmt_rag = $mysqli->prepare("SELECT text_content, file_name, page_number FROM local_knowledge_base WHERE MATCH(text_content) AGAINST(?) LIMIT 3");
+        if ($stmt_rag) {
+            $stmt_rag->bind_param('s', $message_content);
+            $stmt_rag->execute();
+            $res_rag = $stmt_rag->get_result();
+            if ($res_rag && $res_rag->num_rows > 0) {
+                $has_rag_matches = true;
+                while ($row_rag = $res_rag->fetch_assoc()) {
+                    $chunks[] = $row_rag['text_content'];
+                    $source_files[] = "[Source: " . $row_rag['file_name'] . ", Page " . $row_rag['page_number'] . "]";
+                }
+                $rag_context = implode("\n\n", $chunks);
+            }
+            $stmt_rag->close();
+        }
+
+        if ($has_rag_matches) {
+            $top_match = $chunks[0];
+            $display_text = "Verified Guidelines: " . $top_match;
+            if (strlen($display_text) > 180) {
+                $display_text = substr($display_text, 0, 180) . "...";
+            }
+            if (!empty($source_files)) {
+                $display_text .= "\n\n" . implode(", ", array_unique($source_files));
+            }
+            $spoken_text = "According to our verified guidelines: " . substr($top_match, 0, 150);
+
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => $display_text,
+                'spoken_text' => $spoken_text,
+                'language_iso' => $language_iso,
+                'next_options' => [
+                    ['node_id' => 1, 'label' => 'Start Fresh']
+                ]
+            ]);
+        } else {
+            $page_url = 'bot-landing.php';
+            $userId = null;
+
+            $stmt_fail = $mysqli->prepare("INSERT INTO bot_failed_questions (session_id, user_id, language_iso, unanswered_question, page_context_url) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt_fail) {
+                $stmt_fail->bind_param('iisss', $session_id, $userId, $language_iso, $message_content, $page_url);
+                $stmt_fail->execute();
+                $stmt_fail->close();
+            }
+
+            $fallback_display = "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.";
+
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => $fallback_display,
+                'spoken_text' => "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team. Let me loop you back.",
+                'language_iso' => $language_iso,
+                'next_options' => [
+                    ['node_id' => 1, 'label' => 'Start Fresh']
+                ]
+            ]);
+        }
+    }
+
     // Dynamic Badge Click Context Restore
     if ($badge_click) {
         $page_name = $current_page_context['page_name'] ?? '';
