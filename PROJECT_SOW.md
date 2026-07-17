@@ -50,6 +50,28 @@ To drop bot automated form-submissions without processing overhead:
 - The field is masked using absolute visual concealment CSS (`display:none; opacity:0; pointer-events:none;`).
 - Mappings in `lib/anti_spam_helper.php` check if this field contains any string content. If filled, the request is instantly blackholed, simulating a successful completion to the bot while executing zero database actions.
 
+#### F. Click-Fraud Rate Limiting sliding-window Check
+To prevent malicious click syndicates or botnets from draining sponsor budgets, the redirect click tracker inside `api/bot-ad-tracker.php` executes a sliding-window validation check:
+- **Proxy-Aware IP Filtering**: Resolves the visitor's client IP address securely, evaluating both `REMOTE_ADDR` and proxied `HTTP_X_FORWARDED_FOR` headers to ensure accuracy.
+- **Hourly Click Constraint**: Enforces a strict limit of **maximum 3 clicks per hour per IP address** for each unique campaign. If an IP exceeds this threshold, the system flags the click, bypasses the billing updates, and issues a redirect straight to the destination page without charging the sponsor.
+
+#### G. Secure Session Initialization Configurations
+The platform enforces the highest grade of session parameter attributes configured natively upon session initialization inside `lib/auth.php` and key entry files to block cross-site scripting (XSS) and token theft:
+```php
+session_start([
+    'cookie_lifetime' => 86400,
+    'cookie_secure' => true,
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Strict'
+]);
+```
+
+#### H. Integrated Pre-existing RBAC Compliance
+Three fresh permission parameters have been natively integrated with our pre-existing role-based tables:
+1. `can_manage_ads` (Allows access to monetization controls and ad creation forms).
+2. `can_view_failed_queries` (Grants access to failed question timelines).
+3. `can_edit_knowledge_base` (Allows direct manual text or PDF ingestion overrides).
+
 ---
 
 ### 3. MULTILINGUAL VOICE-BOT & DYNAMIC SITE-WIDE CONTEXT ENGINE
@@ -82,7 +104,12 @@ Voice synthesis and vocal input recognition are implemented directly via standar
 - **Spell-Checking & Verification**: When capturing complex fields (e.g. user names or business emails), the bot initiates an interactive spell-checking verification loop, confirming the character inputs back to the user before committing them.
 - **Character Set Sanity**: Strictly filters user inputs, allowing accented Western/diacritic elements while blocking non-Latin typography for user creation and naming processes.
 
-#### F. Operational Guide: Frontend Website & Voice Bot Interlocking
+#### F. Frontend Audio Waveform SVG Micro-interactions Framework
+Inside `bot-landing.php`, a modern inline SVG audio waveform indicator is embedded right alongside the mic trigger badge.
+- **Reactive Listeners**: The system binds client-side webkitSpeechRecognition event listeners (`onstart` / `onend`).
+- **Dynamic Animation Toggle**: When recording begins, the browser injects `.waveform-rippling` to animate the SVG paths dynamically via smooth CSS transitions. Upon stopping, the indicator is cleanly hidden, preventing visual distraction or interface clutter.
+
+#### G. Operational Guide: Frontend Website & Voice Bot Interlocking
 ```
   [User visits index.php]
          │
@@ -171,6 +198,11 @@ The engine accommodates three billing configurations:
    - When set to `'flat_rate_temporal'`, the standard budget caps (`max_budget`) and impression limits are completely bypassed.
    - The engine validates strictly chronologically: checking that the system `NOW()` time is between `start_date` and `end_date`, allowing sponsors to lease ad zones flat-rate for fixed calendar durations.
 
+#### E. Anti-Fraud Audit Validation Architecture (`bot_ad_fraud_logs`)
+The platform implements an automated anti-fraud validation table:
+- **Click-Fraud rate limiting logs**: Tracks historical click frequencies dynamically per IP address and ad identifier inside `bot_ad_fraud_logs` using parameterized statements.
+- **Budget Protection**: When click limits are violated, transactions are intercepted dynamically, preserving advertiser's budgets while maintaining standard redirection loops.
+
 ---
 
 ### 6. MASTER CREDENTIALS SEEDING & API KEYS DIRECTORY
@@ -216,7 +248,7 @@ To transition the platform to a live environment, production credentials must be
 *   **Step 2. Access Team & Document Management**: Navigate to `Vendor Dashboard -> Our Team`. Add team members (which renders an "Our Team" slider on the public profile). Go to `Profile Settings` and upload trade licenses or certificates for Super Admin review.
 *   **Step 3. Track Financial Earnings**: Access `Vendor Dashboard -> Commission & Accounts`. View read-only commission contracts and visual metrics tracking Gross, platform deduction, and net due amount.
 
-##### 3. Customer / Guest
+##### 4. Customer / Guest
 *   **Step 1. Create Account**: Register at `register.php`. Complete profile targeting (goals, target emirate, nationality).
 *   **Step 2. Conversational Booking**: Click the floating "Ask AI Assistant" widget or open `bot-landing.php`. Talk or type questions. The assistant will navigate you directly to services or trigger checkout pages.
 *   **Step 3. Submit Checkout & Document Upload**: Pay securely via `customer/checkout.php`. Upload required onboarding documents in `customer/documents.php` to initiate your case workflow.
@@ -237,6 +269,7 @@ To transition the platform to a live environment, production credentials must be
 - `api/payment-webhook.php` - Replay-resistant payment webhook handler.
 - `admin/settings/bot_ads.php` - Super Admin campaign creator and interactive analytics dashboard.
 - `admin/migrations/monetization_migration.php` - DB table builder.
+- `admin/migrations/fraud_migration.php` - Click fraud table builder.
 - `gpa_gw2.sql` - Permanent synchronized schema dump initialization script.
 
 #### B. Master SQL DDL Schemas
@@ -429,6 +462,17 @@ CREATE TABLE `PROVIDER_DOCUMENTS` (
   UNIQUE KEY `UUID` (`UUID`),
   KEY `PROVIDER_ID` (`PROVIDER_ID`),
   CONSTRAINT `FK_PROVIDER_DOCUMENTS_PROVIDER` FOREIGN KEY (`PROVIDER_ID`) REFERENCES `PROVIDERS` (`ID`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=UTFF8MB4 COLLATE=UTF8MB4_UNICODE_CI;
+
+-- 13. BOT_AD_FRAUD_LOGS
+CREATE TABLE `BOT_AD_FRAUD_LOGS` (
+  `ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `AD_ID` INT(10) UNSIGNED NOT NULL,
+  `IP_ADDRESS` VARCHAR(45) NOT NULL,
+  `CLICKED_AT` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  PRIMARY KEY (`ID`),
+  KEY `AD_ID` (`AD_ID`),
+  CONSTRAINT `FK_BOT_AD_FRAUD_LOGS_AD` FOREIGN KEY (`AD_ID`) REFERENCES `BOT_ADS` (`ID`) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=UTFF8MB4 COLLATE=UTF8MB4_UNICODE_CI;
 ```
 

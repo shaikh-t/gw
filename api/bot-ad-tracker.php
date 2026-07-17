@@ -6,6 +6,17 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+function get_proxy_aware_ip() {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = trim(end($parts));
+    } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }
+    return $ip;
+}
+
 $ad_id = isset($_GET['ad_id']) ? (int)$_GET['ad_id'] : 0;
 if ($ad_id <= 0) {
     http_response_code(400);
@@ -31,6 +42,42 @@ if (!$ad) {
 }
 
 $destination_url = !empty($ad['destination_url']) ? $ad['destination_url'] : '../index.php';
+
+// 1b. Click-Fraud Rate Limiting sliding window check (Max 3 clicks per hour per IP)
+$ip_address = get_proxy_aware_ip();
+$is_fraudulent = false;
+
+$stmt_fraud = $mysqli->prepare("
+    SELECT COUNT(*) AS click_count
+    FROM bot_ad_fraud_logs
+    WHERE ad_id = ? AND ip_address = ? AND clicked_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
+");
+if ($stmt_fraud) {
+    $stmt_fraud->bind_param('is', $ad_id, $ip_address);
+    $stmt_fraud->execute();
+    $res_fraud = $stmt_fraud->get_result();
+    if ($row_fraud = $res_fraud->fetch_assoc()) {
+        if ((int)$row_fraud['click_count'] >= 3) {
+            $is_fraudulent = true;
+        }
+    }
+    $stmt_fraud->close();
+}
+
+if ($is_fraudulent) {
+    // If it exceeds this threshold, intercept the request immediately, block the budget consumption,
+    // and issue a clean HTTP 302 redirect directly without charging the campaign
+    header("Location: " . $destination_url, true, 302);
+    exit;
+}
+
+// Log valid click in fraud logs for sliding window tracking
+$stmt_log_fraud = $mysqli->prepare("INSERT INTO bot_ad_fraud_logs (ad_id, ip_address) VALUES (?, ?)");
+if ($stmt_log_fraud) {
+    $stmt_log_fraud->bind_param('is', $ad_id, $ip_address);
+    $stmt_log_fraud->execute();
+    $stmt_log_fraud->close();
+}
 
 // 2. Resolve or locate an active bot session
 $session_id = null;

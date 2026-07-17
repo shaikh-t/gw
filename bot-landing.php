@@ -255,6 +255,25 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
+    /* SVG Waveform Rippling transitions */
+    .wave-bar {
+      transform-origin: center;
+      transition: height 0.15s ease-in-out, y 0.15s ease-in-out;
+    }
+
+    #waveformSvg.waveform-rippling .bar-1 { animation: ripple-bar 1.2s infinite ease-in-out; }
+    #waveformSvg.waveform-rippling .bar-2 { animation: ripple-bar 1s infinite ease-in-out 0.2s; }
+    #waveformSvg.waveform-rippling .bar-3 { animation: ripple-bar 1.4s infinite ease-in-out 0.1s; }
+    #waveformSvg.waveform-rippling .bar-4 { animation: ripple-bar 1.1s infinite ease-in-out 0.3s; }
+    #waveformSvg.waveform-rippling .bar-5 { animation: ripple-bar 0.9s infinite ease-in-out 0.4s; }
+    #waveformSvg.waveform-rippling .bar-6 { animation: ripple-bar 1.3s infinite ease-in-out 0.15s; }
+    #waveformSvg.waveform-rippling .bar-7 { animation: ripple-bar 1s infinite ease-in-out 0.25s; }
+
+    @keyframes ripple-bar {
+      0%, 100% { height: 6px; y: 12px; }
+      50% { height: 26px; y: 2px; }
+    }
+
     /* Onboarding default content card */
     .ws-default-card {
       background-color: #ffffff;
@@ -335,6 +354,20 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
         <button class="ws-mic-btn" id="wsMicTrigger" onclick="toggleSpeechInput()">
           <i class="bi bi-mic-fill" id="wsMicIcon"></i>
         </button>
+
+        <!-- Inline Animated SVG Audio Waveform Indicator Panel -->
+        <div class="waveform-container d-flex align-items-center justify-content-center gap-1 my-2" style="height: 30px;">
+          <svg id="waveformSvg" width="120" height="30" viewBox="0 0 120 30" style="display: none;">
+            <rect class="wave-bar bar-1" x="10" y="5" width="6" height="20" rx="3" fill="#1165ef" />
+            <rect class="wave-bar bar-2" x="26" y="10" width="6" height="10" rx="3" fill="#38bdf8" />
+            <rect class="wave-bar bar-3" x="42" y="3" width="6" height="24" rx="3" fill="#10b981" />
+            <rect class="wave-bar bar-4" x="58" y="8" width="6" height="14" rx="3" fill="#38bdf8" />
+            <rect class="wave-bar bar-5" x="74" y="12" width="6" height="6" rx="3" fill="#1165ef" />
+            <rect class="wave-bar bar-6" x="90" y="6" width="6" height="18" rx="3" fill="#10b981" />
+            <rect class="wave-bar bar-7" x="106" y="11" width="6" height="8" rx="3" fill="#1165ef" />
+          </svg>
+        </div>
+
         <div class="small text-muted mt-2 fw-medium" id="wsStatusText">Mic is offline</div>
       </div>
 
@@ -451,6 +484,13 @@ document.addEventListener('DOMContentLoaded', () => {
       isListening = true;
       document.getElementById('wsMicTrigger').classList.add('listening');
       document.getElementById('wsStatusText').innerText = 'Listening... Speak now';
+
+      // Show and animate waveform SVG
+      const wave = document.getElementById('waveformSvg');
+      if (wave) {
+        wave.style.display = 'block';
+        wave.classList.add('waveform-rippling');
+      }
     };
 
     recognition.onresult = (event) => {
@@ -581,6 +621,14 @@ function stopSpeechRecognition() {
   isListening = false;
   document.getElementById('wsMicTrigger').classList.remove('listening');
   document.getElementById('wsStatusText').innerText = 'Mic is offline';
+
+  // Hide and stop waveform SVG
+  const wave = document.getElementById('waveformSvg');
+  if (wave) {
+    wave.style.display = 'none';
+    wave.classList.remove('waveform-rippling');
+  }
+
   try {
     recognition.stop();
   } catch(e) {}

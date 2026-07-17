@@ -1289,4 +1289,19 @@ CREATE TABLE `bot_ad_clicks` (
   CONSTRAINT `fk_bot_ad_clicks_session` FOREIGN KEY (`session_id`) REFERENCES `bot_sessions` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Table structure for table `bot_ad_fraud_logs`
+--
+
+DROP TABLE IF EXISTS `bot_ad_fraud_logs`;
+CREATE TABLE `bot_ad_fraud_logs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ad_id` int(10) unsigned NOT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `clicked_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  PRIMARY KEY (`id`),
+  KEY `ad_id` (`ad_id`),
+  CONSTRAINT `fk_bot_ad_fraud_logs_ad` FOREIGN KEY (`ad_id`) REFERENCES `bot_ads` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Dump completed on 2026-07-15  9:42:30
