@@ -39,6 +39,28 @@ if (!$customer) {
     exit;
 }
 
+// SECURE REMEDIATION GATE: Check if target user has a Super Admin role
+$target_user_id = (int)$customer['id'];
+$stmt_check = $mysqli->prepare("
+    SELECT r.name
+    FROM user_roles ur
+    JOIN roles r ON ur.role_id = r.id
+    WHERE ur.user_id = ? AND r.name = 'Super Admin'
+");
+if ($stmt_check) {
+    $stmt_check->bind_param('i', $target_user_id);
+    $stmt_check->execute();
+    $res_check = $stmt_check->get_result();
+    if ($res_check && $res_check->num_rows > 0) {
+        // Only a logged-in Super Admin is authorized to edit another Super Admin
+        if (!is_role('Super Admin')) {
+            http_response_code(403);
+            die("Security Escalation Blocked: Non-Super Admin cannot modify a Super Admin profile.");
+        }
+    }
+    $stmt_check->close();
+}
+
 $userId = (int)$customer['id'];
 $errors = [];
 if ($name === '') $errors[] = 'Name is required';

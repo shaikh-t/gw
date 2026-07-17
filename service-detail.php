@@ -87,15 +87,23 @@ $rich_data = $service_details_data[$service_slug] ?? [
 $p_sql = "SELECT p.*, s2.price, s2.currency, s2.duration_minutes
           FROM providers p
           JOIN services s2 ON s2.provider_id = p.id
-          WHERE s2.title = '" . $mysqli->real_escape_string($service['title']) . "' AND s2.status = 'published'
+          WHERE s2.title = ? AND s2.status = 'published'
           ORDER BY p.rating_avg DESC
           LIMIT 3";
-$res_p = $mysqli->query($p_sql);
+$stmt_p = $mysqli->prepare($p_sql);
 $top_vendors = [];
-if ($res_p && $res_p->num_rows > 0) {
-    while ($row = $res_p->fetch_assoc()) $top_vendors[] = $row;
-    $res_p->free();
-} else {
+if ($stmt_p) {
+    $stmt_p->bind_param('s', $service['title']);
+    $stmt_p->execute();
+    $res_p = $stmt_p->get_result();
+    if ($res_p && $res_p->num_rows > 0) {
+        while ($row = $res_p->fetch_assoc()) $top_vendors[] = $row;
+        $res_p->free();
+    }
+    $stmt_p->close();
+}
+
+if (empty($top_vendors)) {
     // Fallback: Fetch any 3 active/draft providers
     $p_sql_fallback = "SELECT * FROM providers ORDER BY rating_avg DESC LIMIT 3";
     $res_pf = $mysqli->query($p_sql_fallback);
