@@ -23,6 +23,12 @@ if ($res3) {
 }
 ?>
   </div><!-- /#main-content-layout -->
+  <div class="container-xl">
+    <?php
+      require_once __DIR__ . '/../lib/monetization_helper.php';
+      echo render_layout_ad_placement('site_footer_banner');
+    ?>
+  </div>
   <!-- Footer -->
   <footer class="gw-footer">
   <div class="container-xl pt-5 pb-4">

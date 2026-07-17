@@ -84,3 +84,9 @@ if ($h_res) {
     </div>
   </nav>
   <div id="main-content-layout">
+    <div class="container-xl">
+      <?php
+        require_once __DIR__ . '/../lib/monetization_helper.php';
+        echo render_layout_ad_placement('site_header_leaderboard');
+      ?>
+    </div>

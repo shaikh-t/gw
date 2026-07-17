@@ -1232,4 +1232,55 @@ CREATE TABLE `notifications` (
   CONSTRAINT `fk_notifications_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Table structure for table `bot_ads`
+--
+
+DROP TABLE IF EXISTS `bot_ads`;
+CREATE TABLE `bot_ads` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `campaign_name` varchar(255) NOT NULL,
+  `ad_source_type` enum('direct_sponsor','network_programmatic') NOT NULL,
+  `placement_zone` enum('bot_internal_chat','site_header_leaderboard','site_sidebar_banner','site_footer_banner') NOT NULL,
+  `target_page_context` varchar(255) DEFAULT 'global_fallback',
+  `target_category_id` int(10) unsigned DEFAULT NULL,
+  `language_iso` varchar(10) NOT NULL DEFAULT 'en',
+  `banner_text` text DEFAULT NULL,
+  `audio_speech_text` text DEFAULT NULL,
+  `destination_url` varchar(255) DEFAULT NULL,
+  `network_script_code` longtext DEFAULT NULL,
+  `click_cost` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `max_budget` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `current_spend` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `ad_billing_model` enum('ppc','ppi','flat_rate_temporal') NOT NULL DEFAULT 'ppc',
+  `max_impressions` int(10) unsigned NOT NULL DEFAULT 0,
+  `current_impressions` int(10) unsigned NOT NULL DEFAULT 0,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `target_category_id` (`target_category_id`),
+  CONSTRAINT `fk_bot_ads_category` FOREIGN KEY (`target_category_id`) REFERENCES `service_categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `bot_ad_clicks`
+--
+
+DROP TABLE IF EXISTS `bot_ad_clicks`;
+CREATE TABLE `bot_ad_clicks` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ad_id` int(10) unsigned NOT NULL,
+  `session_id` int(10) unsigned DEFAULT NULL,
+  `earned_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `clicked_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `ad_id` (`ad_id`),
+  KEY `session_id` (`session_id`),
+  CONSTRAINT `fk_bot_ad_clicks_ad` FOREIGN KEY (`ad_id`) REFERENCES `bot_ads` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_bot_ad_clicks_session` FOREIGN KEY (`session_id`) REFERENCES `bot_sessions` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Dump completed on 2026-07-15  9:42:30
