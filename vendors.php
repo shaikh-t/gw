@@ -15,21 +15,30 @@ $member_since = trim($_GET['member_since'] ?? 'Any time');
 $sort = trim($_GET['sort'] ?? 'Most Relevant');
 
 $where = ["1=1"]; // always true base
+$types = "";
+$params = [];
 
 // 1. Search Query
 if ($q !== '') {
-    $escaped_q = $mysqli->real_escape_string($q);
-    $where[] = "(name LIKE '%$escaped_q%' OR description LIKE '%$escaped_q%' OR specialties LIKE '%$escaped_q%')";
+    $where[] = "(name LIKE ? OR description LIKE ? OR specialties LIKE ?)";
+    $like_q = "%" . $q . "%";
+    $types .= "sss";
+    array_push($params, $like_q, $like_q, $like_q);
 }
 
 // 2. City Filter
 if ($city !== 'All Cities') {
-    $where[] = "city = '" . $mysqli->real_escape_string($city) . "'";
+    $where[] = "city = ?";
+    $types .= "s";
+    $params[] = $city;
 }
 
 // 3. Specialty Type Filter
 if ($type !== 'All Types') {
-    $where[] = "specialties LIKE '%" . $mysqli->real_escape_string($type) . "%'";
+    $where[] = "specialties LIKE ?";
+    $like_type = "%" . $type . "%";
+    $types .= "s";
+    $params[] = $like_type;
 }
 
 // 4. Verification Checkbox
@@ -43,7 +52,9 @@ if ($top_rated) {
 } elseif ($min_rating !== 'Any') {
     $rating_val = floatval(preg_replace('/[^0-9.]/', '', $min_rating));
     if ($rating_val > 0) {
-        $where[] = "rating_avg >= $rating_val";
+        $where[] = "rating_avg >= ?";
+        $types .= "d";
+        $params[] = $rating_val;
     }
 }
 
@@ -51,7 +62,10 @@ if ($top_rated) {
 if (!empty($selected_langs)) {
     $lang_clauses = [];
     foreach ($selected_langs as $lang) {
-        $lang_clauses[] = "languages LIKE '%" . $mysqli->real_escape_string($lang) . "%'";
+        $lang_clauses[] = "languages LIKE ?";
+        $like_lang = "%" . $lang . "%";
+        $types .= "s";
+        $params[] = $like_lang;
     }
     $where[] = "(" . implode(' OR ', $lang_clauses) . ")";
 }
@@ -78,11 +92,21 @@ if ($sort === 'Highest Rated') {
 }
 
 $sql = "SELECT * FROM providers WHERE $where_sql ORDER BY $order_by";
-$res = $mysqli->query($sql);
+$stmt = $mysqli->prepare($sql);
 $providers = [];
-if ($res) {
-    while($row = $res->fetch_assoc()) $providers[] = $row;
-    $res->free();
+if ($stmt) {
+    if ($types !== "") {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res) {
+        while ($row = $res->fetch_assoc()) {
+            $providers[] = $row;
+        }
+        $res->free();
+    }
+    $stmt->close();
 }
 
 include __DIR__ . '/partials/frontend_header.php';

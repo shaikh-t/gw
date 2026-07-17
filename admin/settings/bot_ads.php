@@ -1,15 +1,9 @@
 <?php
 // admin/settings/bot_ads.php
-require_once __DIR__ . '/../../lib/auth.php';
-require_once __DIR__ . '/../../lib/permissions.php';
+require_once __DIR__ . '/../../lib/middleware.php';
+require_permission_or_die('can_manage_ads');
 require_once __DIR__ . '/../../lib/db_mysqli.php';
 require_once __DIR__ . '/../../lib/csrf.php';
-
-// Strict Super Admin Access Lock
-if (!is_role('Super Admin')) {
-    http_response_code(403);
-    die("Access denied. Super Admin role required.");
-}
 
 $errors = [];
 $success = '';
@@ -57,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ");
                 if ($stmt) {
                     $stmt->bind_param(
-                        'ssssisssssddisssi',
+                        'ssssisssssddssisi',
                         $campaign_name, $ad_source_type, $placement_zone, $target_page_context,
                         $target_category_id, $language_iso, $banner_text, $audio_speech_text,
                         $destination_url, $network_script_code, $click_cost, $max_budget,
@@ -85,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ");
                 if ($stmt) {
                     $stmt->bind_param(
-                        'ssssisssssddisssii',
+                        'ssssisssssddssisii',
                         $campaign_name, $ad_source_type, $placement_zone, $target_page_context,
                         $target_category_id, $language_iso, $banner_text, $audio_speech_text,
                         $destination_url, $network_script_code, $click_cost, $max_budget,

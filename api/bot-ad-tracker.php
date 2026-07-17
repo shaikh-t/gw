@@ -108,11 +108,11 @@ if (!$is_duplicate && $ad['ad_source_type'] === 'direct_sponsor') {
             $stmt_up = $mysqli->prepare("
                 UPDATE bot_ads
                 SET current_spend = current_spend + ?,
-                    is_active = CASE WHEN current_spend + ? >= max_budget THEN 0 ELSE 1 END
+                    is_active = CASE WHEN current_spend >= max_budget THEN 0 ELSE 1 END
                 WHERE id = ?
             ");
             if ($stmt_up) {
-                $stmt_up->bind_param('ddi', $click_cost, $click_cost, $ad_id);
+                $stmt_up->bind_param('di', $click_cost, $ad_id);
                 $stmt_up->execute();
                 $stmt_up->close();
             }

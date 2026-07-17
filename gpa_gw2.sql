@@ -404,7 +404,10 @@ INSERT INTO `permissions` VALUES
 (17,'b761ef43-86f5-41d4-9315-cd18ce733f36','permissions.manage','Permissions: Manage','','2026-01-14 08:12:52'),
 (18,'320330b9-02dd-4f12-994a-2801cda86c2f','cms.manage','CMS: Manage','Allows managing cms.manage','2026-07-13 09:03:27'),
 (19,'f2f0433f-41e3-45f9-8216-555109636862','blog.manage','Blog: Manage','Allows managing blog.manage','2026-07-13 09:03:27'),
-(20,'4dbbaaa3-3fc3-43cf-8682-023701b495a7','messages.manage','Contact Messages: Manage','Allows managing messages.manage','2026-07-13 09:03:27');
+(20,'4dbbaaa3-3fc3-43cf-8682-023701b495a7','messages.manage','Contact Messages: Manage','Allows managing messages.manage','2026-07-13 09:03:27'),
+(21,'3a2b7245-21d3-488b-a45e-b8d4f40cf12b','can_manage_ads','Manage Ads','Allows access to admin/settings/bot_ads.php and ad creation forms','2026-07-17 12:00:00'),
+(22,'f43d22bf-829d-488c-9eb9-bcfd48383cb2','can_view_failed_queries','View Failed Queries','Allows access to admin/crm/failed-questions.php','2026-07-17 12:00:00'),
+(23,'ad7e06e3-ab78-4061-9c3f-c906f21c22cb','can_edit_knowledge_base','Edit Knowledge Base','Allows access to our local PDF/text CRUD manager at admin/crm/knowledge-base.php','2026-07-17 12:00:00');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -677,6 +680,9 @@ INSERT INTO `role_permissions` VALUES
 (1,18,'2026-07-13 09:03:27'),
 (1,19,'2026-07-13 09:03:27'),
 (1,20,'2026-07-13 09:03:27'),
+(1,21,'2026-07-17 12:00:00'),
+(1,22,'2026-07-17 12:00:00'),
+(1,23,'2026-07-17 12:00:00'),
 (2,1,'2026-01-12 18:48:12'),
 (2,2,'2026-01-12 18:48:12'),
 (2,5,'2026-01-12 18:48:12'),

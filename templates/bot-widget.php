@@ -429,7 +429,10 @@ function addMessageToStream(sender, text) {
   const stream = document.getElementById('botChatStream');
   const bubble = document.createElement('div');
   bubble.className = `bot-message ${sender}`;
-  bubble.innerText = text;
+
+  // SECURE REMEDIATION: Always use textContent to ensure raw tags are not parsed as active elements
+  bubble.textContent = text;
+
   stream.appendChild(bubble);
   stream.scrollTop = stream.scrollHeight;
 }

@@ -1,7 +1,7 @@
 <?php
 // admin/crm/failed-questions.php
 require_once __DIR__ . '/../../lib/middleware.php';
-require_permission_or_die('users.view');
+require_permission_or_die('can_view_failed_queries');
 
 // Fetch failed questions chronologically
 $failed_questions = [];
