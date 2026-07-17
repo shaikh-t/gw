@@ -121,6 +121,7 @@ if (can('messages.manage')) {
       <?php nav_item($domain . '/admin/settings/testimonials.php', 'Testimonials', '', $current === 'admin/settings/testimonials.php' ? 'active' : ''); ?>
     <?php endif; ?>
     <?php if (is_role('Super Admin')): ?>
+      <?php nav_item($domain . '/admin/settings/bot_ads.php', 'Monetization Ads', '<i class="bi bi-megaphone"></i>', $current === 'admin/settings/bot_ads.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/ai_status.php', 'AI Global Kill-Switch', '<i class="bi bi-robot"></i>', $current === 'admin/settings/ai_status.php' ? 'active' : ''); ?>
     <?php endif; ?>
   </ul>

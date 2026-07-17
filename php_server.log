@@ -1,13 +1,48 @@
-[Thu Jul 16 20:45:17 2026] PHP 8.3.6 Development Server (http://127.0.0.1:8000) started
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 Accepted
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 [200]: GET /bot-landing.php
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48864 Closing
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 Accepted
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 Accepted
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 [200]: GET /css/globalways.css
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 [200]: GET /assets/logo.png
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48878 Closing
-[Thu Jul 16 20:46:16 2026] 127.0.0.1:48888 Closing
-[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 Accepted
-[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 [200]: POST /api/bot-controller.php
-[Thu Jul 16 20:46:17 2026] 127.0.0.1:48904 Closing
+[Fri Jul 17 13:48:25 2026] PHP 8.3.6 Development Server (http://127.0.0.1:8000) started
+[Fri Jul 17 13:48:27 2026] 127.0.0.1:33036 Accepted
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 71
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 71
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 73
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 73
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 75
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 75
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 77
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 77
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 78
+[Fri Jul 17 13:48:27 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 78
+[Fri Jul 17 13:48:27 2026] 127.0.0.1:33036 [200]: HEAD /
+[Fri Jul 17 13:48:27 2026] 127.0.0.1:33036 Closing
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60368 Accepted
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 71
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 71
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 73
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 73
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 75
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 75
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 77
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 77
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Undefined array key 0 in /app/index.php on line 78
+[Fri Jul 17 13:51:07 2026] PHP Warning:  Trying to access array offset on null in /app/index.php on line 78
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60368 [200]: GET /index.php
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60368 Closing
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60382 Accepted
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60388 Accepted
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60382 [200]: GET /css/globalways.css
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60404 Accepted
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60388 [200]: GET /assets/logo.png
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60404 [200]: GET /assets/logo-white.png
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60382 Closing
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60388 Closing
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60404 Closing
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60410 Accepted
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60410 [200]: GET /js/main.js
+[Fri Jul 17 13:51:07 2026] 127.0.0.1:60410 Closing
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60416 Accepted
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60416 [200]: GET /js/notifications.js
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60416 Closing
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60422 Accepted
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60422 [200]: POST /api/bot-controller.php
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60422 Closing
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60428 Accepted
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60428 [200]: GET //get-unread-notifications.php
+[Fri Jul 17 13:51:08 2026] 127.0.0.1:60428 Closing

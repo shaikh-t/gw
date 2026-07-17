@@ -61,8 +61,113 @@ CORE OPERATION RULES:
    - Keep your text sentences short, scannable, and under 25 words per speech turn. This ensures our Text-to-Speech (TTS) audio streaming loops run with low latency and do not cause browser performance lag.
    - Never output raw HTML layout blocks or verbose markdown code blocks. Structure your choices inside clean arrays that our frontend interface can easily parse into slick button elements.");
 
+/**
+ * Resolves any active 'bot_internal_chat' ad campaigns matching current context.
+ *
+ * @return array|null Ad payload or null.
+ */
+function get_matching_bot_internal_chat_ad(): ?array {
+    global $mysqli;
+    if (!isset($mysqli) || $mysqli->connect_errno || (get_class($mysqli) === 'MockMySQLi')) {
+        return null;
+    }
+
+    // Resolve context parameters
+    $active_page = 'bot-landing.php';
+    $bot_page_context = $_SESSION['bot_page_context'] ?? [];
+    if (isset($bot_page_context['page_name'])) {
+        $active_page = basename($bot_page_context['page_name']);
+    }
+
+    $category_id = isset($bot_page_context['category_id']) ? (int)$bot_page_context['category_id'] : null;
+    $language_iso = isset($bot_page_context['language_iso']) ? trim($bot_page_context['language_iso']) : 'en';
+    if (empty($language_iso)) {
+        $language_iso = 'en';
+    }
+
+    $zone_name = 'bot_internal_chat';
+
+    $query = "
+        SELECT * FROM bot_ads
+        WHERE placement_zone = ?
+          AND ad_source_type = 'direct_sponsor'
+          AND language_iso = ?
+          AND is_active = 1
+          AND (target_page_context = ? OR target_page_context = 'global_fallback')
+    ";
+
+    if ($category_id !== null) {
+        $query .= " AND (target_category_id = ? OR target_category_id IS NULL) ";
+    } else {
+        $query .= " AND target_category_id IS NULL ";
+    }
+
+    $query .= " ORDER BY CASE WHEN target_page_context = ? THEN 1 ELSE 2 END ASC, id DESC";
+
+    $stmt = $mysqli->prepare($query);
+    if ($stmt) {
+        if ($category_id !== null) {
+            $stmt->bind_param('sssss', $zone_name, $language_iso, $active_page, $category_id, $active_page);
+        } else {
+            $stmt->bind_param('ssss', $zone_name, $language_iso, $active_page, $active_page);
+        }
+
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        while ($ad = $res->fetch_assoc()) {
+            $is_eligible = false;
+
+            if ($ad['ad_billing_model'] === 'flat_rate_temporal') {
+                $now = date('Y-m-d H:i:s');
+                $start_valid = empty($ad['start_date']) || ($ad['start_date'] <= $now);
+                $end_valid = empty($ad['end_date']) || ($ad['end_date'] >= $now);
+                if ($start_valid && $end_valid) {
+                    $is_eligible = true;
+                }
+            } else {
+                $budget_ok = $ad['current_spend'] < $ad['max_budget'];
+                $impressions_ok = ($ad['max_impressions'] == 0) || ($ad['current_impressions'] < $ad['max_impressions']);
+                if ($budget_ok && $impressions_ok) {
+                    $is_eligible = true;
+                }
+            }
+
+            if ($is_eligible) {
+                // Increment impression count atomically
+                $stmt_imp = $mysqli->prepare("UPDATE bot_ads SET current_impressions = current_impressions + 1 WHERE id = ?");
+                if ($stmt_imp) {
+                    $stmt_imp->bind_param('i', $ad['id']);
+                    $stmt_imp->execute();
+                    $stmt_imp->close();
+                }
+
+                $stmt->close();
+                return [
+                    'banner_text' => $ad['banner_text'],
+                    'destination_url' => "api/bot-ad-tracker.php?ad_id=" . $ad['id']
+                ];
+            }
+        }
+        $stmt->close();
+    }
+
+    return null;
+}
+
 // Helper function to safely send JSON responses
 function send_json_response(array $data, int $status_code = 200) {
+    if (isset($data['status']) && $data['status'] === 'success') {
+        $ad = get_matching_bot_internal_chat_ad();
+        if ($ad) {
+            $data['ad_payload'] = [
+                'banner_text' => $ad['banner_text'],
+                'destination_url' => $ad['destination_url']
+            ];
+        } else {
+            $data['ad_payload'] = null;
+        }
+    }
     http_response_code($status_code);
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
