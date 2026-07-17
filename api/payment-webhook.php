@@ -41,6 +41,11 @@ if (!isset($mysqli) || $mysqli->connect_errno) {
 $mysqli->query("CREATE TABLE IF NOT EXISTS `payment_transactions` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `transaction_id` VARCHAR(255) NOT NULL UNIQUE,
+  `gross_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `platform_fee` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `vendor_net_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `case_uuid` VARCHAR(36) NULL DEFAULT NULL,
+  `provider_id` INT UNSIGNED NULL DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
@@ -185,12 +190,39 @@ $service_price = (float)$case_data['service_price'];
 $service_currency = $case_data['service_currency'] ?: 'AED';
 $userId = (int)$case_data['customer_user_id'];
 
+// Fetch provider contract deduction details
+$deduction_type = 'percentage';
+$deduction_value = 10.00;
+$stmt_d = $mysqli->prepare("SELECT deduction_type, deduction_value FROM providers WHERE id = ? LIMIT 1");
+if ($stmt_d) {
+    $stmt_d->bind_param('i', $case_data['provider_id']);
+    $stmt_d->execute();
+    $res_d = $stmt_d->get_result();
+    if ($res_d && $row_d = $res_d->fetch_assoc()) {
+        $deduction_type = $row_d['deduction_type'];
+        $deduction_value = (float)$row_d['deduction_value'];
+    }
+    $stmt_d->close();
+}
+
+$gross_amount = $service_price;
+if ($deduction_type === 'flat') {
+    $platform_fee = $deduction_value;
+} else {
+    $platform_fee = $gross_amount * ($deduction_value / 100.0);
+}
+
+if ($platform_fee > $gross_amount) {
+    $platform_fee = $gross_amount;
+}
+$vendor_net_amount = $gross_amount - $platform_fee;
+
 // Secure transaction update
 $mysqli->begin_transaction();
 try {
     // A. Record the transaction ID in payment_transactions to prevent concurrent replay attacks
-    $stmt_ins = $mysqli->prepare("INSERT INTO payment_transactions (transaction_id) VALUES (?)");
-    $stmt_ins->bind_param('s', $transaction_id);
+    $stmt_ins = $mysqli->prepare("INSERT INTO payment_transactions (transaction_id, gross_amount, platform_fee, vendor_net_amount, case_uuid, provider_id) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt_ins->bind_param('sdddsi', $transaction_id, $gross_amount, $platform_fee, $vendor_net_amount, $case_uuid, $case_data['provider_id']);
     $stmt_ins->execute();
     $stmt_ins->close();
 
