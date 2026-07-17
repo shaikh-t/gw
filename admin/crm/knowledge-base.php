@@ -1,12 +1,7 @@
 <?php
 // admin/crm/knowledge-base.php
 require_once __DIR__ . '/../../lib/middleware.php';
-
-// Build a comprehensive management view protected strictly behind Super Admin privileges
-if (!is_role('Super Admin')) {
-    http_response_code(403);
-    die("Access denied. Super Admin privileges are required to manage the RAG Knowledge Base.");
-}
+require_permission_or_die('can_edit_knowledge_base');
 
 $success_message = '';
 $error_message = '';
