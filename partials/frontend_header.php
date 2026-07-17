@@ -6,7 +6,12 @@ $current_user = current_user();
 
 // Persistent dynamic bot page-context tracking loop
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
+    session_start([
+        'cookie_lifetime' => 86400,
+        'cookie_secure' => true,
+        'cookie_httponly' => true,
+        'cookie_samesite' => 'Strict'
+    ]);
 }
 $page_name_tracked = basename($_SERVER['PHP_SELF']);
 $bot_context = [

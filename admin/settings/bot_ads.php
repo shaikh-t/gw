@@ -158,8 +158,95 @@ if ($categories_res) {
 include __DIR__ . '/../../partials/header.php';
 include __DIR__ . '/../../partials/sidebar.php';
 ?>
+<style>
+/* Enterprise Slate Dark-Mode Theme Styles */
+body, .main-content {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6, .main-content strong {
+  color: #f8fafc !important;
+}
+.card {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 12px !important;
+}
+.card-header {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+  color: #f8fafc !important;
+}
+.table {
+  color: #cbd5e1 !important;
+}
+.table-light {
+  background-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+.table-hover tbody tr:hover {
+  background-color: #334155 !important;
+}
+.table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-bottom-color: #1e293b !important;
+}
+.text-dark {
+  color: #f8fafc !important;
+}
+.text-muted {
+  color: #94a3b8 !important;
+}
+.form-control, .form-select, .form-check-input {
+  background-color: #1e293b !important;
+  border: 1px solid #475569 !important;
+  color: #f8fafc !important;
+}
+.form-control:focus, .form-select:focus {
+  background-color: #334155 !important;
+  border-color: #10b981 !important;
+  color: #f8fafc !important;
+  box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
+}
+/* Emerald Accent Colors */
+.bg-success, .alert-success {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+.bg-primary {
+  background-color: rgba(56, 189, 248, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+.text-emerald {
+  color: #10b981 !important;
+}
+.btn-primary {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #0f172a !important;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+code {
+  background-color: #334155 !important;
+  color: #38bdf8 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+</style>
 
-<main class="main-content p-4">
+<main class="main-content p-4" style="background-color: #0f172a; min-height: 100vh;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-0 font-serif fw-bold">Site-Wide Monetization Ad Control Panel</h1>
