@@ -8,6 +8,8 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/uuid_helper.php';
+require_once __DIR__ . '/../lib/auth.php';
+require_once __DIR__ . '/../lib/users_helpers.php';
 
 // Ensure database connection is active
 if (!isset($mysqli) || $mysqli->connect_errno) {
@@ -139,6 +141,292 @@ if ($page_context_input) {
 
 // Determine if we are running in Mock Fallback mode
 $is_mock_mode = (get_class($mysqli) === 'MockMySQLi');
+
+// --- CONVERSATIONAL REGISTRATION STATE MACHINE FOR GUESTS ---
+$is_logged_in = isset($_SESSION['user']['id']);
+$is_trigger_word = in_array(strtolower($message_content), ['book', 'register', 'signup', 'onboard']);
+
+if (!$is_logged_in && ($is_trigger_word || !empty($_SESSION['registration_state']))) {
+    if (empty($_SESSION['registration_state'])) {
+        $_SESSION['registration_state'] = ['step' => 'first_name_input'];
+        $display_text = "To initiate your booking, let's complete a quick customer registration. What is your First Name?";
+        $spoken_text = "To initiate your booking, let us complete a quick customer registration. What is your First Name?";
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => $display_text,
+            'spoken_text' => $spoken_text,
+            'language_iso' => 'en',
+            'next_options' => []
+        ]);
+    }
+
+    $state = &$_SESSION['registration_state'];
+    $step = $state['step'];
+
+    // Helper to validate Latin character diacritics and reject non-Latin characters (Arabic, Urdu, etc.)
+    if (!function_exists('is_valid_latin_input')) {
+        function is_valid_latin_input($str) {
+            return preg_match('/^[\p{Latin}\s\'\-]+$/u', $str) && !preg_match('/[\p{Arabic}\p{Devanagari}\p{Bengali}\p{Urdu}\p{Han}]/u', $str);
+        }
+    }
+
+    if ($step === 'first_name_input') {
+        if (!is_valid_latin_input($message_content)) {
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Registration requires Latin characters only. Please type your First Name again.",
+                'spoken_text' => "Registration requires Latin characters only. Please type your First Name again.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+        $state['first_name'] = $message_content;
+        $state['step'] = 'first_name_confirm';
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => "I recorded your first name as '" . $message_content . "'. Is this correct?",
+            'spoken_text' => "I recorded your first name as " . $message_content . ". Is this correct?",
+            'language_iso' => 'en',
+            'next_options' => [
+                ['node_id' => 9001, 'label' => 'Confirm', 'payload_value' => 'confirm_first_name'],
+                ['node_id' => 9002, 'label' => 'Correct Spelling', 'payload_value' => 'correct_first_name']
+            ]
+        ]);
+    }
+
+    if ($step === 'first_name_confirm') {
+        $confirm = strtolower($payload_value ?: $message_content);
+        if ($confirm === 'confirm_first_name' || strpos($confirm, 'confirm') !== false || strpos($confirm, 'yes') !== false) {
+            $state['step'] = 'last_name_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Great. Now, what is your Last Name?",
+                'spoken_text' => "Great. Now, what is your Last Name?",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        } else {
+            $state['step'] = 'first_name_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Let's correct that. Please enter your First Name.",
+                'spoken_text' => "Let us correct that. Please enter your First Name.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+    }
+
+    if ($step === 'last_name_input') {
+        if (!is_valid_latin_input($message_content)) {
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Registration requires Latin characters only. Please type your Last Name again.",
+                'spoken_text' => "Registration requires Latin characters only. Please type your Last Name again.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+        $state['last_name'] = $message_content;
+        $state['step'] = 'last_name_confirm';
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => "I recorded your last name as '" . $message_content . "'. Is this correct?",
+            'spoken_text' => "I recorded your last name as " . $message_content . ". Is this correct?",
+            'language_iso' => 'en',
+            'next_options' => [
+                ['node_id' => 9003, 'label' => 'Confirm', 'payload_value' => 'confirm_last_name'],
+                ['node_id' => 9004, 'label' => 'Correct Spelling', 'payload_value' => 'correct_last_name']
+            ]
+        ]);
+    }
+
+    if ($step === 'last_name_confirm') {
+        $confirm = strtolower($payload_value ?: $message_content);
+        if ($confirm === 'confirm_last_name' || strpos($confirm, 'confirm') !== false || strpos($confirm, 'yes') !== false) {
+            $state['step'] = 'email_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Excellent. What is your Email Address?",
+                'spoken_text' => "Excellent. What is your Email Address?",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        } else {
+            $state['step'] = 'last_name_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Let's correct that. Please enter your Last Name.",
+                'spoken_text' => "Let us correct that. Please enter your Last Name.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+    }
+
+    if ($step === 'email_input') {
+        $clean_email = filter_var($message_content, FILTER_VALIDATE_EMAIL);
+        $is_latin_email = preg_match('/^[a-zA-Z0-9\._%+-]+@[a-zA-Z0-9\.-]+\.[a-zA-Z]{2,}$/u', $message_content);
+        if (!$clean_email || !$is_latin_email) {
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Please enter a valid, Latin-based Email Address.",
+                'spoken_text' => "Please enter a valid, Latin based Email Address.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+
+        $stmt_email = $mysqli->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        if ($stmt_email) {
+            $stmt_email->bind_param('s', $message_content);
+            $stmt_email->execute();
+            $res_email = $stmt_email->get_result();
+            if ($res_email && $res_email->num_rows > 0) {
+                $stmt_email->close();
+                send_json_response([
+                    'status' => 'success',
+                    'session_token' => $session_token,
+                    'display_text' => "This email address is already registered. Please enter a different Email Address.",
+                    'spoken_text' => "This email address is already registered. Please enter a different Email Address.",
+                    'language_iso' => 'en',
+                    'next_options' => []
+                ]);
+            }
+            $stmt_email->close();
+        }
+
+        $state['email'] = $message_content;
+        $state['step'] = 'email_confirm';
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => "I recorded your email as '" . $message_content . "'. Is this correct?",
+            'spoken_text' => "I recorded your email as " . $message_content . ". Is this correct?",
+            'language_iso' => 'en',
+            'next_options' => [
+                ['node_id' => 9005, 'label' => 'Confirm', 'payload_value' => 'confirm_email'],
+                ['node_id' => 9006, 'label' => 'Correct Spelling', 'payload_value' => 'correct_email']
+            ]
+        ]);
+    }
+
+    if ($step === 'email_confirm') {
+        $confirm = strtolower($payload_value ?: $message_content);
+        if ($confirm === 'confirm_email' || strpos($confirm, 'confirm') !== false || strpos($confirm, 'yes') !== false) {
+            $state['step'] = 'phone_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Perfect. Finally, what is your Phone Number?",
+                'spoken_text' => "Perfect. Finally, what is your Phone Number?",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        } else {
+            $state['step'] = 'email_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Let's correct that. Please enter your Email Address.",
+                'spoken_text' => "Let us correct that. Please enter your Email Address.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+    }
+
+    if ($step === 'phone_input') {
+        if (!preg_match('/^\+?[0-9\s\-]{7,20}$/', $message_content)) {
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Please enter a valid, Latin-based Phone Number.",
+                'spoken_text' => "Please enter a valid, Latin based Phone Number.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+        $state['phone'] = $message_content;
+        $state['step'] = 'phone_confirm';
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => "I recorded your phone number as '" . $message_content . "'. Is this correct?",
+            'spoken_text' => "I recorded your phone number as " . $message_content . ". Is this correct?",
+            'language_iso' => 'en',
+            'next_options' => [
+                ['node_id' => 9007, 'label' => 'Confirm', 'payload_value' => 'confirm_phone'],
+                ['node_id' => 9008, 'label' => 'Correct Spelling', 'payload_value' => 'correct_phone']
+            ]
+        ]);
+    }
+
+    if ($step === 'phone_confirm') {
+        $confirm = strtolower($payload_value ?: $message_content);
+        if ($confirm === 'confirm_phone' || strpos($confirm, 'confirm') !== false || strpos($confirm, 'yes') !== false) {
+            $stmt_r = $mysqli->prepare("SELECT id FROM roles WHERE name = 'viewer' LIMIT 1");
+            $stmt_r->execute();
+            $res_r = $stmt_r->get_result();
+            $viewer_role_id = 3;
+            if ($res_r && $row_r = $res_r->fetch_assoc()) {
+                $viewer_role_id = (int)$row_r['id'];
+            }
+            $stmt_r->close();
+
+            $full_name = $state['first_name'] . ' ' . $state['last_name'];
+            $rand_password = bin2hex(random_bytes(12)) . '@W1a!';
+
+            $create = user_create($full_name, $state['email'], $rand_password, [$viewer_role_id]);
+            if (!$create['ok']) {
+                send_json_response([
+                    'status' => 'error',
+                    'message' => 'Failed to create user account: ' . $create['error']
+                ], 500);
+            }
+
+            $userId = (int)$create['id'];
+            login_user_by_id($userId);
+            session_regenerate_id(true);
+
+            $first_name = $state['first_name'];
+            unset($_SESSION['registration_state']);
+
+            $display_text = "Congratulations, " . $first_name . "! Your customer registration is complete and you are now securely logged in. Let me show you our customized packages.";
+            $spoken_text = "Congratulations, " . $first_name . "! Your customer registration is complete. You are now logged in.";
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => $display_text,
+                'spoken_text' => $spoken_text,
+                'language_iso' => 'en',
+                'next_options' => [
+                    ['node_id' => 1, 'label' => 'Explore Main Menu']
+                ]
+            ]);
+        } else {
+            $state['step'] = 'phone_input';
+            send_json_response([
+                'status' => 'success',
+                'session_token' => $session_token,
+                'display_text' => "Let's correct that. Please enter your Phone Number.",
+                'spoken_text' => "Let us correct that. Please enter your Phone Number.",
+                'language_iso' => 'en',
+                'next_options' => []
+            ]);
+        }
+    }
+}
 
 // --- Predefined dialog values ---
 $lang_labels = [

@@ -1,7 +1,6 @@
 <?php
 // admin/import-pdf.php
 require_once __DIR__ . '/../lib/middleware.php';
-// Gated behind standard cms.manage permissions
 require_permission_or_die('cms.manage');
 
 $success_message = '';
@@ -46,7 +45,7 @@ function parse_pdf_native($filename) {
         }
 
         $text = trim($text);
-        // Robust fallback: if BT/ET has no readable data, parse the raw streams for strings
+        // Fallback: if BT/ET has no readable data, parse the raw streams for strings
         if (strlen($text) < 10) {
             $clean_block = preg_replace('/[^\x20-\x7E\s]/', '', $raw_page);
             preg_match_all('/[a-zA-Z0-9\s,\.\-:\(\)\!]{10,200}/', $clean_block, $fallback_matches);
@@ -62,7 +61,6 @@ function parse_pdf_native($filename) {
         }
     }
 
-    // Default top-level block grab if still empty
     if (empty($pages_text)) {
         $clean_block = preg_replace('/[^\x20-\x7E\s]/', '', $content);
         preg_match_all('/[a-zA-Z0-9\s,\.\-:\(\)\!]{20,250}/', $clean_block, $fallback_matches);
@@ -80,47 +78,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Invalid CSRF');
     }
 
-    $document_category = isset($_POST['document_category']) ? trim($_POST['document_category']) : 'General';
-    if ($document_category === '') {
-        $document_category = 'General';
-    }
+    $ingestion_type = isset($_POST['ingestion_type']) ? trim($_POST['ingestion_type']) : 'pdf';
 
-    if (!empty($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
-        $file_tmp = $_FILES['pdf_file']['tmp_name'];
-        $file_name = basename($_FILES['pdf_file']['name']);
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    if ($ingestion_type === 'manual') {
+        // Option A: Direct Manual Text Ingestion
+        $section_title = trim($_POST['section_title'] ?? '');
+        $document_category = trim($_POST['document_category'] ?? 'General');
+        $text_content = trim($_POST['text_content'] ?? '');
 
-        if ($file_ext !== 'pdf') {
-            $error_message = "Only PDF document files (.pdf) are allowed.";
+        if ($section_title === '') {
+            $error_message = "Section Title is required for manual text ingestion.";
+        } elseif ($text_content === '') {
+            $error_message = "Text Content cannot be left empty.";
         } else {
-            // Extract text page-by-page using secure, shell-free helper
-            $extracted_pages = parse_pdf_native($file_tmp);
+            $file_name = "Manual Section: " . $section_title;
+            $page_number = 1;
 
-            if (empty($extracted_pages)) {
-                $error_message = "Unable to extract any readable text elements from the uploaded PDF document.";
-            } else {
-                $inserted_count = 0;
-                $mysqli->begin_transaction();
-                try {
-                    $stmt_ins = $mysqli->prepare("INSERT INTO `local_knowledge_base` (`file_name`, `document_category`, `page_number`, `text_content`) VALUES (?, ?, ?, ?)");
-                    if ($stmt_ins) {
-                        foreach ($extracted_pages as $page_no => $content) {
-                            $stmt_ins->bind_param('ssis', $file_name, $document_category, $page_no, $content);
-                            $stmt_ins->execute();
-                            $inserted_count++;
-                        }
-                        $stmt_ins->close();
-                    }
-                    $mysqli->commit();
-                    $success_message = "Successfully ingested PDF file: '{$file_name}' as '{$document_category}'. Indexed {$inserted_count} page(s) into our Local RAG Knowledge Base.";
-                } catch (Exception $ex) {
-                    $mysqli->rollback();
-                    $error_message = "Database ingestion failed: " . $ex->getMessage();
+            $stmt_ins = $mysqli->prepare("INSERT INTO `local_knowledge_base` (`file_name`, `document_category`, `page_number`, `text_content`) VALUES (?, ?, ?, ?)");
+            if ($stmt_ins) {
+                $stmt_ins->bind_param('ssis', $file_name, $document_category, $page_number, $text_content);
+                if ($stmt_ins->execute()) {
+                    $success_message = "Successfully ingested manual text asset: '{$section_title}' under '{$document_category}'.";
+                } else {
+                    $error_message = "Failed to ingest text asset: " . $mysqli->error;
                 }
+                $stmt_ins->close();
+            } else {
+                $error_message = "Database prepared statement error.";
             }
         }
     } else {
-        $error_message = "Please select a valid PDF file to upload.";
+        // Option B: Secure PDF Document Ingestion
+        $document_category = isset($_POST['document_category']) ? trim($_POST['document_category']) : 'General';
+        if ($document_category === '') {
+            $document_category = 'General';
+        }
+
+        if (!empty($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
+            $file_tmp = $_FILES['pdf_file']['tmp_name'];
+            $file_name = basename($_FILES['pdf_file']['name']);
+            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+            if ($file_ext !== 'pdf') {
+                $error_message = "Only PDF document files (.pdf) are allowed.";
+            } else {
+                $extracted_pages = parse_pdf_native($file_tmp);
+
+                if (empty($extracted_pages)) {
+                    $error_message = "Unable to extract any readable text elements from the uploaded PDF document.";
+                } else {
+                    $inserted_count = 0;
+                    $mysqli->begin_transaction();
+                    try {
+                        $stmt_ins = $mysqli->prepare("INSERT INTO `local_knowledge_base` (`file_name`, `document_category`, `page_number`, `text_content`) VALUES (?, ?, ?, ?)");
+                        if ($stmt_ins) {
+                            foreach ($extracted_pages as $page_no => $content) {
+                                $stmt_ins->bind_param('ssis', $file_name, $document_category, $page_no, $content);
+                                $stmt_ins->execute();
+                                $inserted_count++;
+                            }
+                            $stmt_ins->close();
+                        }
+                        $mysqli->commit();
+                        $success_message = "Successfully ingested PDF file: '{$file_name}' as '{$document_category}'. Indexed {$inserted_count} page(s) into our Local RAG Knowledge Base.";
+                    } catch (Exception $ex) {
+                        $mysqli->rollback();
+                        $error_message = "Database ingestion failed: " . $ex->getMessage();
+                    }
+                }
+            }
+        } else {
+            $error_message = "Please select a valid PDF file to upload.";
+        }
     }
 }
 
@@ -130,55 +159,105 @@ include __DIR__ . '/../partials/sidebar.php';
 echo '<main class="main-content p-4">';
 ?>
 
-<div class="container mt-2">
-  <div class="card shadow-sm p-4" style="max-width: 650px; margin: 0 auto;">
-    <div class="mb-4">
-      <h3 class="h4 mb-1 fw-bold text-dark"><i class="bi bi-file-earmark-pdf-fill text-danger"></i> Local PDF Knowledge Ingestion Pipeline</h3>
-      <p class="text-muted small">Index documentation into our Local RAG Full-Text search engine using secure, native character extraction.</p>
+<div class="container-fluid mt-2">
+  <div class="mb-4">
+    <h2 class="h4 mb-1 fw-bold text-dark"><i class="bi bi-cloud-arrow-up-fill text-primary"></i> Dual-Ingestion RAG Pipeline Workspace</h2>
+    <p class="text-muted small">Choose between direct manual text ingestion or secure PDF text extraction to enrich the Local RAG search indexing.</p>
+  </div>
+
+  <?php if ($success_message !== ''): ?>
+    <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-1"></i> <?= htmlspecialchars($success_message) ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($error_message !== ''): ?>
+    <div class="alert alert-danger shadow-sm alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-1"></i> <?= htmlspecialchars($error_message) ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
+
+  <div class="row g-4">
+    <!-- Option A: Direct Manual Text Ingestion -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h4 class="h5 fw-bold text-dark mb-3"><i class="bi bi-fonts text-primary"></i> Option A: Direct Manual Text Ingestion</h4>
+        <p class="text-muted small mb-4">Enter guidelines, policies, or manual QA texts directly into the index database.</p>
+
+        <form action="import-pdf.php" method="post">
+          <?= csrf_field(); ?>
+          <input type="hidden" name="ingestion_type" value="manual">
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Section Title</label>
+            <input type="text" name="section_title" class="form-control" placeholder="e.g. Dubai Golden Visa Eligibility Guidelines" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Document Category</label>
+            <select name="document_category" class="form-select">
+              <option value="Immigration">Immigration Services</option>
+              <option value="Visit Visa">Visit Visa</option>
+              <option value="Business Setup">Business Setup</option>
+              <option value="Government Policies">Government Rules & Policies</option>
+              <option value="General">General/Other</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Text Content</label>
+            <textarea name="text_content" class="form-control font-mono" rows="8" placeholder="Type or paste the verified guideline text content here..." style="font-size: 0.85rem;" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-pill fw-bold">
+            <i class="bi bi-check-circle-fill me-1"></i> Index Manual Text Content
+          </button>
+        </form>
+      </div>
     </div>
 
-    <?php if ($success_message !== ''): ?>
-      <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle-fill me-1"></i> <?= htmlspecialchars($success_message) ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    <?php endif; ?>
+    <!-- Option B: Secure PDF Document Ingestion -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h4 class="h5 fw-bold text-dark mb-3"><i class="bi bi-file-earmark-pdf-fill text-danger"></i> Option B: Secure PDF Document Ingestion</h4>
+        <p class="text-muted small mb-4">Upload native PDF documents. The system parses content page-by-page and securely indexes elements.</p>
 
-    <?php if ($error_message !== ''): ?>
-      <div class="alert alert-danger shadow-sm alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-1"></i> <?= htmlspecialchars($error_message) ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    <?php endif; ?>
+        <form action="import-pdf.php" method="post" enctype="multipart/form-data">
+          <?= csrf_field(); ?>
+          <input type="hidden" name="ingestion_type" value="pdf">
 
-    <form action="import-pdf.php" method="post" enctype="multipart/form-data">
-      <?= csrf_field(); ?>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Select PDF Document</label>
+            <input type="file" name="pdf_file" accept=".pdf" class="form-control" required>
+            <div class="form-text small text-muted">Upload native PDF files (max 8MB). Pure-PHP parsed.</div>
+          </div>
 
-      <div class="mb-3">
-        <label class="form-label fw-semibold">Select PDF Document</label>
-        <input type="file" name="pdf_file" accept=".pdf" class="form-control" required>
-        <div class="form-text small text-muted">Upload native PDF documents (max 8MB). Shell exec() functions are strictly bypassed for safety.</div>
-      </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Document Category</label>
+            <select name="document_category" class="form-select">
+              <option value="Immigration">Immigration Services</option>
+              <option value="Visit Visa">Visit Visa</option>
+              <option value="Business Setup">Business Setup</option>
+              <option value="Government Policies">Government Rules & Policies</option>
+              <option value="General">General/Other</option>
+            </select>
+          </div>
 
-      <div class="mb-4">
-        <label class="form-label fw-semibold">Document Category</label>
-        <select name="document_category" class="form-select">
-          <option value="Immigration">Immigration Services</option>
-          <option value="Visit Visa">Visit Visa</option>
-          <option value="Business Setup">Business Setup</option>
-          <option value="Government Policies">Government Rules & Policies</option>
-          <option value="General">General/Other</option>
-        </select>
-        <div class="form-text small text-muted">Select categorization path to focus RAG contexts during matching.</div>
-      </div>
+          <div class="mb-4 pt-4"></div>
 
-      <div class="d-grid gap-2 border-top pt-3">
-        <button type="submit" class="btn btn-primary py-2.5 fw-bold rounded-pill shadow-xs">
-          <i class="bi bi-cloud-arrow-up-fill me-1"></i> Ingest & Index Document
-        </button>
-        <a href="dashboard.php" class="btn btn-outline-secondary py-2 rounded-pill">Return to Dashboard</a>
+          <button type="submit" class="btn btn-danger w-100 py-2.5 rounded-pill fw-bold">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Ingest & Index PDF Document
+          </button>
+        </form>
       </div>
-    </form>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-start mt-4 pt-2">
+    <a href="crm/knowledge-base.php" class="btn btn-outline-secondary rounded-pill me-2"><i class="bi bi-pencil-square"></i> Manage Knowledge Base</a>
+    <a href="dashboard.php" class="btn btn-dark rounded-pill">Return to Dashboard</a>
   </div>
 </div>
 
