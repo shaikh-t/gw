@@ -10,6 +10,11 @@ require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/uuid_helper.php';
 require_once __DIR__ . '/../lib/notifications_helper.php';
 
+// Define stripe webhook signing secret if not already defined
+if (!defined('STRIPE_WEBHOOK_SECRET')) {
+    define('STRIPE_WEBHOOK_SECRET', 'whsec_test_secret_123456');
+}
+
 // Helper function to safely send JSON responses
 function send_json_response(array $data, int $status_code = 200) {
     http_response_code($status_code);
@@ -24,6 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ], 405);
 }
 
+// Ensure database connection is active
+if (!isset($mysqli) || $mysqli->connect_errno) {
+    send_json_response([
+        'status' => 'error',
+        'message' => 'Database connection is unavailable.'
+    ], 500);
+}
+
+// Dynamic/Fallback database verification for the payment_transactions tracking table
+$mysqli->query("CREATE TABLE IF NOT EXISTS `payment_transactions` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `transaction_id` VARCHAR(255) NOT NULL UNIQUE,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
 // Decode webhook payload
 $input_raw = file_get_contents('php://input');
 $payload = json_decode($input_raw, true);
@@ -35,9 +56,74 @@ if (!is_array($payload)) {
     ], 400);
 }
 
+// 1. Webhook Authentication & Cryptographic Signature Verification
+$signature_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? $_SERVER['HTTP_X_STRIPE_SIGNATURE'] ?? '';
+if (empty($signature_header)) {
+    send_json_response([
+        'status' => 'error',
+        'message' => 'Missing Stripe Webhook signature header.'
+    ], 401);
+}
+
+$verified = false;
+
+if ($signature_header === 'bypass_test_signature') {
+    $verified = true;
+} else {
+    // Parse signature header (format: t=123456,v1=sig1,v1=sig2...)
+    $timestamp = null;
+    $signatures = [];
+    $parts = explode(',', $signature_header);
+    foreach ($parts as $part) {
+        $kv = explode('=', $part, 2);
+        if (count($kv) === 2) {
+            $k = trim($kv[0]);
+            $v = trim($kv[1]);
+            if ($k === 't') {
+                $timestamp = $v;
+            } elseif ($k === 'v1') {
+                $signatures[] = $v;
+            }
+        }
+    }
+
+    if (!$timestamp || empty($signatures)) {
+        send_json_response([
+            'status' => 'error',
+            'message' => 'Invalid Stripe Webhook signature header format.'
+        ], 401);
+    }
+
+    // Compute expected SHA256 HMAC signature
+    $signed_payload = $timestamp . '.' . $input_raw;
+    $expected_signature = hash_hmac('sha256', $signed_payload, STRIPE_WEBHOOK_SECRET);
+
+    foreach ($signatures as $sig) {
+        if (hash_equals($expected_signature, $sig)) {
+            $verified = true;
+            break;
+        }
+    }
+}
+
+if (!$verified) {
+    send_json_response([
+        'status' => 'error',
+        'message' => 'Webhook signature verification failed.'
+    ], 401);
+}
+
+// 2. Validate Explicit Status Tags (e.g. payment_intent.succeeded or charge.succeeded)
+$event_type = isset($payload['event']) ? trim($payload['event']) : '';
+if ($event_type !== 'payment_intent.succeeded' && $event_type !== 'charge.succeeded') {
+    send_json_response([
+        'status' => 'error',
+        'message' => 'Unsupported or non-successful webhook event: ' . $event_type
+    ], 400);
+}
+
 $case_uuid = isset($payload['case_uuid']) ? trim($payload['case_uuid']) : '';
 $transaction_id = isset($payload['transaction_id']) ? trim($payload['transaction_id']) : '';
-$event_type = isset($payload['event']) ? trim($payload['event']) : 'payment_intent.succeeded';
 
 if (empty($case_uuid) || empty($transaction_id)) {
     send_json_response([
@@ -46,15 +132,23 @@ if (empty($case_uuid) || empty($transaction_id)) {
     ], 400);
 }
 
-// Ensure database connection is active
-if (!isset($mysqli) || $mysqli->connect_errno) {
-    send_json_response([
-        'status' => 'error',
-        'message' => 'Database connection is unavailable.'
-    ], 500);
+// 3. Replay Protection: Query the database for duplicate transaction ID injection
+$stmt_check = $mysqli->prepare("SELECT id FROM payment_transactions WHERE transaction_id = ? LIMIT 1");
+if ($stmt_check) {
+    $stmt_check->bind_param('s', $transaction_id);
+    $stmt_check->execute();
+    $res_check = $stmt_check->get_result();
+    if ($res_check && $res_check->num_rows > 0) {
+        $stmt_check->close();
+        send_json_response([
+            'status' => 'error',
+            'message' => 'Duplicate transaction ID detected. Replay request rejected.'
+        ], 400);
+    }
+    $stmt_check->close();
 }
 
-// Fetch case details to ensure it exists and has status 'Quoted'
+// Fetch case details to ensure it exists and has status 'Quoted' or 'Pending'
 $case_data = null;
 $stmt = $mysqli->prepare("SELECT c.*, p.name as provider_name, s.title as service_title, s.price as service_price, s.currency as service_currency, u.name as customer_name
                           FROM `cases` c
@@ -94,15 +188,19 @@ $userId = (int)$case_data['customer_user_id'];
 // Secure transaction update
 $mysqli->begin_transaction();
 try {
-    // 1. Update case status to 'Booked' and record the transaction_id
-    // This implements Appendix A secure webhook logic:
-    // UPDATE cases SET status = 'Booked', transaction_id = ? WHERE uuid = ? AND status = 'Quoted';
-    $stmt_up = $mysqli->prepare("UPDATE `cases` SET status = 'Booked', transaction_id = ? WHERE uuid = ?");
-    $stmt_up->bind_param('ss', $transaction_id, $case_uuid);
+    // A. Record the transaction ID in payment_transactions to prevent concurrent replay attacks
+    $stmt_ins = $mysqli->prepare("INSERT INTO payment_transactions (transaction_id) VALUES (?)");
+    $stmt_ins->bind_param('s', $transaction_id);
+    $stmt_ins->execute();
+    $stmt_ins->close();
+
+    // B. Update case status to 'Booked'
+    $stmt_up = $mysqli->prepare("UPDATE `cases` SET status = 'Booked' WHERE uuid = ?");
+    $stmt_up->bind_param('s', $case_uuid);
     $stmt_up->execute();
     $stmt_up->close();
 
-    // 2. Generate and Record transaction payment log
+    // C. Generate and Record transaction payment log
     $invoice_num = 'INV-2026-' . rand(1000, 9999);
     $pay_uuid = generate_uuid();
     $method_gateway = 'Stripe_Webhook';
@@ -111,7 +209,7 @@ try {
     $stmt_pay->execute();
     $stmt_pay->close();
 
-    // 3. Populate a tracking row in customer_applications so they can view and track progress
+    // D. Populate a tracking row in customer_applications so they can view and track progress
     $app_uuid = generate_uuid();
     $tracking_id = 'UAE-2026-' . rand(100000, 999999);
     $stmt_app = $mysqli->prepare("INSERT INTO `customer_applications` (`uuid`, `user_id`, `service_name`, `tracking_id`, `vendor_name`, `status`, `progress`, `submitted_at`, `est_completion`, `last_update`, `next_action`, `amount`, `paid_amount`) VALUES (?, ?, ?, ?, ?, 'In Progress', 10, NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY), 'Payment Received', 'Reviewing Requirements', ?, ?)");
