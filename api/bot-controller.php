@@ -482,6 +482,122 @@ if ($badge_click) {
     }
 }
 
+// Local Document Retrieval (RAG) System & Fail-Closed Logging Hook
+$is_system_action = in_array(strtolower($message_content), ['reset', 'back', 'start fresh', 'ai voice companion', 'browse independently']);
+if ($node_id === null && $message_content !== '' && !$is_system_action) {
+    // 1. Run local MATCH AGAINST query to retrieve top matching documentation chunks
+    $rag_context = "";
+    $has_rag_matches = false;
+    $source_files = [];
+    $language_iso = $session['selected_language'] ?: 'en';
+    $chunks = [];
+
+    $stmt_rag = $mysqli->prepare("SELECT text_content, file_name, page_number FROM local_knowledge_base WHERE MATCH(text_content) AGAINST(?) LIMIT 3");
+    if ($stmt_rag) {
+        $stmt_rag->bind_param('s', $message_content);
+        $stmt_rag->execute();
+        $res_rag = $stmt_rag->get_result();
+        if ($res_rag && $res_rag->num_rows > 0) {
+            $has_rag_matches = true;
+            while ($row_rag = $res_rag->fetch_assoc()) {
+                $chunks[] = $row_rag['text_content'];
+                $source_files[] = "[Source: " . $row_rag['file_name'] . ", Page " . $row_rag['page_number'] . "]";
+            }
+            $rag_context = implode("\n\n", $chunks);
+        }
+        $stmt_rag->close();
+    }
+
+    if ($has_rag_matches) {
+        // Cleanly inject that local text content into our prompt context
+        $ai_concierge_prompt = AI_SYSTEM_PROMPT_BLUEPRINT . "\n\nAUTHORITATIVE LOCAL CONTEXT:\nAnswer the user using only this verified local data:\n" . $rag_context;
+
+        // Log custom user message in chat logs
+        $sender_user = 'user';
+        $stmt_u_log = $mysqli->prepare("INSERT INTO bot_chat_logs (session_id, sender, message_content) VALUES (?, ?, ?)");
+        if ($stmt_u_log) {
+            $stmt_u_log->bind_param('iss', $session_id, $sender_user, $message_content);
+            $stmt_u_log->execute();
+            $stmt_u_log->close();
+        }
+
+        // Generate dynamic response using top matched chunk
+        $top_match = $chunks[0];
+        $display_text = "Verified Guidelines: " . $top_match;
+        if (strlen($display_text) > 180) {
+            $display_text = substr($display_text, 0, 180) . "...";
+        }
+        // Append source citation
+        if (!empty($source_files)) {
+            $display_text .= "\n\n" . implode(", ", array_unique($source_files));
+        }
+
+        $spoken_text = "According to our verified guidelines: " . substr($top_match, 0, 150);
+
+        // Log bot response in chat logs
+        $sender_bot = 'bot';
+        $stmt_b_log = $mysqli->prepare("INSERT INTO bot_chat_logs (session_id, sender, message_content) VALUES (?, ?, ?)");
+        if ($stmt_b_log) {
+            $stmt_b_log->bind_param('iss', $session_id, $sender_bot, $display_text);
+            $stmt_b_log->execute();
+            $stmt_b_log->close();
+        }
+
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => $display_text,
+            'spoken_text' => $spoken_text,
+            'language_iso' => $language_iso,
+            'next_options' => [
+                ['node_id' => 1, 'label' => 'Start Fresh']
+            ]
+        ]);
+    } else {
+        // 2. Fail-Closed Hook: Log unmapped query to bot_failed_questions
+        $page_url = $current_page_context['url'] ?? 'bot-landing.php';
+        $userId = isset($session['user_id']) ? (int)$session['user_id'] : null;
+
+        $stmt_fail = $mysqli->prepare("INSERT INTO bot_failed_questions (session_id, user_id, language_iso, unanswered_question, page_context_url) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt_fail) {
+            $stmt_fail->bind_param('iisss', $session_id, $userId, $language_iso, $message_content, $page_url);
+            $stmt_fail->execute();
+            $stmt_fail->close();
+        }
+
+        // Log custom user message in chat logs
+        $sender_user = 'user';
+        $stmt_u_log = $mysqli->prepare("INSERT INTO bot_chat_logs (session_id, sender, message_content) VALUES (?, ?, ?)");
+        if ($stmt_u_log) {
+            $stmt_u_log->bind_param('iss', $session_id, $sender_user, $message_content);
+            $stmt_u_log->execute();
+            $stmt_u_log->close();
+        }
+
+        // Fail-Closed Fallback Response
+        $fallback_display = "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.";
+
+        $sender_bot = 'bot';
+        $stmt_b_log = $mysqli->prepare("INSERT INTO bot_chat_logs (session_id, sender, message_content) VALUES (?, ?, ?)");
+        if ($stmt_b_log) {
+            $stmt_b_log->bind_param('iss', $session_id, $sender_bot, $fallback_display);
+            $stmt_b_log->execute();
+            $stmt_b_log->close();
+        }
+
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => $fallback_display,
+            'spoken_text' => "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team. Let me loop you back.",
+            'language_iso' => $language_iso,
+            'next_options' => [
+                ['node_id' => 1, 'label' => 'Start Fresh']
+            ]
+        ]);
+    }
+}
+
 $current_node_id = (int)$session['current_node_id'];
 $next_node_id = $node_id ?: $current_node_id;
 
