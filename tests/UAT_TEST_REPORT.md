@@ -1,8 +1,8 @@
 # GlobalWays® Marketplace — User Acceptance Testing (UAT) Report
 ## Automated Verification & Multi-Layer System Integration Audit
 
-**Document Version:** 1.1.0
-**Status:** APPROVED (18 / 18 Tests Passed)
+**Document Version:** 1.2.0
+**Status:** APPROVED (21 / 21 Tests Passed)
 **Execution Date:** July 18, 2026
 **Lead QA Engineer:** Jules (Automated QA Agent)
 
@@ -17,7 +17,7 @@ To guarantee absolute verification of core flows and bulletproof resilience agai
 #### **Final Test Outcome**
 | Total Executed | Passed | Failed | Status | Execution Time |
 | :--- | :--- | :--- | :--- | :--- |
-| **18** | **18** | **0** | **100% PASS** | **3.9 seconds** |
+| **21** | **21** | **0** | **100% PASS** | **5.9 seconds** |
 
 ---
 
@@ -41,7 +41,7 @@ To support reliable, isolated, and repeatable testing without requiring a live, 
     4.  Submitted invalid, non-Latin Cyrillic/Arabic characters (`"العربية"`) and verified immediate validation rejection: *"Registration requires Latin characters only. Please type your First Name again."*.
     5.  Submitted valid Latin First Name (`"John"`), clicked dynamic UI confirmation option button (*"Confirm"*), and verified Last Name transition.
     6.  Verified Last Name Latin diacritics filters (rejection of non-Latin, accepting valid Latin `"Doe"`).
-    7.  Submitted and verified Email Address format checks (rejection of invalid email `"john@البريد.com"`, acceptance of `"john.doe@example.com"`).
+    7.  Submitted and verified Email Address format checks (rejection of invalid email `"john@البريد.com"`, acceptance of `"new.john.doe@example.com"`).
     8.  Submitted and verified Phone Number format checks (rejection of alphanumeric `"invalidphone"`, acceptance of `"+971501234567"`).
     9.  Asserted that upon final phone confirmation, user account details were generated dynamically, role `'viewer'` mapped, session initiated via `login_user_by_id`, and redirected with congratulations.
     10. Navigated directly to `/customer/index.php` to assert active session auto-login persistence and body display.
@@ -87,33 +87,44 @@ To support reliable, isolated, and repeatable testing without requiring a live, 
     5.  **Dynamic Team Visibility:** Navigated to public `/vendor-profile.php` when `provider_team_members` is empty and verified the team section was hidden. Seeded mock team members and asserted the dynamic section rendered perfectly.
 *   **Result:** **PASSED**
 
+#### **Track 6: Advanced Visual Layout & Secure Price Checkout Audits**
+*   **Objective:** Validate that checkout pages perform secure price protection and fetch authoritative costs dynamically, perform visual baseline layout regression tests, and toggle site-wide themes.
+*   **Steps Taken:**
+    1.  **Secure Price Protection:** Navigated a logged-in user session to `/customer/checkout.php?case_id=test-case-uuid`. Asserted that the price (`AED 150.00`) and case details were securely refetched from database.
+    2.  **Visual Soundness Check:** Dispatched a visual soundness test to `/bot-landing.php` and captured a baseline screenshot inside `test-results/baselines/ai_workspace_soundness.png`.
+    3.  **Site-Wide Dark Theme Toggle:** Clicked the global `#themeToggleBtn` on `index.php`. Asserted that the `<html>` tag's `data-bs-theme` attribute transitions dynamically to `'dark'` / `'light'` and persists to `localStorage`.
+*   **Result:** **PASSED**
+
 ---
 
 ### 4. FULL TEST SUITE EXECUTION LOG
 
 ```
-Running 18 tests using 1 worker
+Running 21 tests using 1 worker
 
-[1/18] [chromium] › tests/globalways_uat.spec.js:78:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Conversational UI workflow and valid/invalid validation logic
-[2/18] [chromium] › tests/globalways_uat.spec.js:164:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Backend API controller registration state loop
-[3/18] [chromium] › tests/globalways_uat.spec.js:261:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Valid query should return RAG results with source file citations
-[4/18] [chromium] › tests/globalways_uat.spec.js:292:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Unmapped questions must trigger the fail-closed hook to write log entries into bot_failed_questions
-[5/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/dashboard.php must return HTTP 403
-[6/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/users/index.php must return HTTP 403
-[7/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/roles/index.php must return HTTP 403
-[8/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/permissions/index.php must return HTTP 403
-[9/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/deductions.php must return HTTP 403
-[10/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/bot_ads.php must return HTTP 403
-[11/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/ai_status.php must return HTTP 403
-[12/18] [chromium] › tests/globalways_uat.spec.js:356:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Stripe Webhook Duplicate transaction ID collisions must return HTTP 400
-[13/18] [chromium] › tests/globalways_uat.spec.js:388:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Ad click-fraud sliding window rate-limiting blocks budget consumption on 4th click & redirects cleanly
-[14/18] [chromium] › tests/globalways_uat.spec.js:422:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › AI Global Bot Kill-Switch forcefully restricts API access and drops requests with HTTP 403
-[15/18] [chromium] › tests/globalways_uat.spec.js:433:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › IP-Based Login Rate-Limiter (Brute-Force Protection) restricts client access on 6th failed attempt
-[16/18] [chromium] › tests/globalways_uat.spec.js:463:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Invisible Honeypot field registers instant block on registration post submission
-[17/18] [chromium] › tests/globalways_uat.spec.js:490:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › SEO Clean URL routes are mapped correctly and return active views
-[18/18] [chromium] › tests/globalways_uat.spec.js:495:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Vendor Profile dynamic team visibility logic shows/hides Our Team section
+[1/21] [chromium] › tests/globalways_uat.spec.js:85:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Conversational UI workflow and valid/invalid validation logic
+[2/21] [chromium] › tests/globalways_uat.spec.js:171:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Backend API controller registration state loop
+[3/21] [chromium] › tests/globalways_uat.spec.js:268:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Valid query should return RAG results with source file citations
+[4/21] [chromium] › tests/globalways_uat.spec.js:299:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Unmapped questions must trigger the fail-closed hook to write log entries into bot_failed_questions
+[5/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/dashboard.php must return HTTP 403
+[6/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/users/index.php must return HTTP 403
+[7/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/roles/index.php must return HTTP 403
+[8/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/permissions/index.php must return HTTP 403
+[9/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/deductions.php must return HTTP 403
+[10/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/bot_ads.php must return HTTP 403
+[11/21] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/ai_status.php must return HTTP 403
+[12/21] [chromium] › tests/globalways_uat.spec.js:363:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Stripe Webhook Duplicate transaction ID collisions must return HTTP 400
+[13/21] [chromium] › tests/globalways_uat.spec.js:395:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Ad click-fraud sliding window rate-limiting blocks budget consumption on 4th click & redirects cleanly
+[14/21] [chromium] › tests/globalways_uat.spec.js:429:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › AI Global Bot Kill-Switch forcefully restricts API access and drops requests with HTTP 403
+[15/21] [chromium] › tests/globalways_uat.spec.js:440:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › IP-Based Login Rate-Limiter (Brute-Force Protection) restricts client access on 6th failed attempt
+[16/21] [chromium] › tests/globalways_uat.spec.js:469:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Invisible Honeypot field registers instant block on registration post submission
+[17/21] [chromium] › tests/globalways_uat.spec.js:496:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › SEO Clean URL routes are mapped correctly and return active views
+[18/21] [chromium] › tests/globalways_uat.spec.js:501:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Vendor Profile dynamic team visibility logic shows/hides Our Team section
+[19/21] [chromium] › tests/globalways_uat.spec.js:531:5 › GlobalWays Automated UAT Suite › Track 6: Advanced Visual Layout & Secure Price Checkout Audits › Secure price protection handles case checkouts and fetches authoritative costs
+[20/21] [chromium] › tests/globalways_uat.spec.js:566:5 › GlobalWays Automated UAT Suite › Track 6: Advanced Visual Layout & Secure Price Checkout Audits › Playwright visual layout check of AI Workspace
+[21/21] [chromium] › tests/globalways_uat.spec.js:576:5 › GlobalWays Automated UAT Suite › Track 6: Advanced Visual Layout & Secure Price Checkout Audits › Global system theme toggle switches HTML attribute and persists to localStorage
 
-  18 passed (3.9s)
+  21 passed (5.9s)
 ```
 
 ---
