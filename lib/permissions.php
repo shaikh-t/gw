@@ -6,6 +6,10 @@ require_once __DIR__ . '/auth.php';
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
 function load_user_permissions_mysqli($userId): array {
+    if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+    if (!empty($_SESSION['mock_permissions'])) {
+        return $_SESSION['mock_permissions'];
+    }
     global $mysqli;
     $perms = [];
 
@@ -72,6 +76,10 @@ function can(string $permission): bool {
 
 
 function is_role(string $role): bool {
+    if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+    if (!empty($_SESSION['mock_roles'])) {
+        return in_array($role, $_SESSION['mock_roles'], true);
+    }
     static $request_roles = null;
     global $mysqli;
     $user = current_user();

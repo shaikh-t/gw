@@ -20,12 +20,37 @@ class CacheUtility {
         }
     }
 
+    private static function should_bypass_cache() {
+        if (isset($_SERVER['SCRIPT_NAME'])) {
+            $script = $_SERVER['SCRIPT_NAME'];
+            if (strpos($script, '/admin/') !== false ||
+                strpos($script, '/customer/') !== false ||
+                strpos($script, '/providers/') !== false ||
+                strpos($script, '/vendor/') !== false) {
+                return true;
+            }
+        }
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $uri = $_SERVER['REQUEST_URI'];
+            if (strpos($uri, '/admin/') !== false ||
+                strpos($uri, '/customer/') !== false ||
+                strpos($uri, '/providers/') !== false ||
+                strpos($uri, '/vendor/') !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static function get_file_path($key) {
         $safe_key = md5($key);
         return self::$cache_dir . '/' . $safe_key . '.cache';
     }
 
     public static function get($key) {
+        if (self::should_bypass_cache()) {
+            return null;
+        }
         self::init();
         if (self::$use_apcu) {
             $success = false;
@@ -78,14 +103,46 @@ class CacheUtility {
 
     public static function clear() {
         self::init();
-        if (self::$use_apcu) {
-            return apcu_clear_cache();
+
+        // 1. Clear APCu if available
+        if (function_exists('apcu_clear_cache')) {
+            @apcu_clear_cache();
         }
 
+        // 2. Clear Redis if extension is available
+        if (class_exists('Redis')) {
+            try {
+                $redis = new Redis();
+                if (@$redis->connect('127.0.0.1', 6379)) {
+                    @$redis->flushAll();
+                }
+            } catch (Throwable $t) {
+                // Ignore Redis errors if it is not running
+            }
+        }
+
+        // 3. Recursively delete file-based fragments inside var/cache/
         if (file_exists(self::$cache_dir)) {
-            $files = glob(self::$cache_dir . '/*.cache');
-            foreach ($files as $file) {
-                @unlink($file);
+            try {
+                $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator(self::$cache_dir, RecursiveDirectoryIterator::SKIP_DOTS),
+                    RecursiveIteratorIterator::CHILD_FIRST
+                );
+                foreach ($iterator as $file) {
+                    if ($file->isFile()) {
+                        @unlink($file->getRealPath());
+                    } elseif ($file->isDir()) {
+                        @rmdir($file->getRealPath());
+                    }
+                }
+            } catch (Throwable $t) {
+                // Fallback to glob if recursive iterator fails
+                $files = glob(self::$cache_dir . '/*.cache');
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        @unlink($file);
+                    }
+                }
             }
         }
         return true;

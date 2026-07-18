@@ -1,9 +1,11 @@
 <?php
 // lib/auth.php
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+                  (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
     session_start([
         'cookie_lifetime' => 86400,
-        'cookie_secure' => true,
+        'cookie_secure' => $is_secure,
         'cookie_httponly' => true,
         'cookie_samesite' => 'Strict'
     ]);
