@@ -50,7 +50,7 @@ A dedicated, high-value administrative permission was created:
 * **Description:** Allows administrators to perform a global cache purge of Redis, APCu, and file-based fragments.
 
 ### Database Migration
-The permission is seeded via `admin/migrations/cache_clear_permission.php` and mapped to:
+The permission is seeded via `migrations/admin_cache_clear_permission.php` and mapped to:
 1. **Admin Role** (ID 1)
 2. **Super Admin Role** (ID 4)
 
