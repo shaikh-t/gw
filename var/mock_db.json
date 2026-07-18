@@ -38,16 +38,7 @@
       "deduction_value": 10
     }
   ],
-  "provider_team_members": [
-    {
-      "id": 1,
-      "provider_id": 1,
-      "name": "Alice Smith",
-      "role": "Golden Visa Consultant",
-      "specialties": "Golden Visa, Residenship",
-      "avatar": null
-    }
-  ],
+  "provider_team_members": [],
   "local_knowledge_base": [
     {
       "text_content": "This is the authoritative golden visa guide details.",
@@ -62,5 +53,12 @@
   "customer_applications": [],
   "login_attempts": [],
   "registration_attempts": [],
-  "users": []
+  "users": [
+    {
+      "id": 1,
+      "uuid": "test-user-uuid",
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    }
+  ]
 }

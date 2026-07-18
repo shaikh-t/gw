@@ -357,6 +357,28 @@ class MockMySQLiStmt {
             }
             $this->result_rows = $matched_rows;
         }
+        elseif (stripos($sql, 'SELECT c.*, p.name as provider_name, p.owner_user_id as provider_owner_id') !== false) {
+            $case_uuid = $this->params[0] ?? '';
+            $matched_rows = [];
+            foreach ($db['cases'] as $case) {
+                if ($case['uuid'] === $case_uuid) {
+                    $matched_rows[] = [
+                        'uuid' => $case['uuid'],
+                        'customer_user_id' => $case['customer_user_id'],
+                        'provider_id' => $case['provider_id'],
+                        'service_id' => $case['service_id'],
+                        'status' => $case['status'],
+                        'service_price' => $case['service_price'],
+                        'service_currency' => $case['service_currency'],
+                        'customer_name' => $case['customer_name'],
+                        'service_title' => $case['service_title'],
+                        'provider_name' => $case['provider_name'],
+                        'provider_owner_id' => 2
+                    ];
+                }
+            }
+            $this->result_rows = $matched_rows;
+        }
         elseif (stripos($sql, 'SELECT c.*, p.name as provider_name') !== false) {
             $case_uuid = $this->params[0] ?? '';
             $matched_rows = [];

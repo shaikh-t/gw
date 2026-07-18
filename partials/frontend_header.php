@@ -48,6 +48,40 @@ if ($h_res) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/globalways.css" rel="stylesheet">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'auto';
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const activeTheme = savedTheme === 'auto' ? systemTheme : savedTheme;
+      document.documentElement.setAttribute('data-bs-theme', activeTheme);
+    })();
+  </script>
+  <script>
+    function toggleSystemTheme() {
+      const htmlEl = document.documentElement;
+      const currentTheme = htmlEl.getAttribute('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      htmlEl.setAttribute('data-bs-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeToggleIcon(newTheme);
+    }
+
+    function updateThemeToggleIcon(theme) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (!icon) return;
+      if (theme === 'dark') {
+        icon.className = 'bi bi-sun-fill text-warning';
+      } else {
+        icon.className = 'bi bi-moon-fill text-primary';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+      updateThemeToggleIcon(activeTheme);
+    });
+  </script>
 </head>
 <body>
   <!-- Header / Navbar -->
@@ -70,7 +104,12 @@ if ($h_res) {
             </li>
           <?php endforeach; ?>
         </ul>
-        <div class="d-flex align-items-center gap-2 navbar-actions">
+        <div class="d-flex align-items-center gap-3 navbar-actions">
+          <!-- Theme Toggle Button -->
+          <button class="btn btn-link nav-link p-2 d-flex align-items-center justify-content-center" id="themeToggleBtn" onclick="toggleSystemTheme()" title="Toggle Light/Dark Theme" style="border: none; background: none;">
+            <i class="bi bi-moon-fill text-primary" id="themeToggleIcon" style="font-size: 1.25rem;"></i>
+          </button>
+
           <?php if ($current_user): ?>
               <?php if (is_role('admin') || is_role('Super Admin')): ?>
                   <a href="admin/dashboard.php" class="btn btn-signin rounded-pill px-4">Admin Panel</a>

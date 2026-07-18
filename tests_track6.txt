@@ -1,0 +1,32 @@
+546: sendQueryToController('jane.smith@example.com');
+547: });
+548: await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+549: await page.evaluate(() => {
+550: sendQueryToController('+971509999999');
+551: });
+552: await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+553:
+554: // Wait for registration completion message to ensure session cookies are fully written in Playwright context
+555: await expect(page.locator('.ws-bubble.bot').last()).toContainText("Congratulations, Jane! Your customer registration is complete");
+556:
+557: // 2. Access customer checkout page with valid case_id
+558: await page.goto('/customer/checkout.php?case_id=test-case-uuid');
+559: expect(page.url()).toContain('/customer/checkout.php');
+560:
+561: // 3. Assert that case details and authoritative price are securely retrieved and rendered
+562: await expect(page.locator('body')).toContainText('Golden Visa Assistance');
+563: await expect(page.locator('body')).toContainText('AED 150.00');
+564: });
+565:
+566: test('Playwright visual layout check of AI Workspace', async ({ page }) => {
+567: await page.goto('/bot-landing.php');
+568: // Assert that core sidebar and preview views are rendered nicely
+569: await expect(page.locator('.ws-sidebar')).toBeVisible();
+570: await expect(page.locator('#bot-workspace-view')).toBeVisible();
+571:
+572: // Capture baseline screenshot
+573: await page.screenshot({ path: 'test-results/baselines/ai_workspace_soundness.png' });
+574: });
+575: });
+576:
+577: });

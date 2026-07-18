@@ -61,7 +61,14 @@ function resetMockDb() {
     "customer_applications": [],
     "login_attempts": [],
     "registration_attempts": [],
-    "users": []
+    "users": [
+      {
+        "id": 1,
+        "uuid": "test-user-uuid",
+        "name": "John Doe",
+        "email": "john.doe@example.com"
+      }
+    ]
   };
   fs.writeFileSync(mockDbPath, JSON.stringify(default_db, null, 2));
 }
@@ -125,11 +132,11 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       });
       await expect(page.locator('.ws-bubble.bot').last()).toContainText("Please enter a valid, Latin-based Email Address.");
 
-      // 9. Enter valid Email
+      // 9. Enter valid Email (use unique email to avoid collision with pre-seeded John Doe)
       await page.evaluate(() => {
-        sendQueryToController('john.doe@example.com');
+        sendQueryToController('new.john.doe@example.com');
       });
-      await expect(page.locator('.ws-bubble.bot').last()).toContainText("I recorded your email as 'john.doe@example.com'. Is this correct?");
+      await expect(page.locator('.ws-bubble.bot').last()).toContainText("I recorded your email as 'new.john.doe@example.com'. Is this correct?");
 
       // 10. Confirm Email via UI clicking
       const confirmEmailBtn = page.locator('#wsOptionsRack button:has-text("Confirm")');
@@ -431,7 +438,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
     });
 
     test('IP-Based Login Rate-Limiter (Brute-Force Protection) restricts client access on 6th failed attempt', async ({ playwright }) => {
-      // 1. Visit login.php to initialize session and get dynamic CSRF token
       const freshContext = await playwright.request.newContext();
       const loginPageRes = await freshContext.get('/login.php');
       const loginHtml = await loginPageRes.text();
@@ -516,6 +522,75 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       await expect(page.locator('#vendorTeamGrid')).toBeVisible();
       await expect(page.locator('#vendorTeamGrid')).toContainText("Alice Smith");
       await expect(page.locator('#vendorTeamGrid')).toContainText("Golden Visa Consultant");
+    });
+  });
+
+  // Track 6: Advanced Visual Layout & Secure Price Checkout Audits
+  test.describe('Track 6: Advanced Visual Layout & Secure Price Checkout Audits', () => {
+
+    test('Secure price protection handles case checkouts and fetches authoritative costs', async ({ page }) => {
+      // 1. Login user securely first to be allowed access to customer checkout page
+      await page.goto('/bot-landing.php');
+      await page.evaluate(() => {
+        sendQueryToController('register');
+      });
+      await page.evaluate(() => {
+        sendQueryToController('Jane');
+      });
+      await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+      await page.evaluate(() => {
+        sendQueryToController('Smith');
+      });
+      await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+      await page.evaluate(() => {
+        sendQueryToController('jane.smith@example.com');
+      });
+      await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+      await page.evaluate(() => {
+        sendQueryToController('+971509999999');
+      });
+      await page.locator('#wsOptionsRack button:has-text("Confirm")').click();
+
+      // Wait for registration completion message to ensure session cookies are fully written in Playwright context
+      await expect(page.locator('.ws-bubble.bot').last()).toContainText("Congratulations, Jane! Your customer registration is complete");
+
+      // 2. Access customer checkout page with valid case_id
+      await page.goto('/customer/checkout.php?case_id=test-case-uuid');
+      expect(page.url()).toContain('/customer/checkout.php');
+
+      // 3. Assert that case details and authoritative price are securely retrieved and rendered
+      await expect(page.locator('body')).toContainText('Golden Visa Assistance');
+      await expect(page.locator('body')).toContainText('AED 150.00');
+    });
+
+    test('Playwright visual layout check of AI Workspace', async ({ page }) => {
+      await page.goto('/bot-landing.php');
+      // Assert that core sidebar and preview views are rendered nicely
+      await expect(page.locator('.ws-sidebar')).toBeVisible();
+      await expect(page.locator('#bot-workspace-view')).toBeVisible();
+
+      // Capture baseline screenshot
+      await page.screenshot({ path: 'test-results/baselines/ai_workspace_soundness.png' });
+    });
+
+    test('Global system theme toggle switches HTML attribute and persists to localStorage', async ({ page }) => {
+      await page.goto('/index.php');
+
+      // Get initial theme attribute
+      const defaultTheme = await page.locator('html').getAttribute('data-bs-theme') || 'light';
+
+      // Click Theme Toggle Button
+      const toggleBtn = page.locator('#themeToggleBtn');
+      await expect(toggleBtn).toBeVisible();
+      await toggleBtn.click();
+
+      // Assert theme switches
+      const toggledTheme = await page.locator('html').getAttribute('data-bs-theme');
+      expect(toggledTheme).not.toBe(defaultTheme);
+
+      // Verify persistence in localStorage
+      const persistedTheme = await page.evaluate(() => localStorage.getItem('theme'));
+      expect(persistedTheme).toBe(toggledTheme);
     });
   });
 
