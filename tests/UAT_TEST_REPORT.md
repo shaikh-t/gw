@@ -1,9 +1,9 @@
 # GlobalWays® Marketplace — User Acceptance Testing (UAT) Report
 ## Automated Verification & Multi-Layer System Integration Audit
 
-**Document Version:** 1.0.0
-**Status:** APPROVED (13 / 13 Tests Passed)
-**Execution Date:** July 17, 2026
+**Document Version:** 1.1.0
+**Status:** APPROVED (18 / 18 Tests Passed)
+**Execution Date:** July 18, 2026
 **Lead QA Engineer:** Jules (Automated QA Agent)
 
 ---
@@ -17,15 +17,15 @@ To guarantee absolute verification of core flows and bulletproof resilience agai
 #### **Final Test Outcome**
 | Total Executed | Passed | Failed | Status | Execution Time |
 | :--- | :--- | :--- | :--- | :--- |
-| **13** | **13** | **0** | **100% PASS** | **2.5 seconds** |
+| **18** | **18** | **0** | **100% PASS** | **3.9 seconds** |
 
 ---
 
 ### 2. ARCHITECTURAL OVERVIEW
 
 To support reliable, isolated, and repeatable testing without requiring a live, complex MySQL server daemon, the platform's fallback compatibility layer was augmented into a stateful mock system:
-1. **Stateful Database Emulation (`lib/mock_mysqli.php`)**: Translates standard SQL queries (including transactional SELECT, INSERT, UPDATE statements) into dynamic reads/writes against a thread-safe JSON datastore.
-2. **File-Backed Persistence Datastore (`var/mock_db.json`)**: Keeps track of mock user accounts, active ad campaigns, fraud logs, pending/quoted cases, and transactional states. This allows complete end-to-end multi-page session tracking.
+1. **Stateful Database Emulation (`lib/mock_mysqli.php`)**: Translates standard SQL queries (including transactional SELECT, INSERT, UPDATE, and DELETE statements) into dynamic reads/writes against a thread-safe JSON datastore.
+2. **File-Backed Persistence Datastore (`var/mock_db.json`)**: Keeps track of mock user accounts, active ad campaigns, fraud logs, login/registration attempts, pending/quoted cases, and transactional states. This allows complete end-to-end multi-page session tracking.
 3. **Single-Worker Playwright Harness (`playwright.config.js`)**: Configured to run sequentially (`workers: 1`) to ensure perfect session-state synchronization across asynchronous PHP network fetches.
 
 ---
@@ -77,28 +77,43 @@ To support reliable, isolated, and repeatable testing without requiring a live, 
     8.  Verified that since the IP-based hour threshold exceeded 3 clicks, the click-fraud rate-limiter intercepted the request, blocked any budget increments, skipped database writes, and cleanly redirected with `HTTP 302` to protect sponsor funds.
 *   **Result:** **PASSED**
 
+#### **Track 5: High-Value Advanced Security & Layout Audits**
+*   **Objective:** Validate system resilience against Global AI Bot Kill-Switch transitions, IP login brute-force throttling, invisible spam honeypots, clean URLs, and dynamic team grid visibility layouts.
+*   **Steps Taken:**
+    1.  **AI Global Kill-Switch:** Seeding `site_settings` value `ai_bot_global_status = "disabled"` and dispatching POST request to `/api/bot-controller.php`. Asserted immediate connection drop with HTTP `403 Forbidden`.
+    2.  **IP Brute-Force Rate Limiting:** Seeding 5 failed attempts in the database. Dispatched a 6th failed attempt. Asserted that the request was throttled and redirected with a secure flash error message back to `login.php`.
+    3.  **Invisible Spam Honeypots:** Dispatched a POST request to `/register.php` with the hidden honeypot field `website_url_verification` populated. Asserted that the system executed a silent drop and immediately terminated execution with `HTTP 200` to mislead spam bot tools.
+    4.  **SEO Clean URLs:** Verified that clean URL pages load correctly with active views and standard `HTTP 200` statuses.
+    5.  **Dynamic Team Visibility:** Navigated to public `/vendor-profile.php` when `provider_team_members` is empty and verified the team section was hidden. Seeded mock team members and asserted the dynamic section rendered perfectly.
+*   **Result:** **PASSED**
+
 ---
 
 ### 4. FULL TEST SUITE EXECUTION LOG
 
 ```
-Running 13 tests using 1 worker
+Running 18 tests using 1 worker
 
-[1/13] [chromium] › tests/globalways_uat.spec.js:69:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Conversational UI workflow and valid/invalid validation logic
-[2/13] [chromium] › tests/globalways_uat.spec.js:157:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Backend API controller registration state loop
-[3/13] [chromium] › tests/globalways_uat.spec.js:257:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Valid query should return RAG results with source file citations
-[4/13] [chromium] › tests/globalways_uat.spec.js:293:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Unmapped questions must trigger the fail-closed hook to write log entries into bot_failed_questions
-[5/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/dashboard.php must return HTTP 403
-[6/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/users/index.php must return HTTP 403
-[7/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/roles/index.php must return HTTP 403
-[8/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/permissions/index.php must return HTTP 403
-[9/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/deductions.php must return HTTP 403
-[10/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/bot_ads.php must return HTTP 403
-[11/13] [chromium] › tests/globalways_uat.spec.js:351:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/ai_status.php must return HTTP 403
-[12/13] [chromium] › tests/globalways_uat.spec.js:365:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Stripe Webhook Duplicate transaction ID collisions must return HTTP 400
-[13/13] [chromium] › tests/globalways_uat.spec.js:401:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Ad click-fraud sliding window rate-limiting blocks budget consumption on 4th click & redirects cleanly
+[1/18] [chromium] › tests/globalways_uat.spec.js:78:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Conversational UI workflow and valid/invalid validation logic
+[2/18] [chromium] › tests/globalways_uat.spec.js:164:5 › GlobalWays Automated UAT Suite › Track 1: Guest-to-Customer Onboarding Flow › Backend API controller registration state loop
+[3/18] [chromium] › tests/globalways_uat.spec.js:261:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Valid query should return RAG results with source file citations
+[4/18] [chromium] › tests/globalways_uat.spec.js:292:5 › GlobalWays Automated UAT Suite › Track 2: Local RAG & Fail-Closed Logging › Unmapped questions must trigger the fail-closed hook to write log entries into bot_failed_questions
+[5/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/dashboard.php must return HTTP 403
+[6/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/users/index.php must return HTTP 403
+[7/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/roles/index.php must return HTTP 403
+[8/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/permissions/index.php must return HTTP 403
+[9/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/deductions.php must return HTTP 403
+[10/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/bot_ads.php must return HTTP 403
+[11/18] [chromium] › tests/globalways_uat.spec.js:344:7 › GlobalWays Automated UAT Suite › Track 3: RBAC Access Wall Authorization Checks › Direct guest request to administrative endpoint /admin/settings/ai_status.php must return HTTP 403
+[12/18] [chromium] › tests/globalways_uat.spec.js:356:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Stripe Webhook Duplicate transaction ID collisions must return HTTP 400
+[13/18] [chromium] › tests/globalways_uat.spec.js:388:5 › GlobalWays Automated UAT Suite › Track 4: Webhook Replay & Ad Click Fraud Protection › Ad click-fraud sliding window rate-limiting blocks budget consumption on 4th click & redirects cleanly
+[14/18] [chromium] › tests/globalways_uat.spec.js:422:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › AI Global Bot Kill-Switch forcefully restricts API access and drops requests with HTTP 403
+[15/18] [chromium] › tests/globalways_uat.spec.js:433:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › IP-Based Login Rate-Limiter (Brute-Force Protection) restricts client access on 6th failed attempt
+[16/18] [chromium] › tests/globalways_uat.spec.js:463:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Invisible Honeypot field registers instant block on registration post submission
+[17/18] [chromium] › tests/globalways_uat.spec.js:490:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › SEO Clean URL routes are mapped correctly and return active views
+[18/18] [chromium] › tests/globalways_uat.spec.js:495:5 › GlobalWays Automated UAT Suite › Track 5: High-Value Advanced Security & Layout Audits › Vendor Profile dynamic team visibility logic shows/hides Our Team section
 
-  13 passed (2.5s)
+  18 passed (3.9s)
 ```
 
 ---

@@ -1141,3 +1141,727 @@
 [Fri Jul 17 22:08:50 2026] 127.0.0.1:37748 Accepted
 [Fri Jul 17 22:08:50 2026] 127.0.0.1:37748 [302]: GET /api/bot-ad-tracker.php?ad_id=99
 [Fri Jul 17 22:08:50 2026] 127.0.0.1:37748 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55542 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55542 [200]: GET /bot-landing.php
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55542 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55556 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55558 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55556 [200]: GET /css/globalways.css
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55558 [200]: GET /assets/logo.png
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55556 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55558 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55566 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55566 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55566 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55570 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55570 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55570 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55576 Accepted
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55576 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55576 Closing
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55588 Accepted
+[Sat Jul 18 10:21:28 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55588 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:28 2026] 127.0.0.1:55588 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55592 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55592 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55592 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55594 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55594 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55594 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55604 Accepted
+[Sat Jul 18 10:21:29 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55604 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55604 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55610 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55610 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55610 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55626 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55626 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55626 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55634 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55634 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55634 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55640 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55640 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55640 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55648 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55648 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55648 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55656 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55656 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55656 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55672 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55672 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55672 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55680 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55680 [200]: GET /customer/index.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55680 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55682 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55690 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55682 [200]: GET /css/globalways.css
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55690 [200]: GET /js/main.js
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55682 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55690 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55704 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55704 [200]: GET /js/notifications.js
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55704 Closing
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55720 Accepted
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55720 [200]: GET /get-unread-notifications.php
+[Sat Jul 18 10:21:29 2026] 127.0.0.1:55720 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55734 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55734 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55734 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55736 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55736 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55736 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55742 Accepted
+[Sat Jul 18 10:21:30 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55742 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55742 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55748 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55748 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55748 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55750 Accepted
+[Sat Jul 18 10:21:30 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55750 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55750 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55758 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55758 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55758 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55760 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55760 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55760 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55762 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55762 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55762 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55772 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55772 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55772 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55782 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55782 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55782 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55798 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55798 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55798 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55810 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55810 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55810 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55824 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55824 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55824 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55838 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55838 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55838 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55854 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55854 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55854 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55856 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55856 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55856 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55858 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55858 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55858 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55866 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55866 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55866 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55878 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55878 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55878 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55882 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55882 [403]: GET /admin/dashboard.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55882 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55890 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55890 [403]: GET /admin/users/index.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55890 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55900 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55900 [403]: GET /admin/roles/index.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55900 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55916 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55916 [403]: GET /admin/permissions/index.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55916 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55932 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55932 [403]: GET /admin/settings/deductions.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55932 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55942 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55942 [403]: GET /admin/settings/bot_ads.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55942 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55944 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55944 [403]: GET /admin/settings/ai_status.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55944 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55954 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55954 [200]: POST /api/payment-webhook.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55954 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55966 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55966 [400]: POST /api/payment-webhook.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55966 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55970 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55970 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55970 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55980 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55980 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55980 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55988 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55988 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55988 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55994 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55994 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:55994 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56006 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56006 [403]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56006 Closing
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56022 Accepted
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56022 [200]: POST /login_post.php
+[Sat Jul 18 10:21:30 2026] 127.0.0.1:56022 Closing
+[Sat Jul 18 10:21:31 2026] 127.0.0.1:56036 Accepted
+[Sat Jul 18 10:21:31 2026] PHP Parse error:  Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:21:31 2026] 127.0.0.1:56036 [500]: POST /register.php - Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:21:31 2026] 127.0.0.1:56036 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56048 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56048 [200]: GET /blog.php
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56048 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56054 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56060 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56066 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56054 [200]: GET /css/globalways.css
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56054 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56076 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56060 [200]: GET /assets/logo.png
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56060 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56066 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56066 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56076 [200]: GET /js/main.js
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56076 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56080 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56080 [200]: GET /js/notifications.js
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56080 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56088 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56088 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56088 Closing
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56100 Accepted
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56100 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:21:32 2026] 127.0.0.1:56100 Closing
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56114 Accepted
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56114 [404]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56114 Closing
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56122 Accepted
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56122 [404]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:21:33 2026] 127.0.0.1:56122 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49608 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49608 [200]: GET /bot-landing.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49608 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49618 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49626 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49618 [200]: GET /css/globalways.css
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49626 [200]: GET /assets/logo.png
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49618 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49626 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49636 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49636 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49636 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49652 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49652 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49652 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49658 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49658 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49658 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49674 Accepted
+[Sat Jul 18 10:30:14 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49674 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49674 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49678 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49678 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49678 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49684 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49684 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49684 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49700 Accepted
+[Sat Jul 18 10:30:14 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49700 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49700 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49704 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49704 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49704 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49706 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49706 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49706 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49708 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49708 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49708 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49714 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49714 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49714 Closing
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49716 Accepted
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49716 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:14 2026] 127.0.0.1:49716 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49724 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49724 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49724 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49738 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49738 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49738 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49740 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49740 [200]: GET /customer/index.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49740 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49748 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49762 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49748 [200]: GET /css/globalways.css
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49762 [200]: GET /js/main.js
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49748 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49762 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49770 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49770 [200]: GET /js/notifications.js
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49770 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49782 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49782 [200]: GET /get-unread-notifications.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49782 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49798 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49798 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49798 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49812 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49812 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49812 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49826 Accepted
+[Sat Jul 18 10:30:15 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49826 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49826 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49828 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49828 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49828 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49836 Accepted
+[Sat Jul 18 10:30:15 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49836 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49836 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49838 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49838 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49838 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49848 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49848 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49848 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49860 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49860 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49860 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49866 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49866 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49866 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49880 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49880 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49880 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49896 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49896 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49896 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49906 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49906 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49906 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49920 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49920 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49920 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49936 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49936 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49936 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49950 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49950 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49950 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49966 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49966 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49966 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49968 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49968 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49968 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49978 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49978 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49978 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49984 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49984 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49984 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49990 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49990 [403]: GET /admin/dashboard.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49990 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49998 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49998 [403]: GET /admin/users/index.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:49998 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50014 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50014 [403]: GET /admin/roles/index.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50014 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50022 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50022 [403]: GET /admin/permissions/index.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50022 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50032 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50032 [403]: GET /admin/settings/deductions.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50032 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50038 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50038 [403]: GET /admin/settings/bot_ads.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50038 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50054 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50054 [403]: GET /admin/settings/ai_status.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50054 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50062 Accepted
+[Sat Jul 18 10:30:15 2026] PHP Warning:  Undefined array key "owner_user_id" in /app/lib/notifications_helper.php on line 62
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50062 [200]: POST /api/payment-webhook.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50062 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50074 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50074 [400]: POST /api/payment-webhook.php
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50074 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50090 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50090 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50090 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50094 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50094 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50094 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50102 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50102 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50102 Closing
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50104 Accepted
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50104 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:30:15 2026] 127.0.0.1:50104 Closing
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50112 Accepted
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50112 [403]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50112 Closing
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50116 Accepted
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50116 [200]: GET /login.php
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50116 Closing
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50126 Accepted
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50126 [302]: POST /login_post.php
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50126 Closing
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50138 Accepted
+[Sat Jul 18 10:30:16 2026] PHP Parse error:  Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50138 [500]: GET /register.php - Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50138 Closing
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50152 Accepted
+[Sat Jul 18 10:30:16 2026] PHP Parse error:  Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50152 [500]: POST /register.php - Unmatched '}' in /app/register.php on line 117
+[Sat Jul 18 10:30:16 2026] 127.0.0.1:50152 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40230 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40230 [200]: GET /blog.php
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40230 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40234 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40244 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40260 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40234 [200]: GET /css/globalways.css
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40244 [200]: GET /assets/logo.png
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40260 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40234 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40244 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40260 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40274 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40274 [200]: GET /js/main.js
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40274 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40278 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40278 [200]: GET /js/notifications.js
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40278 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40282 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40282 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40282 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40292 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40292 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40292 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40300 Accepted
+[Sat Jul 18 10:30:17 2026] PHP Warning:  Undefined array key "verification_status" in /app/vendor-profile.php on line 101
+[Sat Jul 18 10:30:17 2026] PHP Warning:  Undefined array key "description" in /app/vendor-profile.php on line 149
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40300 [200]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40300 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40302 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40304 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40312 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40302 [200]: GET /css/globalways.css
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40304 [200]: GET /assets/logo.png
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40312 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40304 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40302 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40312 Closing
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40322 Accepted
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40322 [200]: GET /js/main.js
+[Sat Jul 18 10:30:17 2026] 127.0.0.1:40322 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40330 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40330 [200]: GET /js/notifications.js
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40330 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40342 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40342 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40342 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40358 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40358 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40358 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40364 Accepted
+[Sat Jul 18 10:30:18 2026] PHP Warning:  Undefined array key "verification_status" in /app/vendor-profile.php on line 101
+[Sat Jul 18 10:30:18 2026] PHP Warning:  Undefined array key "description" in /app/vendor-profile.php on line 149
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40364 [200]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40364 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40372 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40376 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40388 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40372 [200]: GET /css/globalways.css
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40376 [200]: GET /assets/logo.png
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40388 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40376 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40372 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40388 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40402 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40402 [200]: GET /js/main.js
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40402 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40412 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40412 [200]: GET /js/notifications.js
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40412 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40428 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40428 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40428 Closing
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40432 Accepted
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40432 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:30:18 2026] 127.0.0.1:40432 Closing
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46514 Accepted
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46514 [200]: GET /bot-landing.php
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46514 Closing
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46520 Accepted
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46536 Accepted
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46520 [200]: GET /css/globalways.css
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46536 [200]: GET /assets/logo.png
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46520 Closing
+[Sat Jul 18 10:45:09 2026] 127.0.0.1:46536 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46542 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46542 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46542 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46546 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46546 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46546 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46552 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46552 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46552 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46568 Accepted
+[Sat Jul 18 10:45:10 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46568 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46568 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46582 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46582 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46582 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46590 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46590 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46590 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46602 Accepted
+[Sat Jul 18 10:45:10 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46602 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46602 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46604 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46604 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46604 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46610 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46610 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46610 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46624 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46624 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46624 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46638 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46638 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46638 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46640 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46640 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46640 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46650 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46650 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46650 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46664 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46664 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46664 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46670 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46670 [200]: GET /customer/index.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46670 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46680 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46686 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46680 [200]: GET /css/globalways.css
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46680 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46686 [200]: GET /js/main.js
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46686 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46698 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46698 [200]: GET /js/notifications.js
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46698 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46704 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46704 [200]: GET /get-unread-notifications.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46704 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46710 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46710 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46710 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46712 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46712 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46712 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46728 Accepted
+[Sat Jul 18 10:45:10 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46728 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46728 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46736 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46736 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46736 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46742 Accepted
+[Sat Jul 18 10:45:10 2026] PHP Warning:  preg_match(): Compilation failed: unknown property after \P or \p at offset 44 in /app/api/bot-controller.php on line 275
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46742 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46742 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46754 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46754 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46754 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46758 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46758 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46758 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46764 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46764 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46764 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46770 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46770 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46770 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46780 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46780 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46780 Closing
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46788 Accepted
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46788 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:10 2026] 127.0.0.1:46788 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46802 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46802 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46802 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46818 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46818 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46818 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46828 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46828 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46828 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46840 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46840 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46840 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46844 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46844 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46844 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46848 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46848 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46848 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46862 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46862 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46862 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46870 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46870 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46870 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46886 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46886 [403]: GET /admin/dashboard.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46886 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46888 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46888 [403]: GET /admin/users/index.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46888 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46898 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46898 [403]: GET /admin/roles/index.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46898 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46908 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46908 [403]: GET /admin/permissions/index.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46908 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46912 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46912 [403]: GET /admin/settings/deductions.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46912 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46916 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46916 [403]: GET /admin/settings/bot_ads.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46916 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46928 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46928 [403]: GET /admin/settings/ai_status.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46928 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46938 Accepted
+[Sat Jul 18 10:45:11 2026] PHP Warning:  Undefined array key "owner_user_id" in /app/lib/notifications_helper.php on line 62
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46938 [200]: POST /api/payment-webhook.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46938 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46944 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46944 [400]: POST /api/payment-webhook.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46944 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46948 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46948 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46948 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46950 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46950 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46950 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46964 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46964 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46964 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46968 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46968 [302]: GET /api/bot-ad-tracker.php?ad_id=99
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46968 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46984 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46984 [403]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46984 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46988 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46988 [200]: GET /login.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:46988 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47002 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47002 [302]: POST /login_post.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47002 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47010 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47010 [200]: GET /register.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47010 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47012 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47012 [200]: POST /register.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47012 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47014 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47014 [200]: GET /blog.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47014 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47026 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47042 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47050 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47026 [200]: GET /css/globalways.css
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47042 [200]: GET /assets/logo.png
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47050 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47042 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47050 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47026 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47052 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47052 [200]: GET /js/main.js
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47052 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47064 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47064 [200]: GET /js/notifications.js
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47064 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47076 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47076 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47076 Closing
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47088 Accepted
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47088 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:45:11 2026] 127.0.0.1:47088 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47098 Accepted
+[Sat Jul 18 10:45:12 2026] PHP Warning:  Undefined array key "verification_status" in /app/vendor-profile.php on line 101
+[Sat Jul 18 10:45:12 2026] PHP Warning:  Undefined array key "description" in /app/vendor-profile.php on line 149
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47098 [200]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47098 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47112 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47114 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47120 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47112 [200]: GET /css/globalways.css
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47114 [200]: GET /assets/logo.png
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47120 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47114 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47112 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47120 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47130 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47130 [200]: GET /js/main.js
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47130 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47146 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47152 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47146 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47146 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47152 [200]: GET /js/notifications.js
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47152 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47160 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47160 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47160 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47172 Accepted
+[Sat Jul 18 10:45:12 2026] PHP Warning:  Undefined array key "verification_status" in /app/vendor-profile.php on line 101
+[Sat Jul 18 10:45:12 2026] PHP Warning:  Undefined array key "description" in /app/vendor-profile.php on line 149
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47172 [200]: GET /vendor-profile.php?id=test-case-uuid
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47172 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47176 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47182 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47194 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47176 [200]: GET /css/globalways.css
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47182 [200]: GET /assets/logo.png
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47194 [200]: GET /assets/logo-white.png
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47182 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47194 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47176 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47196 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47196 [200]: GET /js/main.js
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47196 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47206 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47206 [200]: GET /js/notifications.js
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47206 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47220 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47220 [200]: POST /api/bot-controller.php
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47220 Closing
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47224 Accepted
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47224 [200]: GET //get-unread-notifications.php
+[Sat Jul 18 10:45:12 2026] 127.0.0.1:47224 Closing

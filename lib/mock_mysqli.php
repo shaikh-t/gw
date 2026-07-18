@@ -16,6 +16,9 @@ class MockDbHelper {
         }
         if (!file_exists($path) || @filesize($path) === 0) {
             $default_db = [
+                "site_settings" => [
+                    "ai_bot_global_status" => "enabled"
+                ],
                 "ads" => [
                     [
                         "id" => 99,
@@ -45,10 +48,14 @@ class MockDbHelper {
                 "providers" => [
                     [
                         "id" => 1,
+                        "uuid" => "test-case-uuid",
+                        "name" => "Apex Legal",
+                        "team_size" => 3,
                         "deduction_type" => "percentage",
                         "deduction_value" => 10.00
                     ]
                 ],
+                "provider_team_members" => [],
                 "local_knowledge_base" => [
                     [
                         "text_content" => "This is the authoritative golden visa guide details.",
@@ -61,6 +68,8 @@ class MockDbHelper {
                 "payment_transactions" => [],
                 "customer_payments" => [],
                 "customer_applications" => [],
+                "login_attempts" => [],
+                "registration_attempts" => [],
                 "users" => []
             ];
             @file_put_contents($path, json_encode($default_db, JSON_PRETTY_PRINT));
@@ -94,6 +103,19 @@ class MockMySQLi {
         if (stripos($sql, 'CREATE TABLE') !== false) {
             return new MockMySQLiResult();
         }
+
+        $db = MockDbHelper::read();
+        if (stripos($sql, 'FROM provider_team_members') !== false || stripos($sql, 'FROM `provider_team_members`') !== false) {
+            $provider_team = $db['provider_team_members'] ?? [];
+            return new MockMySQLiResult($provider_team);
+        }
+        if (stripos($sql, 'FROM providers') !== false || stripos($sql, 'FROM `providers`') !== false) {
+            return new MockMySQLiResult($db['providers']);
+        }
+        if (stripos($sql, 'FROM services') !== false || stripos($sql, 'FROM `services`') !== false) {
+            return new MockMySQLiResult([]);
+        }
+
         return new MockMySQLiResult();
     }
 
@@ -153,6 +175,8 @@ class MockMySQLiStmt {
     public $insert_id = 1;
     public $error = '';
     private $result_rows = [];
+    private $currentRowIndex = 0;
+    private $bound_results = [];
 
     public function __construct($sql) {
         $this->sql = $sql;
@@ -166,9 +190,26 @@ class MockMySQLiStmt {
         return true;
     }
 
+    public function bind_result(&...$args) {
+        $this->bound_results = &$args;
+        return true;
+    }
+
+    public function fetch() {
+        if ($this->currentRowIndex < count($this->result_rows)) {
+            $row = array_values($this->result_rows[$this->currentRowIndex++]);
+            for ($i = 0; $i < count($row) && $i < count($this->bound_results); $i++) {
+                $this->bound_results[$i] = $row[$i];
+            }
+            return true;
+        }
+        return null;
+    }
+
     public function execute() {
         $db = MockDbHelper::read();
         $sql = trim(preg_replace('/\s+/', ' ', $this->sql));
+        $this->currentRowIndex = 0;
 
         if (stripos($sql, 'SELECT text_content, file_name, page_number FROM local_knowledge_base') !== false) {
             $search = $this->params[0] ?? '';
@@ -181,6 +222,60 @@ class MockMySQLiStmt {
                 }
             }
             $this->result_rows = $matched_rows;
+        }
+        elseif (stripos($sql, 'SELECT COUNT(*) FROM `login_attempts`') !== false || stripos($sql, 'SELECT COUNT(*) FROM login_attempts') !== false) {
+            $ip = $this->params[0] ?? '';
+            $count = 0;
+            foreach ($db['login_attempts'] as $log) {
+                if ($log['ip_address'] === $ip) {
+                    $count++;
+                }
+            }
+            $this->result_rows = [[$count]];
+        }
+        elseif (stripos($sql, 'SELECT COUNT(*) FROM `registration_attempts`') !== false || stripos($sql, 'SELECT COUNT(*) FROM registration_attempts') !== false) {
+            $ip = $this->params[0] ?? '';
+            $count = 0;
+            foreach ($db['registration_attempts'] as $log) {
+                if ($log['ip_address'] === $ip) {
+                    $count++;
+                }
+            }
+            $this->result_rows = [[$count]];
+        }
+        elseif (stripos($sql, 'INSERT INTO `login_attempts`') !== false || stripos($sql, 'INSERT INTO login_attempts') !== false) {
+            $ip = $this->params[0] ?? '';
+            $db['login_attempts'][] = [
+                'ip_address' => $ip,
+                'attempt_time' => date('Y-m-d H:i:s')
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = count($db['login_attempts']);
+        }
+        elseif (stripos($sql, 'INSERT INTO `registration_attempts`') !== false || stripos($sql, 'INSERT INTO registration_attempts') !== false) {
+            $ip = $this->params[0] ?? '';
+            $db['registration_attempts'][] = [
+                'ip_address' => $ip,
+                'attempt_time' => date('Y-m-d H:i:s')
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = count($db['registration_attempts']);
+        }
+        elseif (stripos($sql, 'DELETE FROM `login_attempts`') !== false || stripos($sql, 'DELETE FROM login_attempts') !== false) {
+            $ip = $this->params[0] ?? '';
+            $filtered = [];
+            foreach ($db['login_attempts'] as $log) {
+                if ($log['ip_address'] !== $ip) {
+                    $filtered[] = $log;
+                }
+            }
+            $db['login_attempts'] = $filtered;
+            MockDbHelper::write($db);
+        }
+        elseif (stripos($sql, 'SELECT `value` FROM `site_settings` WHERE `key` =') !== false || stripos($sql, 'SELECT value FROM site_settings') !== false) {
+            $key = $this->params[0] ?? 'ai_bot_global_status';
+            $val = $db['site_settings'][$key] ?? 'enabled';
+            $this->result_rows = [['value' => $val]];
         }
         elseif (stripos($sql, 'INSERT INTO bot_failed_questions') !== false) {
             $db['bot_failed_questions'][] = [
@@ -345,6 +440,15 @@ class MockMySQLiStmt {
         elseif (stripos($sql, 'FROM user_roles') !== false) {
             $this->result_rows = [['name' => 'viewer']];
         }
+        elseif (stripos($sql, 'FROM provider_team_members') !== false || stripos($sql, 'FROM `provider_team_members`') !== false) {
+            $this->result_rows = $db['provider_team_members'] ?? [];
+        }
+        elseif (stripos($sql, 'FROM providers') !== false || stripos($sql, 'FROM `providers`') !== false) {
+            $this->result_rows = $db['providers'] ?? [];
+        }
+        elseif (stripos($sql, 'FROM services') !== false || stripos($sql, 'FROM `services`') !== false) {
+            $this->result_rows = [];
+        }
         elseif (stripos($sql, 'INSERT INTO `users`') !== false || stripos($sql, 'INSERT INTO users') !== false) {
             $uuid = isset($this->params[0]) ? $this->params[0] : 'test-user-uuid';
             $name = isset($this->params[1]) ? $this->params[1] : '';
@@ -367,14 +471,6 @@ class MockMySQLiStmt {
 
     public function get_result() {
         return new MockMySQLiResult($this->result_rows);
-    }
-
-    public function bind_result(&...$args) {
-        return true;
-    }
-
-    public function fetch() {
-        return null;
     }
 
     public function close() {

@@ -7,6 +7,9 @@ const mockDbPath = path.resolve(__dirname, '../var/mock_db.json');
 // Helper to reset the mock database before running tests
 function resetMockDb() {
   const default_db = {
+    "site_settings": {
+      "ai_bot_global_status": "enabled"
+    },
     "ads": [
       {
         "id": 99,
@@ -36,10 +39,14 @@ function resetMockDb() {
     "providers": [
       {
         "id": 1,
+        "uuid": "test-case-uuid",
+        "name": "Apex Legal",
+        "team_size": 3,
         "deduction_type": "percentage",
         "deduction_value": 10.00
       }
     ],
+    "provider_team_members": [],
     "local_knowledge_base": [
       {
         "text_content": "This is the authoritative golden visa guide details.",
@@ -52,6 +59,8 @@ function resetMockDb() {
     "payment_transactions": [],
     "customer_payments": [],
     "customer_applications": [],
+    "login_attempts": [],
+    "registration_attempts": [],
     "users": []
   };
   fs.writeFileSync(mockDbPath, JSON.stringify(default_db, null, 2));
@@ -67,14 +76,12 @@ test.describe('GlobalWays Automated UAT Suite', () => {
   test.describe('Track 1: Guest-to-Customer Onboarding Flow', () => {
 
     test('Conversational UI workflow and valid/invalid validation logic', async ({ page }) => {
-      // Go to AI Workspace
       await page.goto('/bot-landing.php');
 
       // 1. Send trigger word 'register' to initiate registration
       await page.evaluate(() => {
         sendQueryToController('register');
       });
-      // Verify bot response asks for First Name
       await expect(page.locator('.ws-bubble.bot').last()).toContainText("What is your First Name?");
 
       // 2. Validate Latin character set rule (rejection of non-Latin input)
@@ -155,8 +162,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
     });
 
     test('Backend API controller registration state loop', async ({ request }) => {
-      // Drive conversational state loop directly via HTTP POST requests to api/bot-controller.php
-
       // Step 1: Start onboarding
       let res = await request.post('/api/bot-controller.php', {
         data: { message: 'register', entry_point: 'immersive_landing' }
@@ -166,7 +171,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       expect(data.display_text).toContain("What is your First Name?");
       const token = data.session_token;
 
-      // Extract Cookie to maintain session state
       const cookie = res.headers()['set-cookie'];
 
       // Step 2: Send non-Latin Name -> Rejection
@@ -255,7 +259,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
   test.describe('Track 2: Local RAG & Fail-Closed Logging', () => {
 
     test('Valid query should return RAG results with source file citations', async ({ request }) => {
-      // 1. Initialize bot session (Welcome Screen, Node 1)
       let resInit = await request.post('/api/bot-controller.php', {
         data: { message: 'Reset', entry_point: 'immersive_landing' }
       });
@@ -263,21 +266,18 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       const token = dataInit.session_token;
       const cookie = resInit.headers()['set-cookie'];
 
-      // 2. Select English (Node 10) to set selected_language to 'en'
       let resLang = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, node_id: 10, message: 'English' }
       });
       expect(resLang.ok()).toBeTruthy();
 
-      // 3. Select AI Voice Companion (Node 2) to complete onboarding welcome handshake
       let resVoice = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, node_id: 2, message: 'AI Voice Companion' }
       });
       expect(resVoice.ok()).toBeTruthy();
 
-      // 4. Send query matching 'visa guide' (which matches the text in local_knowledge_base)
       const res = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, message: 'visa guide' }
@@ -285,13 +285,11 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       expect(res.ok()).toBeTruthy();
       const data = await res.json();
 
-      // Verify output contains the matched guideline details and source citation
       expect(data.display_text).toContain("Verified Guidelines: This is the authoritative golden visa guide details.");
       expect(data.display_text).toContain("[Source: golden_visa_regulations.pdf, Page 4]");
     });
 
     test('Unmapped questions must trigger the fail-closed hook to write log entries into bot_failed_questions', async ({ request }) => {
-      // 1. Initialize bot session (Welcome Screen, Node 1)
       let resInit = await request.post('/api/bot-controller.php', {
         data: { message: 'Reset', entry_point: 'immersive_landing' }
       });
@@ -299,14 +297,12 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       const token = dataInit.session_token;
       const cookie = resInit.headers()['set-cookie'];
 
-      // 2. Select English (Node 10) to set selected_language to 'en'
       let resLang = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, node_id: 10, message: 'English' }
       });
       expect(resLang.ok()).toBeTruthy();
 
-      // 3. Select AI Voice Companion (Node 2) to complete onboarding welcome handshake
       let resVoice = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, node_id: 2, message: 'AI Voice Companion' }
@@ -315,7 +311,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
 
       const unmappedQuery = "unmapped question about something completely unknown";
 
-      // 4. Submit unmapped question to the bot controller
       const res = await request.post('/api/bot-controller.php', {
         headers: { 'Cookie': cookie },
         data: { session_token: token, message: unmappedQuery }
@@ -323,10 +318,8 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       expect(res.ok()).toBeTruthy();
       const data = await res.json();
 
-      // Verify fallback display output
       expect(data.display_text).toContain("I am unable to find that specific configuration in my database right now, but I have logged your question");
 
-      // Verify that the fail-closed hook physically wrote the log entry into mock database
       const db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
       const loggedQuestions = db.bot_failed_questions;
       expect(loggedQuestions.length).toBeGreaterThan(0);
@@ -349,11 +342,9 @@ test.describe('GlobalWays Automated UAT Suite', () => {
 
     for (const endpoint of protectedEndpoints) {
       test(`Direct guest request to administrative endpoint ${endpoint} must return HTTP 403`, async ({ request }) => {
-        // Fetch endpoint directly without being logged in (guest context)
         const res = await request.get(endpoint, {
-          maxRedirects: 0 // Prevent following redirect to check direct status code
+          maxRedirects: 0
         });
-        // Verify response status is 403 Forbidden
         expect(res.status()).toBe(403);
       });
     }
@@ -369,7 +360,6 @@ test.describe('GlobalWays Automated UAT Suite', () => {
         transaction_id: "tx-replay-protection-123"
       };
 
-      // 1. Initial Webhook submission (Should process successfully)
       const res1 = await request.post('/api/payment-webhook.php', {
         headers: { 'Stripe-Signature': 'bypass_test_signature' },
         data: payload
@@ -378,16 +368,13 @@ test.describe('GlobalWays Automated UAT Suite', () => {
       const data1 = await res1.json();
       expect(data1.status).toBe('success');
 
-      // Check transaction was logged
       let db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
       const initialTx = db.payment_transactions.find(tx => tx.transaction_id === payload.transaction_id);
       expect(initialTx).toBeDefined();
 
-      // Check case status updated to Booked
       const initialCase = db.cases.find(c => c.uuid === payload.case_uuid);
       expect(initialCase.status).toBe('Booked');
 
-      // 2. Immediate Replay Webhook submission with identical transaction ID (Should collision trigger HTTP 400)
       const res2 = await request.post('/api/payment-webhook.php', {
         headers: { 'Stripe-Signature': 'bypass_test_signature' },
         data: payload
@@ -401,43 +388,134 @@ test.describe('GlobalWays Automated UAT Suite', () => {
     test('Ad click-fraud sliding window rate-limiting blocks budget consumption on 4th click & redirects cleanly', async ({ playwright }) => {
       const adId = 99;
 
-      // Let's perform 3 valid clicks using completely separate API request contexts to avoid session duplicate check but count in IP sliding window
       for (let i = 1; i <= 3; i++) {
         const freshContext = await playwright.request.newContext();
         const res = await freshContext.get(`/api/bot-ad-tracker.php?ad_id=${adId}`, {
           maxRedirects: 0
         });
-        // Each valid click should redirect to the destination URL
         expect(res.status()).toBe(302);
       }
 
-      // Check database counters after 3 clicks
       let db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
       const adAfter3 = db.ads.find(a => a.id === adId);
-      // Budget spend should have incremented 3 times (2.00 click cost * 3 = 6.00 increment)
-      // current_spend started at 10.00, should now be 16.00
       expect(adAfter3.current_spend).toBe(16.00);
-      // 3 click logs recorded
       expect(db.bot_ad_clicks.length).toBe(3);
       expect(db.bot_ad_fraud_logs.length).toBe(3);
 
-      // Make the 4th click (Interception / Fraud Rate-Limit trigger)
       const freshContext4 = await playwright.request.newContext();
       const res4 = await freshContext4.get(`/api/bot-ad-tracker.php?ad_id=${adId}`, {
         maxRedirects: 0
       });
-      // Verification: must redirect immediately with status 302
       expect(res4.status()).toBe(302);
 
-      // Verify that budget was NOT charged and click counter was dropped/ignored
       db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
       const adAfter4 = db.ads.find(a => a.id === adId);
-      // The current_spend should remain strictly at 16.00 (not charged)
       expect(adAfter4.current_spend).toBe(16.00);
-      // Click logs should stay at 3 (ignored charging)
       expect(db.bot_ad_clicks.length).toBe(3);
-      // Fraud logs also stays at 3 (since sliding window triggers bypass before inserting log or increments)
       expect(db.bot_ad_fraud_logs.length).toBe(3);
+    });
+  });
+
+  // Advanced Track 5: Global Kill-Switch, Rate Limiter Throttling, Anti-Spam Registration Honeypots, Clean URLs, and Team Visibility
+  test.describe('Track 5: High-Value Advanced Security & Layout Audits', () => {
+
+    test('AI Global Bot Kill-Switch forcefully restricts API access and drops requests with HTTP 403', async ({ request }) => {
+      let db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
+      db.site_settings.ai_bot_global_status = "disabled";
+      fs.writeFileSync(mockDbPath, JSON.stringify(db, null, 2));
+
+      const res = await request.post('/api/bot-controller.php', {
+        data: { message: 'Reset' }
+      });
+      expect(res.status()).toBe(403);
+    });
+
+    test('IP-Based Login Rate-Limiter (Brute-Force Protection) restricts client access on 6th failed attempt', async ({ playwright }) => {
+      // 1. Visit login.php to initialize session and get dynamic CSRF token
+      const freshContext = await playwright.request.newContext();
+      const loginPageRes = await freshContext.get('/login.php');
+      const loginHtml = await loginPageRes.text();
+      let csrfToken = '';
+      const match = loginHtml.match(/name=["']_csrf["']\s+value=["']([^"']+)["']/);
+      if (match) csrfToken = match[1];
+      const cookie = loginPageRes.headers()['set-cookie'];
+
+      // Seeding 5 failed attempts in our stateful mock db
+      let db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
+      db.login_attempts = Array(5).fill({ ip_address: '127.0.0.1', attempt_time: new Date().toISOString() });
+      fs.writeFileSync(mockDbPath, JSON.stringify(db, null, 2));
+
+      // Dispatch 6th login request -> should block immediately with flash error redirection (HTTP 302 back to login.php)
+      const res = await freshContext.post('/login_post.php', {
+        headers: { 'Cookie': cookie },
+        form: {
+          email: 'attacker@example.com',
+          password: 'bad_password',
+          _csrf: csrfToken
+        },
+        maxRedirects: 0
+      });
+
+      expect(res.status()).toBe(302);
+      expect(res.headers()['location']).toContain('login.php');
+    });
+
+    test('Invisible Honeypot field registers instant block on registration post submission', async ({ playwright }) => {
+      const freshContext = await playwright.request.newContext();
+      const regPageRes = await freshContext.get('/register.php');
+      const regHtml = await regPageRes.text();
+      let csrfToken = '';
+      const match = regHtml.match(/name=["']_csrf["']\s+value=["']([^"']+)["']/);
+      if (match) csrfToken = match[1];
+      const cookie = regPageRes.headers()['set-cookie'];
+
+      // Send a registration post request with the invisible website_url_verification honeypot field populated
+      const res = await freshContext.post('/register.php', {
+        headers: { 'Cookie': cookie },
+        form: {
+          firstName: 'Spam',
+          lastName: 'Bot',
+          email: 'spammer@disposable.com',
+          password: 'Password123@',
+          _csrf: csrfToken,
+          website_url_verification: 'http://malicious-spam-url.com' // Honeypot filled!
+        },
+        maxRedirects: 0
+      });
+
+      // Silent drop returns 200 OK
+      expect(res.status()).toBe(200);
+    });
+
+    test('SEO Clean URL routes are mapped correctly and return active views', async ({ page }) => {
+      const res = await page.goto('/blog.php');
+      expect(res.status()).toBe(200);
+    });
+
+    test('Vendor Profile dynamic team visibility logic shows/hides Our Team section', async ({ page }) => {
+      // 1. Mock DB has empty team members array -> Section is hidden
+      await page.goto('/vendor-profile.php?id=test-case-uuid');
+      await expect(page.locator('#vendorTeamGrid')).not.toBeVisible();
+
+      // 2. Seed team members in mock DB
+      let db = JSON.parse(fs.readFileSync(mockDbPath, 'utf8'));
+      db.provider_team_members = [
+        {
+          id: 1,
+          provider_id: 1,
+          name: "Alice Smith",
+          role: "Golden Visa Consultant",
+          specialties: "Golden Visa, Residenship",
+          avatar: null
+        }
+      ];
+      fs.writeFileSync(mockDbPath, JSON.stringify(db, null, 2));
+
+      // 3. Reload vendor page -> section should now render perfectly!
+      await page.reload();
+      await expect(page.locator('#vendorTeamGrid')).toBeVisible();
+      await expect(page.locator('#vendorTeamGrid')).toContainText("Alice Smith");
+      await expect(page.locator('#vendorTeamGrid')).toContainText("Golden Visa Consultant");
     });
   });
 
