@@ -274,6 +274,12 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
       50% { height: 26px; y: 2px; }
     }
 
+    @keyframes pulse-shimmer {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
     /* Onboarding default content card */
     .ws-default-card {
       background-color: #ffffff;
@@ -662,6 +668,22 @@ function resetWorkspace() {
 
 function handleClientAction(action) {
   if (action.type === 'page_swap' && action.url) {
+    // Show premium CSS pulsing skeleton loaders to eliminate Cumulative Layout Shift (CLS)
+    document.getElementById('bot-workspace-view').innerHTML = `
+      <div class="w-100 p-4" style="max-width: 800px;">
+        <div class="shimmer-card p-4 bg-white border rounded-4 mb-4" style="animation: pulse-shimmer 1.5s infinite ease-in-out;">
+          <div class="shimmer-line bg-secondary bg-opacity-10 rounded-pill mb-3" style="width: 40%; height: 24px;"></div>
+          <div class="shimmer-line bg-secondary bg-opacity-10 rounded-pill mb-2" style="width: 90%; height: 16px;"></div>
+          <div class="shimmer-line bg-secondary bg-opacity-10 rounded-pill mb-2" style="width: 80%; height: 16px;"></div>
+          <div class="shimmer-line bg-secondary bg-opacity-10 rounded-pill mb-4" style="width: 50%; height: 16px;"></div>
+          <div class="d-flex gap-3">
+            <div class="shimmer-btn bg-secondary bg-opacity-10 rounded-pill" style="width: 120px; height: 38px;"></div>
+            <div class="shimmer-btn bg-secondary bg-opacity-10 rounded-pill" style="width: 120px; height: 38px;"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
     // Hydrate the right workspace view panel asynchronously
     fetch(action.url)
     .then(r => r.text())

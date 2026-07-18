@@ -99,6 +99,14 @@ if ($signature_header === 'bypass_test_signature') {
         ], 401);
     }
 
+    // Cryptographic clock-drift protection: reject timestamps older or newer than 5 minutes (300 seconds)
+    if (abs(time() - (int)$timestamp) > 300) {
+        send_json_response([
+            'status' => 'error',
+            'message' => 'Stale Stripe Webhook signature. Clock-drift threshold exceeded.'
+        ], 401);
+    }
+
     // Compute expected SHA256 HMAC signature
     $signed_payload = $timestamp . '.' . $input_raw;
     $expected_signature = hash_hmac('sha256', $signed_payload, STRIPE_WEBHOOK_SECRET);

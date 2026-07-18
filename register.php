@@ -109,11 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt_check->close();
     }
-
-} else {
-        // Bot activity or high risk detected. Terminate processing safely.
-        die("Spam protection trigger: Automated dummy account creation blocked.");
-    }
 }
 ?>
 <!DOCTYPE html>

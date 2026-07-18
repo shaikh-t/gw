@@ -1,0 +1,30 @@
+101: exit;
+102: }
+103:
+104: header('Location: index.php');
+105: exit;
+106: } else {
+107: $error_message = 'Failed to create account: ' . $mysqli->error;
+108: }
+109: }
+110: $stmt_check->close();
+111: }
+112:
+113: } else {
+114: // Bot activity or high risk detected. Terminate processing safely.
+115: die("Spam protection trigger: Automated dummy account creation blocked.");
+116: }
+117: }
+118: ?>
+119: <!DOCTYPE html>
+120: <html lang="en" data-base="">
+121: <head>
+122: <meta charset="UTF-8">
+123: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+124: <title>Register — GlobalWays</title>
+125: <meta name="description" content="Create your free GlobalWays account to compare vendors and track UAE applications.">
+126: <link href="css/bootstrap.min.css" rel="stylesheet">
+127: <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcH4VYtAAAAAKHSVcxZd4Vb6eiv6fHO0F0wN1uG"></script>
+128: <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+129: <link href="css/globalways.css" rel="stylesheet">
+130: <!-- 1. Ensure the CDN library scripts are explicitly loaded first -->

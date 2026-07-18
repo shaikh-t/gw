@@ -1,0 +1,39 @@
+<?php
+// customer/checkout.php
+require_once __DIR__ . '/../lib/auth.php';
+require_once __DIR__ . '/../lib/permissions.php';
+require_once __DIR__ . '/../lib/db_mysqli.php';
+require_once __DIR__ . '/../lib/payment_gateway_factory.php';
+require_once __DIR__ . '/../lib/notifications_helper.php';
+require_once __DIR__ . '/../lib/csrf.php';
+
+require_login();
+
+// Guard access: customer role only
+if (is_role('provider') || is_role('admin') || is_role('Super Admin')) {
+header('Location: ../login.php');
+exit;
+}
+
+$user = current_user();
+$userId = (int)$user['id'];
+
+$case_uuid = trim($_GET['case_id'] ?? '');
+$case_data = null;
+
+if ($case_uuid !== '') {
+// Dynamic read of pricing & details from the 'services' table using JOIN on the case's service_id
+$stmt = $mysqli->prepare("SELECT c.*, p.name as provider_name, p.owner_user_id as provider_owner_id,
+s.title as service_title, s.price as service_price, s.currency as service_currency
+FROM `cases` c
+JOIN `providers` p ON p.id = c.provider_id
+JOIN `services` s ON s.id = c.service_id
+WHERE c.uuid = ? AND c.customer_user_id = ? LIMIT 1");
+$stmt->bind_param('si', $case_uuid, $userId);
+$stmt->execute();
+$res = $stmt->get_result();
+$case_data = $res->fetch_assoc();
+$stmt->close();
+}
+
+if (!$case_data) {
