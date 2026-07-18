@@ -255,23 +255,10 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
-    /* SVG Waveform Rippling transitions */
+    /* SVG Waveform transitions */
     .wave-bar {
       transform-origin: center;
-      transition: height 0.15s ease-in-out, y 0.15s ease-in-out;
-    }
-
-    #waveformSvg.waveform-rippling .bar-1 { animation: ripple-bar 1.2s infinite ease-in-out; }
-    #waveformSvg.waveform-rippling .bar-2 { animation: ripple-bar 1s infinite ease-in-out 0.2s; }
-    #waveformSvg.waveform-rippling .bar-3 { animation: ripple-bar 1.4s infinite ease-in-out 0.1s; }
-    #waveformSvg.waveform-rippling .bar-4 { animation: ripple-bar 1.1s infinite ease-in-out 0.3s; }
-    #waveformSvg.waveform-rippling .bar-5 { animation: ripple-bar 0.9s infinite ease-in-out 0.4s; }
-    #waveformSvg.waveform-rippling .bar-6 { animation: ripple-bar 1.3s infinite ease-in-out 0.15s; }
-    #waveformSvg.waveform-rippling .bar-7 { animation: ripple-bar 1s infinite ease-in-out 0.25s; }
-
-    @keyframes ripple-bar {
-      0%, 100% { height: 6px; y: 12px; }
-      50% { height: 26px; y: 2px; }
+      transition: height 0.1s ease-in-out, y 0.1s ease-in-out;
     }
 
     @keyframes pulse-shimmer {
@@ -364,13 +351,13 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
         <!-- Inline Animated SVG Audio Waveform Indicator Panel -->
         <div class="waveform-container d-flex align-items-center justify-content-center gap-1 my-2" style="height: 30px;">
           <svg id="waveformSvg" width="120" height="30" viewBox="0 0 120 30" style="display: none;">
-            <rect class="wave-bar bar-1" x="10" y="5" width="6" height="20" rx="3" fill="#1165ef" />
-            <rect class="wave-bar bar-2" x="26" y="10" width="6" height="10" rx="3" fill="#38bdf8" />
-            <rect class="wave-bar bar-3" x="42" y="3" width="6" height="24" rx="3" fill="#10b981" />
-            <rect class="wave-bar bar-4" x="58" y="8" width="6" height="14" rx="3" fill="#38bdf8" />
+            <rect class="wave-bar bar-1" x="10" y="12" width="6" height="6" rx="3" fill="#1165ef" />
+            <rect class="wave-bar bar-2" x="26" y="12" width="6" height="6" rx="3" fill="#38bdf8" />
+            <rect class="wave-bar bar-3" x="42" y="12" width="6" height="6" rx="3" fill="#10b981" />
+            <rect class="wave-bar bar-4" x="58" y="12" width="6" height="6" rx="3" fill="#38bdf8" />
             <rect class="wave-bar bar-5" x="74" y="12" width="6" height="6" rx="3" fill="#1165ef" />
-            <rect class="wave-bar bar-6" x="90" y="6" width="6" height="18" rx="3" fill="#10b981" />
-            <rect class="wave-bar bar-7" x="106" y="11" width="6" height="8" rx="3" fill="#1165ef" />
+            <rect class="wave-bar bar-6" x="90" y="12" width="6" height="6" rx="3" fill="#10b981" />
+            <rect class="wave-bar bar-7" x="106" y="12" width="6" height="6" rx="3" fill="#1165ef" />
           </svg>
         </div>
 
@@ -423,12 +410,48 @@ let currentLang = 'en';
 let isListening = false;
 let recognition = null;
 
+// Web Audio API Context variables
+let audioCtx = null;
+let analyser = null;
+let dataArray = null;
+let mediaStreamSource = null;
+let animationFrameId = null;
+let audioStream = null;
+
 const langCodeMapping = {
   'en': 'en-US',
   'fr': 'fr-FR',
   'ar': 'ar-SA',
   'ur': 'ur-PK'
 };
+
+// URL validation for local routes
+function isLocalRoute(url) {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    return parsed.origin === window.location.origin;
+  } catch (e) {
+    return !url.includes('://');
+  }
+}
+
+// LocalStorage helpers for chat stream HTML persistence
+function saveChatStreamToLocalStorage() {
+  const stream = document.getElementById('wsChatStream');
+  if (stream) {
+    localStorage.setItem('globalways_chat_stream_html', stream.innerHTML);
+  }
+}
+
+function loadChatStreamFromLocalStorage() {
+  const stream = document.getElementById('wsChatStream');
+  const cachedHtml = localStorage.getItem('globalways_chat_stream_html');
+  if (stream && cachedHtml) {
+    stream.innerHTML = cachedHtml;
+    stream.scrollTop = stream.scrollHeight;
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Sync state and resume if active session exists in LocalStorage or URL
@@ -443,6 +466,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (urlLang) {
     currentLang = urlLang;
   }
+
+  // Load context stream from LocalStorage to bypass sequential API lookups on refresh
+  loadChatStreamFromLocalStorage();
 
   // 2. Immediate Panel Pre-Hydration: Check if user arrived from a specific page and pre-hydrate
   if (window.botPageContext && window.botPageContext.page_name) {
@@ -491,12 +517,19 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('wsMicTrigger').classList.add('listening');
       document.getElementById('wsStatusText').innerText = 'Listening... Speak now';
 
-      // Show and animate waveform SVG
+      // Show waveform SVG
       const wave = document.getElementById('waveformSvg');
       if (wave) {
         wave.style.display = 'block';
-        wave.classList.add('waveform-rippling');
       }
+
+      // Initialize Web Audio API Analyser for real-time visualization of mic stream
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          audioStream = stream;
+          startAudioVisualization(stream);
+        })
+        .catch(err => console.error('Microphone visualizer acquisition failed:', err));
     };
 
     recognition.onresult = (event) => {
@@ -520,7 +553,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Sync / Resume exact conversational nodes
   if (window.botPageContext && window.botPageContext.page_name) {
-    // 3. Contextual Dialogue Handshake: Bypasses generic welcome, transmits contextual data immediately
     sendQueryToController('', null, '', true);
   } else if (botSessionToken) {
     sendQueryToController('', null, '');
@@ -528,6 +560,71 @@ document.addEventListener('DOMContentLoaded', () => {
     sendQueryToController('', 1, '');
   }
 });
+
+function startAudioVisualization(stream) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    audioCtx = new AudioContext();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 32;
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    mediaStreamSource = audioCtx.createMediaStreamSource(stream);
+    mediaStreamSource.connect(analyser);
+
+    const bars = document.querySelectorAll('#waveformSvg rect');
+
+    function draw() {
+      if (!isListening) return;
+      animationFrameId = requestAnimationFrame(draw);
+
+      analyser.getByteFrequencyData(dataArray);
+
+      for (let i = 0; i < bars.length; i++) {
+        const val = dataArray[i] || 0;
+        const percent = val / 255;
+        const newHeight = 4 + (percent * 22);
+        const newY = 15 - (newHeight / 2);
+
+        bars[i].setAttribute('height', newHeight);
+        bars[i].setAttribute('y', newY);
+      }
+    }
+
+    draw();
+  } catch (e) {
+    console.error('Web Audio API Initialization error:', e);
+  }
+}
+
+function stopAudioVisualization() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+  if (mediaStreamSource) {
+    mediaStreamSource.disconnect();
+    mediaStreamSource = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+  if (audioStream) {
+    audioStream.getTracks().forEach(track => track.stop());
+    audioStream = null;
+  }
+
+  // Reset bars back to original state
+  const bars = document.querySelectorAll('#waveformSvg rect');
+  bars.forEach(bar => {
+    bar.setAttribute('height', 6);
+    bar.setAttribute('y', 12);
+  });
+}
 
 function sendQueryToController(messageText, nodeId = null, userInputText = '', forceBadgeContext = false) {
   let pageName = 'bot-landing.php';
@@ -605,6 +702,7 @@ function addMessageToStream(sender, text) {
   bubble.innerText = text;
   stream.appendChild(bubble);
   stream.scrollTop = stream.scrollHeight;
+  saveChatStreamToLocalStorage();
 }
 
 function toggleSpeechInput() {
@@ -628,12 +726,13 @@ function stopSpeechRecognition() {
   document.getElementById('wsMicTrigger').classList.remove('listening');
   document.getElementById('wsStatusText').innerText = 'Mic is offline';
 
-  // Hide and stop waveform SVG
+  // Hide waveform SVG and stop animations
   const wave = document.getElementById('waveformSvg');
   if (wave) {
     wave.style.display = 'none';
-    wave.classList.remove('waveform-rippling');
   }
+
+  stopAudioVisualization();
 
   try {
     recognition.stop();
@@ -662,12 +761,20 @@ function resetWorkspace() {
   window.speechSynthesis.cancel();
   stopSpeechRecognition();
   document.getElementById('wsChatStream').innerHTML = '';
-  // Purge to language selector menu
+  localStorage.removeItem('globalways_chat_stream_html');
+  localStorage.removeItem('globalways_bot_session');
+  botSessionToken = '';
   sendQueryToController('', 1, 'Reset');
 }
 
 function handleClientAction(action) {
   if (action.type === 'page_swap' && action.url) {
+    // 3. Restrict handleClientAction page swapping scripts to local routes to prevent redirect hijacking
+    if (!isLocalRoute(action.url)) {
+      console.warn('Rejected non-local page swap route:', action.url);
+      return;
+    }
+
     // Show premium CSS pulsing skeleton loaders to eliminate Cumulative Layout Shift (CLS)
     document.getElementById('bot-workspace-view').innerHTML = `
       <div class="w-100 p-4" style="max-width: 800px;">

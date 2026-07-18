@@ -296,11 +296,46 @@ include __DIR__ . '/partials/frontend_header.php';
       </div>
     </section>
   </main>
+<!-- Floating Contextual Sticky Bar -->
+<div class="sd-floating-bar fixed-bottom bg-white border-top shadow p-3" style="display: none; opacity: 0; z-index: 1040; transition: opacity 0.3s ease, transform 0.3s ease;">
+  <div class="container-xl d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div>
+      <h5 class="mb-0 font-serif" style="font-size: 1.1rem; color: #1e293b;"><?= htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') ?></h5>
+      <span class="text-primary fw-bold font-mono" style="font-size: 0.9rem;"><?= htmlspecialchars($price_value, ENT_QUOTES, 'UTF-8') ?></span>
+    </div>
+    <div>
+      <a href="vendors.php" class="btn btn-outline-dark rounded-pill px-4 me-2 btn-sm">Browse Vendors</a>
+      <a href="create-case.php?service_id=<?= htmlspecialchars($service['uuid'], ENT_QUOTES, 'UTF-8') ?>" class="btn btn-gw-blue rounded-pill px-4 btn-sm">Buy / Enquire Now</a>
+    </div>
+  </div>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('service-detail-page');
-    // document.body.classList.add('has-custom-cursor');
     document.getElementById('gwNav').classList.add('dark-hero');
-});
+
+    const floatingBar = document.querySelector('.sd-floating-bar');
+    const priceCard = document.querySelector('.sd-price-card');
+
+    if (floatingBar && priceCard) {
+      window.addEventListener('scroll', function () {
+        const priceCardBottom = priceCard.getBoundingClientRect().bottom;
+        if (priceCardBottom < 0) {
+          if (floatingBar.style.display === 'none') {
+            floatingBar.style.display = 'block';
+            // Trigger browser reflow to enable transition
+            floatingBar.offsetHeight;
+            floatingBar.style.opacity = '1';
+            floatingBar.style.transform = 'translateY(0)';
+          }
+        } else {
+          floatingBar.style.display = 'none';
+          floatingBar.style.opacity = '0';
+          floatingBar.style.transform = 'translateY(10px)';
+        }
+      });
+    }
+  });
 </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

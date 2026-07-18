@@ -12,7 +12,9 @@ require_once __DIR__ . '/../lib/notifications_helper.php';
 
 // Define stripe webhook signing secret if not already defined
 if (!defined('STRIPE_WEBHOOK_SECRET')) {
-    define('STRIPE_WEBHOOK_SECRET', 'whsec_test_secret_123456');
+    // Extract signature secrets from secure server environment variables
+    $env_secret = getenv('STRIPE_WEBHOOK_SECRET') ?: ($_ENV['STRIPE_WEBHOOK_SECRET'] ?? 'whsec_test_secret_123456');
+    define('STRIPE_WEBHOOK_SECRET', $env_secret);
 }
 
 // Helper function to safely send JSON responses

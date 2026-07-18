@@ -85,7 +85,7 @@ if (!empty($_SESSION['impersonator_id'])):
         $avatar = $user['avatar'] ?? $domain.'/public/assets/img/avatar-placeholder.png';
       ?>
         <div class="d-flex align-items-center">
-          <img src="<?php echo htmlspecialchars($avatar, ENT_QUOTES); ?>" alt="avatar" class="header-avatar me-2" onerror="this.onerror=null;this.src='/public/assets/img/avatar-placeholder.png'">
+          <img src="<?php echo htmlspecialchars($avatar, ENT_QUOTES); ?>" alt="avatar" class="header-avatar me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.onerror=null;this.src='/public/assets/img/avatar-placeholder.png'">
           <div class="d-none d-md-block text-end me-3">
             <div class="fw-bold small mb-0"><?php echo htmlspecialchars($user['name'], ENT_QUOTES); ?></div>
             <a href="<?php echo $domain; ?>/admin/logout.php" class="small text-muted">Sign out</a>

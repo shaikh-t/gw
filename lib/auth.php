@@ -1,9 +1,11 @@
 <?php
 // lib/auth.php
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+                  (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
     session_start([
         'cookie_lifetime' => 86400,
-        'cookie_secure' => true,
+        'cookie_secure' => $is_secure,
         'cookie_httponly' => true,
         'cookie_samesite' => 'Strict'
     ]);
@@ -11,12 +13,84 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 require_once __DIR__ . '/db_mysqli.php';
 
 $domain="/gw3/gw";
+define('REMEMBER_ME_SECRET', 'GlobalWays_Remember_Me_Secret_2026!');
+
+function get_client_subnet(): string {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $parts = explode('.', $ip);
+        return $parts[0] . '.' . $parts[1] . '.' . $parts[2] . '.0';
+    } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        $parts = explode(':', $ip);
+        return $parts[0] . ':' . $parts[1] . ':' . $parts[2] . ':0';
+    }
+    return '0.0.0.0';
+}
+
+function validate_session_bindings(): bool {
+    if (empty($_SESSION['user'])) return true;
+
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $subnet = get_client_subnet();
+
+    if (!isset($_SESSION['session_user_agent'])) {
+        $_SESSION['session_user_agent'] = $user_agent;
+    }
+    if (!isset($_SESSION['session_subnet'])) {
+        $_SESSION['session_subnet'] = $subnet;
+    }
+
+    if ($_SESSION['session_user_agent'] !== $user_agent || $_SESSION['session_subnet'] !== $subnet) {
+        logout_user();
+        return false;
+    }
+    return true;
+}
+
+function set_remember_me_cookie($user_id) {
+    require_once __DIR__ . '/cache_helper.php';
+    $token = bin2hex(random_bytes(32));
+    $signature = hash_hmac('sha256', $token, REMEMBER_ME_SECRET);
+    $cookie_value = $user_id . '|' . $token . '|' . $signature;
+
+    cache_set('remember_token_' . $user_id, $token, 30 * 86400);
+    setcookie('remember_me', $cookie_value, time() + (30 * 86400), '/', '', true, true);
+}
+
+function check_remember_me_cookie(): bool {
+    if (!empty($_SESSION['user'])) return true;
+    if (empty($_COOKIE['remember_me'])) return false;
+
+    $parts = explode('|', $_COOKIE['remember_me']);
+    if (count($parts) !== 3) return false;
+
+    list($user_id, $token, $signature) = $parts;
+
+    $expected_signature = hash_hmac('sha256', $token, REMEMBER_ME_SECRET);
+    if (!hash_equals($expected_signature, $signature)) return false;
+
+    require_once __DIR__ . '/cache_helper.php';
+    $cached_token = cache_get('remember_token_' . $user_id);
+    if ($cached_token === null || !hash_equals($cached_token, $token)) return false;
+
+    return login_user_by_id((int)$user_id);
+}
+
 /**
  * Return current user array or null.
  * Minimal fields: id, name, email, avatar, roles (array), permissions (array)
  */
 function current_user(): ?array {
     global $mysqli;
+
+    if (empty($_SESSION['user'])) {
+        check_remember_me_cookie();
+    }
+
+    if (!validate_session_bindings()) {
+        return null;
+    }
+
     if (empty($_SESSION['user'])) return null;
     $user = $_SESSION['user'];
 
@@ -125,6 +199,8 @@ function logout_user(): void {
     session_destroy();
     unset($_SESSION['user']);
     unset($_SESSION['_csrf_token']);
-    session_regenerate_id(true);
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_regenerate_id(true);
+    }
 }
 ?>

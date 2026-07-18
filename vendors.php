@@ -2,6 +2,13 @@
 // vendors.php
 require_once __DIR__ . '/lib/db_mysqli.php';
 require_once __DIR__ . '/lib/auth.php';
+require_once __DIR__ . '/lib/cache_helper.php';
+
+// Enforce integer binding on page input parameters
+$page = intval($_GET['page'] ?? 1);
+if ($page < 1) {
+    $page = 1;
+}
 
 // Fetch query filters
 $q = trim($_GET['q'] ?? '');
@@ -14,99 +21,189 @@ $selected_langs = isset($_GET['langs']) ? (array)$_GET['langs'] : [];
 $member_since = trim($_GET['member_since'] ?? 'Any time');
 $sort = trim($_GET['sort'] ?? 'Most Relevant');
 
-$where = ["1=1"]; // always true base
-$types = "";
-$params = [];
+// Partial-text caching on highly repetitive filter strings
+$cache_key = 'vendors_list_' . md5(serialize([
+    'q' => $q,
+    'city' => $city,
+    'type' => $type,
+    'verified' => $verified,
+    'top_rated' => $top_rated,
+    'min_rating' => $min_rating,
+    'langs' => $selected_langs,
+    'member_since' => $member_since,
+    'sort' => $sort,
+    'page' => $page
+]));
 
-// 1. Search Query
-if ($q !== '') {
-    $where[] = "(name LIKE ? OR description LIKE ? OR specialties LIKE ?)";
-    $like_q = "%" . $q . "%";
-    $types .= "sss";
-    array_push($params, $like_q, $like_q, $like_q);
-}
+$providers = cache_get($cache_key);
+if ($providers === null) {
+    $where = ["1=1"]; // always true base
+    $types = "";
+    $params = [];
 
-// 2. City Filter
-if ($city !== 'All Cities') {
-    $where[] = "city = ?";
-    $types .= "s";
-    $params[] = $city;
-}
-
-// 3. Specialty Type Filter
-if ($type !== 'All Types') {
-    $where[] = "specialties LIKE ?";
-    $like_type = "%" . $type . "%";
-    $types .= "s";
-    $params[] = $like_type;
-}
-
-// 4. Verification Checkbox
-if ($verified) {
-    $where[] = "verification_status = 'verified'";
-}
-
-// 5. Top Rated Checkbox or rating selector
-if ($top_rated) {
-    $where[] = "rating_avg >= 4.8";
-} elseif ($min_rating !== 'Any') {
-    $rating_val = floatval(preg_replace('/[^0-9.]/', '', $min_rating));
-    if ($rating_val > 0) {
-        $where[] = "rating_avg >= ?";
-        $types .= "d";
-        $params[] = $rating_val;
+    // 1. Search Query
+    if ($q !== '') {
+        $where[] = "(name LIKE ? OR description LIKE ? OR specialties LIKE ?)";
+        $like_q = "%" . $q . "%";
+        $types .= "sss";
+        array_push($params, $like_q, $like_q, $like_q);
     }
-}
 
-// 6. Languages Filter
-if (!empty($selected_langs)) {
-    $lang_clauses = [];
-    foreach ($selected_langs as $lang) {
-        $lang_clauses[] = "languages LIKE ?";
-        $like_lang = "%" . $lang . "%";
+    // 2. City Filter
+    if ($city !== 'All Cities') {
+        $where[] = "city = ?";
         $types .= "s";
-        $params[] = $like_lang;
+        $params[] = $city;
     }
-    $where[] = "(" . implode(' OR ', $lang_clauses) . ")";
-}
 
-// 7. Member Since Filter
-if ($member_since === '2+ years') {
-    $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR)";
-} elseif ($member_since === '5+ years') {
-    $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 5 YEAR)";
-} elseif ($member_since === '10+ years') {
-    $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 10 YEAR)";
-}
-
-$where_sql = implode(' AND ', $where);
-
-// Sort Order
-$order_by = "created_at DESC";
-if ($sort === 'Highest Rated') {
-    $order_by = "rating_avg DESC";
-} elseif ($sort === 'Lowest Price') {
-    $order_by = "starting_price ASC";
-} elseif ($sort === 'Newest') {
-    $order_by = "created_at DESC";
-}
-
-$sql = "SELECT * FROM providers WHERE $where_sql ORDER BY $order_by";
-$stmt = $mysqli->prepare($sql);
-$providers = [];
-if ($stmt) {
-    if ($types !== "") {
-        $stmt->bind_param($types, ...$params);
+    // 3. Specialty Type Filter
+    if ($type !== 'All Types') {
+        $where[] = "specialties LIKE ?";
+        $like_type = "%" . $type . "%";
+        $types .= "s";
+        $params[] = $like_type;
     }
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($res) {
-        while ($row = $res->fetch_assoc()) {
-            $providers[] = $row;
+
+    // 4. Verification Checkbox
+    if ($verified) {
+        $where[] = "verification_status = 'verified'";
+    }
+
+    // 5. Top Rated Checkbox or rating selector
+    if ($top_rated) {
+        $where[] = "rating_avg >= 4.8";
+    } elseif ($min_rating !== 'Any') {
+        $rating_val = floatval(preg_replace('/[^0-9.]/', '', $min_rating));
+        if ($rating_val > 0) {
+            $where[] = "rating_avg >= ?";
+            $types .= "d";
+            $params[] = $rating_val;
         }
-        $res->free();
     }
-    $stmt->close();
+
+    // 6. Languages Filter
+    if (!empty($selected_langs)) {
+        $lang_clauses = [];
+        foreach ($selected_langs as $lang) {
+            $lang_clauses[] = "languages LIKE ?";
+            $like_lang = "%" . $lang . "%";
+            $types .= "s";
+            $params[] = $like_lang;
+        }
+        $where[] = "(" . implode(' OR ', $lang_clauses) . ")";
+    }
+
+    // 7. Member Since Filter
+    if ($member_since === '2+ years') {
+        $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR)";
+    } elseif ($member_since === '5+ years') {
+        $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 5 YEAR)";
+    } elseif ($member_since === '10+ years') {
+        $where[] = "created_at <= DATE_SUB(NOW(), INTERVAL 10 YEAR)";
+    }
+
+    $where_sql = implode(' AND ', $where);
+
+    // Sort Order
+    $order_by = "created_at DESC";
+    if ($sort === 'Highest Rated') {
+        $order_by = "rating_avg DESC";
+    } elseif ($sort === 'Lowest Price') {
+        $order_by = "starting_price ASC";
+    } elseif ($sort === 'Newest') {
+        $order_by = "created_at DESC";
+    }
+
+    $per_page = 6;
+    $offset = ($page - 1) * $per_page;
+    $sql = "SELECT * FROM providers WHERE $where_sql ORDER BY $order_by LIMIT $per_page OFFSET $offset";
+    $stmt = $mysqli->prepare($sql);
+    $providers = [];
+    if ($stmt) {
+        if ($types !== "") {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $providers[] = $row;
+            }
+            $res->free();
+        }
+        $stmt->close();
+    }
+    cache_set($cache_key, $providers, 600); // 10 minutes cache
+}
+
+// Check for asynchronous AJAX request
+if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    if (empty($providers)) {
+        http_response_code(204); // No content
+        exit;
+    }
+    foreach ($providers as $vnd) {
+        // Avatar Initials
+        $initials = '';
+        $words = explode(' ', $vnd['name']);
+        foreach ($words as $w) {
+            $initials .= mb_substr($w, 0, 1);
+        }
+        $initials = mb_strtoupper(mb_substr($initials, 0, 2));
+
+        $vnd_price = !empty($vnd['starting_price']) ? 'AED ' . number_format($vnd['starting_price']) : 'AED 500';
+        $vnd_rating = !empty($vnd['rating_avg']) ? round($vnd['rating_avg'], 1) : '4.8';
+        $vnd_count = !empty($vnd['rating_count']) ? $vnd['rating_count'] : '120';
+        $vnd_langs = !empty($vnd['languages']) ? $vnd['languages'] : 'English, Arabic';
+        $vnd_team = !empty($vnd['team_size']) ? $vnd['team_size'] : '12';
+        ?>
+        <div class="col-md-6 fade-in">
+          <article class="vendor-list-card">
+            <span class="featured-partner-chip"><i class="bi bi-award-fill"></i> Featured Partner</span>
+            <div class="vnd-price-from"><span>From</span><strong><?= htmlspecialchars($vnd_price) ?></strong></div>
+            <div class="vnd-card-head">
+              <?php if (!empty($vnd['logo'])): ?>
+                <img src="<?= htmlspecialchars($vnd['logo']) ?>" style="width:48px;height:48px;object-fit:contain;border-radius:50%;margin-right:12px;">
+              <?php else: ?>
+                <span class="vnd-avatar"><?= htmlspecialchars($initials) ?></span>
+              <?php endif; ?>
+              <div class="vnd-card-meta">
+                <div class="vnd-name-row">
+                  <h2 class="vnd-name"><?= htmlspecialchars($vnd['name']) ?></h2>
+                  <?php if ($vnd_rating >= 4.8): ?>
+                    <span class="vnd-top-badge">TOP</span>
+                  <?php endif; ?>
+                  <?php if ($vnd['verification_status'] === 'verified'): ?>
+                    <i class="bi bi-patch-check-fill vnd-verified" title="Verified"></i>
+                  <?php endif; ?>
+                </div>
+                <div class="vnd-rating-row">
+                  <span class="vnd-rating"><i class="bi bi-star-fill text-warning"></i> <?= htmlspecialchars($vnd_rating) ?> <span>(<?= htmlspecialchars($vnd_count) ?>)</span></span>
+                  <span class="vnd-loc"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($vnd['city'] ?? 'Dubai') ?></span>
+                </div>
+              </div>
+            </div>
+            <p class="vnd-desc"><?= htmlspecialchars($vnd['description']) ?></p>
+            <div class="vnd-tags">
+              <?php
+                $specs_arr = array_filter(array_map('trim', explode(',', $vnd['specialties'] ?? 'Golden Visa, Business Setup, PRO Services')));
+                foreach (array_slice($specs_arr, 0, 3) as $spec):
+              ?>
+                <span><?= htmlspecialchars($spec) ?></span>
+              <?php endforeach; ?>
+              <?php if (count($specs_arr) > 3): ?>
+                <span class="more">+<?= count($specs_arr) - 3 ?></span>
+              <?php endif; ?>
+            </div>
+            <div class="vnd-card-footer">
+              <span class="vnd-specs"><?= htmlspecialchars($vnd_team) ?> specialists, <?= htmlspecialchars($vnd_langs) ?></span>
+              <a href="vendor-profile.php?id=<?= htmlspecialchars($vnd['slug']) ?>" class="vnd-view-link">View Profile <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </article>
+        </div>
+        <?php
+    }
+    exit;
 }
 
 include __DIR__ . '/partials/frontend_header.php';
@@ -137,8 +234,8 @@ include __DIR__ . '/partials/frontend_header.php';
       <div class="container-xl">
         <div class="d-flex flex-wrap gap-2 vendors-type-tabs" role="group" aria-label="Filter by type">
           <?php
-            $types = ['All Types', 'PRO Services', 'Business Setup', 'Visa & Immigration', 'Education Visa', 'Golden / Residential'];
-            foreach ($types as $t_option):
+            $types_list = ['All Types', 'PRO Services', 'Business Setup', 'Visa & Immigration', 'Education Visa', 'Golden / Residential'];
+            foreach ($types_list as $t_option):
           ?>
             <a href="vendors.php?type=<?= urlencode($t_option) ?>&q=<?= urlencode($q) ?>&city=<?= urlencode($city) ?>" class="filter-pill-btn text-decoration-none <?= $type === $t_option ? 'active' : '' ?>">
               <i class="bi bi-clipboard-check"></i> <?= htmlspecialchars($t_option) ?>
@@ -272,7 +369,7 @@ include __DIR__ . '/partials/frontend_header.php';
                       <div class="vnd-price-from"><span>From</span><strong><?= htmlspecialchars($vnd_price) ?></strong></div>
                       <div class="vnd-card-head">
                         <?php if (!empty($vnd['logo'])): ?>
-                          <img src="<?= htmlspecialchars($domain.$vnd['logo']) ?>" style="width:48px;height:48px;object-fit:contain;border-radius:50%;margin-right:12px;">
+                          <img src="<?= htmlspecialchars($vnd['logo']) ?>" style="width:48px;height:48px;object-fit:contain;border-radius:50%;margin-right:12px;">
                         <?php else: ?>
                           <span class="vnd-avatar"><?= htmlspecialchars($initials) ?></span>
                         <?php endif; ?>
@@ -313,6 +410,15 @@ include __DIR__ . '/partials/frontend_header.php';
                 <?php endforeach; ?>
               <?php endif; ?>
             </div>
+
+            <!-- Sentinel and Spinner for Asynchronous Pagination -->
+            <div id="infinite-scroll-sentinel" style="height: 10px; margin-bottom: 20px;"></div>
+            <div id="infinite-scroll-loading" class="text-center py-3" style="display: none;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -352,5 +458,68 @@ include __DIR__ . '/partials/frontend_header.php';
     // document.body.classList.add('has-custom-cursor');
     document.getElementById('gwNav').classList.add('dark-hero');
   });
+  </script>
+
+  <!-- Infinite Scroll Implementation via IntersectionObserver -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let currentPage = 1;
+      let loading = false;
+      let hasMore = true;
+      const sentinel = document.getElementById('infinite-scroll-sentinel');
+      const loader = document.getElementById('infinite-scroll-loading');
+      const grid = document.querySelector('.vendors-grid');
+
+      if (sentinel && grid) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && !loading && hasMore) {
+            loadNextPage();
+          }
+        }, { threshold: 0.1 });
+
+        observer.observe(sentinel);
+
+        function loadNextPage() {
+          loading = true;
+          if (loader) loader.style.display = 'block';
+          currentPage++;
+
+          // Construct AJAX URL with existing query parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          urlParams.set('page', currentPage);
+          urlParams.set('ajax', '1');
+
+          fetch('vendors.php?' + urlParams.toString())
+            .then(res => {
+              if (res.status === 204) {
+                hasMore = false;
+                if (loader) loader.style.display = 'none';
+                return '';
+              }
+              return res.text();
+            })
+            .then(html => {
+              if (html.trim() !== '') {
+                grid.insertAdjacentHTML('beforeend', html);
+                // Also update count
+                const countEl = document.getElementById('vendorsFoundCount');
+                if (countEl) {
+                  const currentCards = grid.querySelectorAll('.vendor-list-card').length;
+                  countEl.textContent = currentCards + ' vendors found';
+                }
+              } else {
+                hasMore = false;
+              }
+              loading = false;
+              if (loader) loader.style.display = 'none';
+            })
+            .catch(err => {
+              console.error(err);
+              loading = false;
+              if (loader) loader.style.display = 'none';
+            });
+        }
+      }
+    });
   </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

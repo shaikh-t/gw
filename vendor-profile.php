@@ -176,6 +176,34 @@ include __DIR__ . '/partials/frontend_header.php';
             <div class="vp-card fade-in">
               <p class="vp-section-kicker">What Customers Say</p>
               <h2 class="vp-card-title font-serif">Customer Reviews</h2>
+
+              <!-- Star Rating Distribution Progress Bar -->
+              <?php
+                $stars_dist = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+                foreach ($reviews as $rev) {
+                    $r_val = intval($rev['rating']);
+                    if (isset($stars_dist[$r_val])) {
+                        $stars_dist[$r_val]++;
+                    }
+                }
+                $total_reviews_count = count($reviews);
+              ?>
+              <div class="vp-rating-distribution mb-4 p-3 bg-light rounded" style="border: 1px solid rgba(0,0,0,0.05);">
+                <h5 class="font-serif mb-3" style="font-size: 1.1rem;">Rating Distribution</h5>
+                <?php for ($i = 5; $i >= 1; $i--):
+                    $count = $stars_dist[$i];
+                    $pct = $total_reviews_count > 0 ? round(($count / $total_reviews_count) * 100) : 0;
+                ?>
+                  <div class="d-flex align-items-center mb-2">
+                    <span class="me-2 text-nowrap font-mono" style="width: 60px; font-size: 0.85rem;"><?= $i ?> Star</span>
+                    <div class="progress flex-grow-1" style="height: 10px; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: <?= $pct ?>%;" aria-valuenow="<?= $pct ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="ms-2 font-mono text-muted" style="width: 40px; text-align: right; font-size: 0.85rem;"><?= $count ?></span>
+                  </div>
+                <?php endfor; ?>
+              </div>
+
               <div class="vp-reviews" id="vendorReviews">
                 <?php if (empty($reviews)): ?>
                   <p class="text-muted">No reviews received yet.</p>

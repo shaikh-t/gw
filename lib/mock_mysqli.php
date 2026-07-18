@@ -52,7 +52,18 @@ class MockDbHelper {
                         "name" => "Apex Legal",
                         "team_size" => 3,
                         "deduction_type" => "percentage",
-                        "deduction_value" => 10.00
+                        "deduction_value" => 10.00,
+                        "status" => "active",
+                        "is_active" => 1,
+                        "slug" => "apex-legal",
+                        "city" => "Dubai",
+                        "description" => "Premium UAE Legal & Golden Visa advisory.",
+                        "starting_price" => 500,
+                        "rating_avg" => 4.9,
+                        "rating_count" => 120,
+                        "languages" => "English, Arabic",
+                        "verification_status" => "verified",
+                        "specialties" => "Golden Visa, Business Setup, PRO Services"
                     ]
                 ],
                 "provider_team_members" => [],
@@ -113,7 +124,28 @@ class MockMySQLi {
             return new MockMySQLiResult($db['providers']);
         }
         if (stripos($sql, 'FROM services') !== false || stripos($sql, 'FROM `services`') !== false) {
-            return new MockMySQLiResult([]);
+            return new MockMySQLiResult([
+                [
+                    'id' => 1,
+                    'uuid' => 'test-service-uuid-1',
+                    'provider_id' => 1,
+                    'category_id' => 1,
+                    'title' => 'Golden Visa Assistance',
+                    'slug' => 'golden-visa',
+                    'short_description' => 'Get your 10-year Golden Visa with guaranteed UAE approval.',
+                    'description' => 'Our premium Golden Visa assistance package covers all document clearance and application stages.',
+                    'price' => 5000.00,
+                    'currency' => 'AED',
+                    'duration_minutes' => 120,
+                    'duration_text' => '5-7 days',
+                    'status' => 'published',
+                    'rating_avg' => 4.9,
+                    'rating_count' => 120,
+                    'icon_class' => 'bi-award',
+                    'category_name' => 'Immigration Services',
+                    'category_slug' => 'immigration'
+                ]
+            ]);
         }
 
         return new MockMySQLiResult();
@@ -469,7 +501,30 @@ class MockMySQLiStmt {
             $this->result_rows = $db['providers'] ?? [];
         }
         elseif (stripos($sql, 'FROM services') !== false || stripos($sql, 'FROM `services`') !== false) {
-            $this->result_rows = [];
+            $this->result_rows = [
+                [
+                    'id' => 1,
+                    'uuid' => 'test-service-uuid-1',
+                    'provider_id' => 1,
+                    'category_id' => 1,
+                    'title' => 'Golden Visa Assistance',
+                    'slug' => 'golden-visa',
+                    'short_description' => 'Get your 10-year Golden Visa with guaranteed UAE approval.',
+                    'description' => 'Our premium Golden Visa assistance package covers all document clearance and application stages.',
+                    'price' => 5000.00,
+                    'currency' => 'AED',
+                    'duration_minutes' => 120,
+                    'duration_text' => '5-7 days',
+                    'status' => 'published',
+                    'rating_avg' => 4.9,
+                    'rating_count' => 120,
+                    'icon_class' => 'bi-award',
+                    'category_name' => 'Immigration Services',
+                    'category_slug' => 'immigration',
+                    'provider_name' => 'Apex Legal',
+                    'provider_slug' => 'apex-legal'
+                ]
+            ];
         }
         elseif (stripos($sql, 'INSERT INTO `users`') !== false || stripos($sql, 'INSERT INTO users') !== false) {
             $uuid = isset($this->params[0]) ? $this->params[0] : 'test-user-uuid';

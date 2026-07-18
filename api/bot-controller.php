@@ -155,8 +155,15 @@ function get_matching_bot_internal_chat_ad(): ?array {
     return null;
 }
 
+// Helper to sanitize out terminal control characters to prevent terminal injection
+function sanitize_terminal_characters($str) {
+    if (!is_string($str)) return $str;
+    return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x1B]/', '', $str);
+}
+
 // Helper function to safely send JSON responses
 function send_json_response(array $data, int $status_code = 200) {
+    global $input;
     if (isset($data['status']) && $data['status'] === 'success') {
         $ad = get_matching_bot_internal_chat_ad();
         if ($ad) {
@@ -168,6 +175,42 @@ function send_json_response(array $data, int $status_code = 200) {
             $data['ad_payload'] = null;
         }
     }
+
+    // Check for Server-Sent Events (SSE) streaming request
+    $is_sse = (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'text/event-stream') ||
+              (isset($input['stream']) && $input['stream'] === true) ||
+              (isset($_GET['stream']) && $_GET['stream'] === 'true');
+
+    if ($is_sse && isset($data['display_text'])) {
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no'); // Disable proxy buffering for nginx
+
+        $text = $data['display_text'];
+        $len = mb_strlen($text, 'UTF-8');
+
+        // Stream metadata first
+        $meta = $data;
+        unset($meta['display_text']);
+        echo "data: " . json_encode(['meta' => $meta], JSON_UNESCAPED_UNICODE) . "\n\n";
+        @ob_flush();
+        flush();
+
+        // Stream text characters
+        for ($i = 0; $i < $len; $i++) {
+            $char = mb_substr($text, $i, 1, 'UTF-8');
+            echo "data: " . json_encode(['char' => $char], JSON_UNESCAPED_UNICODE) . "\n\n";
+            @ob_flush();
+            flush();
+            usleep(10000); // 10ms smooth typing speed
+        }
+        echo "data: [DONE]\n\n";
+        @ob_flush();
+        flush();
+        exit;
+    }
+
     http_response_code($status_code);
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
@@ -181,8 +224,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ], 405);
 }
 
-// 2. Decode JSON input payload
+// 2. Decode JSON input payload with terminal injection mitigation
 $input_raw = file_get_contents('php://input');
+$input_raw = sanitize_terminal_characters($input_raw);
 $input = json_decode($input_raw, true);
 
 if (!is_array($input)) {

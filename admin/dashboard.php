@@ -38,6 +38,22 @@ include __DIR__ . '/../partials/sidebar.php';
   <h2>Admin Dashboard</h2>
   <p class="text-muted">Welcome back, <?php echo htmlspecialchars($_SESSION['user']['name'], ENT_QUOTES); ?>.</p>
 
+  <?php if (can('cache.clear')): ?>
+    <div class="card mt-4 mb-4 border-warning">
+      <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">System Utilities</h5>
+        <span class="badge bg-dark">RBAC Controlled</span>
+      </div>
+      <div class="card-body">
+        <p class="mb-2 text-muted font-sans text-sm">Manually clear and purge all cached system objects, including APCu, local compiled assets, file fragments, and Redis caches.</p>
+        <button id="btnClearCache" class="btn btn-warning text-dark fw-bold">
+          <span class="spinner-border spinner-border-sm d-none" id="clearCacheSpinner" role="status" aria-hidden="true"></span>
+          Clear Application Cache
+        </button>
+      </div>
+    </div>
+  <?php endif; ?>
+
   <div class="row mt-4">
     <div class="col-md-3">
       <div class="card text-center">
@@ -99,7 +115,26 @@ include __DIR__ . '/../partials/sidebar.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+function showToast(type, message) {
+  // Remove any existing dynamic alert first
+  var oldAlert = document.getElementById('dynamicCacheAlert');
+  if (oldAlert) oldAlert.remove();
+
+  var alertDiv = document.createElement('div');
+  alertDiv.id = 'dynamicCacheAlert';
+  alertDiv.className = 'alert alert-' + type + ' alert-dismissible fade show mt-3';
+  alertDiv.setAttribute('role', 'alert');
+  alertDiv.innerHTML = '<strong>System Update:</strong> ' + message +
+    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+
+  var container = document.querySelector('.container');
+  if (container) {
+    container.insertBefore(alertDiv, container.firstChild);
+  }
+}
+
+function initDashboardScripts() {
+  console.log('initDashboardScripts called. readyState:', document.readyState);
   var successBox = document.getElementById('flashSuccess');
   var errorBox = document.getElementById('flashErrors');
   [successBox, errorBox].forEach(function(box) {
@@ -110,7 +145,55 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 4000);
     }
   });
-});
+
+  var btnClearCache = document.getElementById('btnClearCache');
+  console.log('btnClearCache found:', !!btnClearCache);
+  if (btnClearCache) {
+    if (btnClearCache.dataset.initCache === 'true') return;
+    btnClearCache.dataset.initCache = 'true';
+
+    btnClearCache.addEventListener('click', function() {
+      console.log('CLEAR CACHE CLICKED!');
+      var spinner = document.getElementById('clearCacheSpinner');
+
+      // Show loading spinner and disable button
+      if (spinner) spinner.classList.remove('d-none');
+      btnClearCache.disabled = true;
+
+      // Make secure AJAX POST request
+      fetch('clear_cache_action.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-TOKEN': '<?php echo csrf_token(); ?>'
+        },
+        body: '_csrf=' + encodeURIComponent('<?php echo csrf_token(); ?>')
+      })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          if (res.ok && data.status === 'success') {
+            showToast('success', data.message || 'Cache cleared successfully.');
+          } else {
+            showToast('danger', data.message || 'An error occurred.');
+          }
+        });
+      })
+      .catch(function(err) {
+        showToast('danger', 'Network error or connection lost.');
+      })
+      .finally(function() {
+        if (spinner) spinner.classList.add('d-none');
+        btnClearCache.disabled = false;
+      });
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDashboardScripts);
+} else {
+  initDashboardScripts();
+}
 </script>
 
 <?php include __DIR__ . '/../partials/footer.php'; ?>

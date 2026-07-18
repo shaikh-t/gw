@@ -131,8 +131,21 @@ include __DIR__ . '/partials/frontend_header.php';
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('services-page');
-    // document.body.classList.add('has-custom-cursor');
     document.getElementById('gwNav').classList.add('dark-hero');
+
+    // Link pre-fetching on detail links hover over cards
+    const cards = document.querySelectorAll('.svc-list-card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        const href = card.getAttribute('href');
+        if (href && !document.querySelector(`link[href="${href}"][rel="prefetch"]`)) {
+          const prefetchLink = document.createElement('link');
+          prefetchLink.rel = 'prefetch';
+          prefetchLink.href = href;
+          document.head.appendChild(prefetchLink);
+        }
+      }, { once: true });
+    });
   });
   </script>
 <?php include __DIR__ . '/partials/frontend_footer.php'; ?>

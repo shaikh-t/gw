@@ -1,5 +1,21 @@
 RewriteEngine On
 
+# Compression (mod_deflate)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/xml image/svg+xml
+</IfModule>
+
+# Long-lived Cache-Control headers for static assets
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|otf)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+
+    # Security Headers via .htaccess
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://google.com https://jsdelivr.net; style-src 'self' 'unsafe-inline' https://jsdelivr.net; img-src 'self' data:; frame-src https://google.com;"
+    Header set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+</IfModule>
+
 # Rewrite clean blog slugs (e.g. /scaling-breaks-businesses) to blog-detail.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
