@@ -15,12 +15,18 @@ function service_slugify(string $s): string {
 
 /* Categories */
 function service_categories_all(): array {
+    require_once __DIR__ . '/cache_helper.php';
+    $cached = cache_get('all_service_categories');
+    if ($cached !== null) {
+        return $cached;
+    }
     global $mysqli;
     $out = [];
     if ($res = $mysqli->query("SELECT * FROM service_categories ORDER BY name")) {
         while ($r = $res->fetch_assoc()) $out[] = $r;
         $res->free();
     }
+    cache_set('all_service_categories', $out, 3600);
     return $out;
 }
 
@@ -181,8 +187,19 @@ function service_create(array $data) {
         $slug = $slugBase . '-' . $i++;
     }
     $category_id = isset($data['category_id']) && $data['category_id'] !== '' ? intval($data['category_id']) : 'NULL';
-    $short = $mysqli->real_escape_string(trim($data['short_description'] ?? ''));
-    $desc = $mysqli->real_escape_string(trim($data['description'] ?? ''));
+
+    // Block raw HTML tags from non-admin providers
+    require_once __DIR__ . '/permissions.php';
+    $is_admin = is_role('admin') || is_role('Super Admin');
+    $raw_short = trim($data['short_description'] ?? '');
+    $raw_desc = trim($data['description'] ?? '');
+    if (!$is_admin) {
+        $raw_short = strip_tags($raw_short);
+        $raw_desc = strip_tags($raw_desc);
+    }
+
+    $short = $mysqli->real_escape_string($raw_short);
+    $desc = $mysqli->real_escape_string($raw_desc);
     $price = isset($data['price']) && $data['price'] !== '' ? $mysqli->real_escape_string($data['price']) : 'NULL';
     $currency = $mysqli->real_escape_string($data['currency'] ?? 'USD');
     $duration = isset($data['duration_minutes']) && $data['duration_minutes'] !== '' ? intval($data['duration_minutes']) : 'NULL';
@@ -229,9 +246,20 @@ function service_update(int $id, array $data) {
     global $mysqli;
     $id = intval($id);
     $sets = [];
+    require_once __DIR__ . '/permissions.php';
+    $is_admin = is_role('admin') || is_role('Super Admin');
+
     if (isset($data['title'])) $sets[] = "title = " . ($data['title'] === '' ? "NULL" : "'" . $mysqli->real_escape_string(trim($data['title'])) . "'");
-    if (isset($data['short_description'])) $sets[] = "short_description = '" . $mysqli->real_escape_string(trim($data['short_description'])) . "'";
-    if (isset($data['description'])) $sets[] = "description = '" . $mysqli->real_escape_string(trim($data['description'])) . "'";
+    if (isset($data['short_description'])) {
+        $val = trim($data['short_description']);
+        if (!$is_admin) $val = strip_tags($val);
+        $sets[] = "short_description = '" . $mysqli->real_escape_string($val) . "'";
+    }
+    if (isset($data['description'])) {
+        $val = trim($data['description']);
+        if (!$is_admin) $val = strip_tags($val);
+        $sets[] = "description = '" . $mysqli->real_escape_string($val) . "'";
+    }
     if (isset($data['price'])) $sets[] = "price = " . ($data['price'] === '' ? "NULL" : $mysqli->real_escape_string($data['price']));
     if (isset($data['currency'])) $sets[] = "currency = '" . $mysqli->real_escape_string($data['currency']) . "'";
     if (isset($data['duration_minutes'])) $sets[] = "duration_minutes = " . (intval($data['duration_minutes']) ?: "NULL");

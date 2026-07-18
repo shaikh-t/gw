@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($firstName === '' || $lastName === '' || $email === '' || $password === '') {
         $error_message = 'Please fill all required fields.';
+    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
+        $error_message = 'Password must be at least 8 characters long, and contain at least one uppercase letter, one number, and one special character.';
     } elseif (!check_rate_limit($mysqli)) {
         // 2. Form Submission Throttling (Rate Limiting)
         $error_message = 'Too many registration attempts from this connection. Please wait a few minutes before trying again.';
@@ -380,10 +382,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     password?.addEventListener('input', () => {
       const score = scorePassword(password.value);
+      const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
       strengthSegs.forEach((seg, idx) => {
-        seg.classList.toggle('on', idx < score);
+        if (idx < score) {
+          seg.style.backgroundColor = colors[score - 1];
+        } else {
+          seg.style.backgroundColor = '#e5e7eb';
+        }
       });
     });
+
+    // Asynchronous email check
+    const emailInput = document.getElementById('regEmail');
+    if (emailInput) {
+      emailInput.addEventListener('blur', function() {
+        const email = this.value.trim();
+        if (email === '') return;
+        fetch('api/check-email.php?email=' + encodeURIComponent(email))
+          .then(res => res.json())
+          .then(data => {
+            if (!data.available) {
+              emailInput.setCustomValidity('This email address is already registered.');
+              emailInput.classList.add('is-invalid');
+              alert('Notice: An account with this email address already exists.');
+            } else {
+              emailInput.setCustomValidity('');
+              emailInput.classList.remove('is-invalid');
+            }
+          })
+          .catch(err => console.error('Email verification error:', err));
+      });
+    }
 
     document.getElementById('btnToStep2')?.addEventListener('click', (e) => {
       // Validate Step 1 Inputs manually before transitioning

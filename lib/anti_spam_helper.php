@@ -46,6 +46,9 @@ function ensure_registration_attempts_table($mysqli) {
 function check_rate_limit($mysqli): bool {
     ensure_registration_attempts_table($mysqli);
 
+    // Routine self-cleaning: Purge data older than 24 hours within the registration_attempts sliding window table
+    $mysqli->query("DELETE FROM `registration_attempts` WHERE `attempt_time` < DATE_SUB(NOW(), INTERVAL 1 DAY)");
+
     $ip = get_client_ip();
     $minutes_threshold = 5;
     $max_attempts = 3;
@@ -121,56 +124,38 @@ function ensure_login_attempts_table($mysqli) {
  * Returns true if blocked, false if allowed.
  */
 function is_login_throttled($mysqli): bool {
-    ensure_login_attempts_table($mysqli);
-
+    require_once __DIR__ . '/cache_helper.php';
     $ip = get_client_ip();
-    $minutes_threshold = 5;
-    $max_attempts = 5;
+    $attempts = cache_get('login_attempts_' . $ip) ?: [];
 
-    $stmt = $mysqli->prepare("
-        SELECT COUNT(*)
-        FROM `login_attempts`
-        WHERE `ip_address` = ?
-          AND `attempt_time` > DATE_SUB(NOW(), INTERVAL ? MINUTE)
-    ");
-    if (!$stmt) {
-        return false;
-    }
-    $stmt->bind_param('si', $ip, $minutes_threshold);
-    $stmt->execute();
-    $stmt->bind_result($count);
-    $stmt->fetch();
-    $stmt->close();
+    // Filter attempts to keep only those within the last 5 minutes
+    $now = time();
+    $attempts = array_filter($attempts, function($timestamp) use ($now) {
+        return ($now - $timestamp) <= 300;
+    });
 
-    return $count >= $max_attempts;
+    cache_set('login_attempts_' . $ip, $attempts, 300);
+    return count($attempts) >= 5;
 }
 
 /**
  * Logs a failed login attempt for the current IP.
  */
 function log_failed_login($mysqli): void {
-    ensure_login_attempts_table($mysqli);
+    require_once __DIR__ . '/cache_helper.php';
     $ip = get_client_ip();
-    $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`ip_address`) VALUES (?)");
-    if ($stmt) {
-        $stmt->bind_param('s', $ip);
-        $stmt->execute();
-        $stmt->close();
-    }
+    $attempts = cache_get('login_attempts_' . $ip) ?: [];
+    $attempts[] = time();
+    cache_set('login_attempts_' . $ip, $attempts, 300);
 }
 
 /**
  * Clears failed login attempts history for the current IP after a successful login.
  */
 function clear_failed_logins($mysqli): void {
-    ensure_login_attempts_table($mysqli);
+    require_once __DIR__ . '/cache_helper.php';
     $ip = get_client_ip();
-    $stmt = $mysqli->prepare("DELETE FROM `login_attempts` WHERE `ip_address` = ?");
-    if ($stmt) {
-        $stmt->bind_param('s', $ip);
-        $stmt->execute();
-        $stmt->close();
-    }
+    cache_delete('login_attempts_' . $ip);
 }
 
 /**

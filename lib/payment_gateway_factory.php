@@ -194,6 +194,9 @@ class PaymentGatewayFactory {
     }
 
     public static function getEnabledGateways(): array {
+        if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['cached_enabled_gateways'])) {
+            return $_SESSION['cached_enabled_gateways'];
+        }
         global $mysqli;
         $gateways = [];
         // Single unified SQL query fetching all active gateways configurations at once to avoid N+1 query loops.
@@ -206,6 +209,9 @@ class PaymentGatewayFactory {
                 }
             }
             $res->free();
+        }
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['cached_enabled_gateways'] = $gateways;
         }
         return $gateways;
     }

@@ -197,10 +197,10 @@ function review_recalculate_aggregates($provider_id = null, $service_id = null) 
         $s = intval($service_id);
         $sql = "SELECT AVG(rating) AS avg_rating, COUNT(*) AS cnt FROM reviews WHERE service_id = $s AND status = 'published'";
         if ($res = $mysqli->query($sql)) {
-            $row = $res->fetch_assoc();
-            $avgVal = $row['avg_rating'] !== null ? round(floatval($row['avg_rating']), 2) : null;
-            $cntVal = intval($row['cnt']);
-            $res->free();
+            $row = $res ? $res->fetch_assoc() : null;
+            $avgVal = ($row && isset($row['avg_rating']) && $row['avg_rating'] !== null) ? round(floatval($row['avg_rating']), 2) : null;
+            $cntVal = ($row && isset($row['cnt'])) ? intval($row['cnt']) : 0;
+            if ($res && !is_bool($res)) $res->free();
             $avg_sql = $avgVal === null ? "NULL" : "'" . $mysqli->real_escape_string((string)$avgVal) . "'";
             $mysqli->query("UPDATE services SET rating_avg = $avg_sql, rating_count = $cntVal WHERE id = $s");
         }
@@ -209,10 +209,10 @@ function review_recalculate_aggregates($provider_id = null, $service_id = null) 
         $p = intval($provider_id);
         $sql = "SELECT AVG(rating) AS avg_rating, COUNT(*) AS cnt FROM reviews WHERE provider_id = $p AND status = 'published'";
         if ($res = $mysqli->query($sql)) {
-            $row = $res->fetch_assoc();
-            $avgVal = $row['avg_rating'] !== null ? round(floatval($row['avg_rating']), 2) : null;
-            $cntVal = intval($row['cnt']);
-            $res->free();
+            $row = $res ? $res->fetch_assoc() : null;
+            $avgVal = ($row && isset($row['avg_rating']) && $row['avg_rating'] !== null) ? round(floatval($row['avg_rating']), 2) : null;
+            $cntVal = ($row && isset($row['cnt'])) ? intval($row['cnt']) : 0;
+            if ($res && !is_bool($res)) $res->free();
             $avg_sql = $avgVal === null ? "NULL" : "'" . $mysqli->real_escape_string((string)$avgVal) . "'";
             $mysqli->query("UPDATE providers SET rating_avg = $avg_sql, rating_count = $cntVal WHERE id = $p");
         }

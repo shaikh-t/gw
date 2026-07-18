@@ -2,6 +2,13 @@
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/permissions.php';
+
+// Redundant Security Headers
+if (!headers_sent()) {
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://google.com https://jsdelivr.net; style-src 'self' 'unsafe-inline' https://jsdelivr.net; img-src 'self' data:; frame-src https://google.com;");
+    header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
+}
+
 $current_user = current_user();
 
 // Persistent dynamic bot page-context tracking loop

@@ -2,29 +2,50 @@
 require_once __DIR__ . '/lib/settings_helper.php';
 require_once __DIR__ . '/lib/services_helpers.php';
 require_once __DIR__ . '/lib/db_mysqli.php';
+require_once __DIR__ . '/lib/cache_helper.php';
 
+// Cache global settings/CMS pages for 1 hour
 $s = get_all_settings();
 
-// Fetch dynamic testimonials
-$testimonials_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY created_at DESC LIMIT 3");
-$testimonials = [];
-if ($testimonials_res) {
-    while($row = $testimonials_res->fetch_assoc()) $testimonials[] = $row;
+// Cache testimonials for 1 hour
+$testimonials = cache_get('index_testimonials');
+if ($testimonials === null) {
+    $testimonials_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 ORDER BY created_at DESC LIMIT 3");
+    $testimonials = [];
+    if ($testimonials_res) {
+        while($row = $testimonials_res->fetch_assoc()) $testimonials[] = $row;
+    }
+    cache_set('index_testimonials', $testimonials, 3600);
 }
 
-// Fetch dynamic landing features
-$features_res = $mysqli->query("SELECT * FROM landing_features ORDER BY sort_order ASC, id ASC LIMIT 6");
-$features = [];
-if ($features_res) {
-    while($row = $features_res->fetch_assoc()) $features[] = $row;
+// Cache dynamic landing features for 1 hour
+$features = cache_get('index_features');
+if ($features === null) {
+    $features_res = $mysqli->query("SELECT * FROM landing_features ORDER BY sort_order ASC, id ASC LIMIT 6");
+    $features = [];
+    if ($features_res) {
+        while($row = $features_res->fetch_assoc()) $features[] = $row;
+    }
+    cache_set('index_features', $features, 3600);
 }
-$testi_head_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 and stars>=4 ORDER BY RAND()  LIMIT 1");
-$testi_head = [];
-if ($testi_head_res) {
-    while($row = $testi_head_res->fetch_assoc()) $testi_head[] = $row;
+
+// Cache testi_head for 1 hour
+$testi_head = cache_get('index_testi_head');
+if ($testi_head === null) {
+    $testi_head_res = $mysqli->query("SELECT * FROM testimonials WHERE is_active = 1 and stars>=4 ORDER BY RAND()  LIMIT 1");
+    $testi_head = [];
+    if ($testi_head_res) {
+        while($row = $testi_head_res->fetch_assoc()) $testi_head[] = $row;
+    }
+    cache_set('index_testi_head', $testi_head, 3600);
 }
-// Fetch dynamic services
-$featured_services = services_paginated(1, 8, ['status' => 'published']);
+
+// Cache dynamic services for 1 hour
+$featured_services = cache_get('index_featured_services');
+if ($featured_services === null) {
+    $featured_services = services_paginated(1, 8, ['status' => 'published']);
+    cache_set('index_featured_services', $featured_services, 3600);
+}
 
 include __DIR__ . '/partials/frontend_header.php';
 ?>
@@ -158,13 +179,19 @@ include __DIR__ . '/partials/frontend_header.php';
         <div class="row g-3">
           <?php foreach ($featured_services as $service): ?>
             <div class="col-sm-6 col-lg-3 fade-in">
-              <a href="service-detail.php?id=<?= htmlspecialchars($service['slug']) ?>&uuid=<?= htmlspecialchars($service['uuid']) ?>" class="service-card">
-                <div class="service-icon"><i class="bi <?= htmlspecialchars($service['icon_class'] ?? 'bi-award') ?>"></i></div>
-                <h3 class="h6 font-serif"><?= htmlspecialchars($service['title']) ?></h3>
-                <p class="small text-secondary"><?= htmlspecialchars($service['short_description']) ?></p>
+              <a href="service-detail.php?id=<?= htmlspecialchars($service['slug'], ENT_QUOTES, 'UTF-8') ?>&uuid=<?= htmlspecialchars($service['uuid'], ENT_QUOTES, 'UTF-8') ?>" class="service-card">
+                <div class="service-icon">
+                  <?php if (!empty($service['icon_image'])): ?>
+                    <img src="<?= htmlspecialchars($service['icon_image'], ENT_QUOTES, 'UTF-8') ?>" alt="Category Icon" loading="lazy" class="img-fluid">
+                  <?php else: ?>
+                    <i class="bi <?= htmlspecialchars($service['icon_class'] ?? 'bi-award', ENT_QUOTES, 'UTF-8') ?>"></i>
+                  <?php endif; ?>
+                </div>
+                <h3 class="h6 font-serif"><?= htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') ?></h3>
+                <p class="small text-secondary"><?= htmlspecialchars($service['short_description'], ENT_QUOTES, 'UTF-8') ?></p>
                 <div class="d-flex justify-content-between border-top pt-3 mt-3">
-                  <span class="small fw-medium">From <?= htmlspecialchars($service['currency'] ?? 'AED') ?> <?= number_format($service['price'] ?? 0, 0) ?></span>
-                  <span class="small text-muted font-mono"><i class="bi bi-clock"></i> <?= htmlspecialchars($service['duration_text'] ?? '5–7 days') ?></span>
+                  <span class="small fw-medium">From <?= htmlspecialchars($service['currency'] ?? 'AED', ENT_QUOTES, 'UTF-8') ?> <?= number_format($service['price'] ?? 0, 0) ?></span>
+                  <span class="small text-muted font-mono"><i class="bi bi-clock"></i> <?= htmlspecialchars($service['duration_text'] ?? '5–7 days', ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
               </a>
             </div>
@@ -217,11 +244,15 @@ include __DIR__ . '/partials/frontend_header.php';
                 </div>
                 <p class="small fst-italic mb-4">"<?= htmlspecialchars($t['quote']) ?>"</p>
                 <div class="d-flex align-items-center gap-3 border-top pt-3">
-                  <span class="avatar-circle bg-blk"><?= htmlspecialchars($t['avatar_text'] ?? 'SA') ?></span>
+                  <?php if (!empty($t['avatar_image'])): ?>
+                    <img src="<?= htmlspecialchars($t['avatar_image'], ENT_QUOTES, 'UTF-8') ?>" alt="Testimonial Avatar" loading="lazy" class="avatar-circle bg-blk">
+                  <?php else: ?>
+                    <span class="avatar-circle bg-blk"><?= htmlspecialchars($t['avatar_text'] ?? 'SA', ENT_QUOTES, 'UTF-8') ?></span>
+                  <?php endif; ?>
                   <div>
-                    <div class="small fw-medium font-serif"><?= htmlspecialchars($t['client_name']) ?></div>
+                    <div class="small fw-medium font-serif"><?= htmlspecialchars($t['client_name'], ENT_QUOTES, 'UTF-8') ?></div>
                     <div class="font-mono text-muted" style="font-size:0.65rem">
-                      <?= htmlspecialchars($t['client_role']) ?> · <?= htmlspecialchars($t['client_location']) ?>
+                      <?= htmlspecialchars($t['client_role'], ENT_QUOTES, 'UTF-8') ?> · <?= htmlspecialchars($t['client_location'], ENT_QUOTES, 'UTF-8') ?>
                     </div>
                   </div>
                 </div>

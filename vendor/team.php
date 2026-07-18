@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $avatarPath = null;
             if (!empty($_FILES['avatar_file']) && $_FILES['avatar_file']['error'] === UPLOAD_ERR_OK) {
                 $destDir = __DIR__ . '/../public/uploads/team_avatars';
-                $resUpload = file_upload_handle($_FILES['avatar_file'], $destDir, 2 * 1024 * 1024, false);
+                $resUpload = file_upload_handle($_FILES['avatar_file'], $destDir, 2 * 1024 * 1024, false, 500);
                 if ($resUpload['ok']) {
                     $avatarPath = '/public/uploads/team_avatars/' . $resUpload['filename'];
                 } else {
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $avatarPath = $member['avatar'];
                 if (!empty($_FILES['avatar_file']) && $_FILES['avatar_file']['error'] === UPLOAD_ERR_OK) {
                     $destDir = __DIR__ . '/../public/uploads/team_avatars';
-                    $resUpload = file_upload_handle($_FILES['avatar_file'], $destDir, 2 * 1024 * 1024, false);
+                    $resUpload = file_upload_handle($_FILES['avatar_file'], $destDir, 2 * 1024 * 1024, false, 500);
                     if ($resUpload['ok']) {
                         $avatarPath = '/public/uploads/team_avatars/' . $resUpload['filename'];
                     } else {
@@ -338,6 +338,38 @@ $team = provider_team_members_find_by_provider($provider['id']);
         document.getElementById('editMemberSpecialties').value = specialties;
       });
     }
+
+    function validateAvatarInput(inputEl) {
+      inputEl.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        // Size check (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+          alert('Warning: File size exceeds 2MB limit.');
+          this.value = '';
+          return;
+        }
+
+        // Dimension check using HTML5 Image object
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            if (this.width > 500 || this.height > 500) {
+              alert('Notice: Image is larger than 500x500. It will be resized automatically on the server to fit the target dimensions.');
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    const addInput = document.querySelector('#addMemberModal input[name="avatar_file"]');
+    const editInput = document.querySelector('#editMemberModal input[name="avatar_file"]');
+    if (addInput) validateAvatarInput(addInput);
+    if (editInput) validateAvatarInput(editInput);
   </script>
 </body>
 </html>

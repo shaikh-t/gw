@@ -102,22 +102,49 @@ function provider_team_member_find($idOrUuid) {
 
 function provider_find($idOrUuidOrSlug) {
     global $mysqli;
+    $provider = null;
     if (is_numeric($idOrUuidOrSlug)) {
         $id = intval($idOrUuidOrSlug);
-        $res = $mysqli->query("SELECT * FROM providers WHERE id = $id LIMIT 1");
+        $stmt = $mysqli->prepare("SELECT * FROM providers WHERE id = ? LIMIT 1");
+        if ($stmt) {
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($res) {
+                $provider = $res->fetch_assoc();
+                $res->free();
+            }
+            $stmt->close();
+        }
     } else {
-        $val = $mysqli->real_escape_string($idOrUuidOrSlug);
-        // Try UUID first if it looks like one, then slug
+        $val = trim($idOrUuidOrSlug);
         if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $val)) {
-            $res = $mysqli->query("SELECT * FROM providers WHERE uuid = '$val' LIMIT 1");
+            $stmt = $mysqli->prepare("SELECT * FROM providers WHERE uuid = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param("s", $val);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                if ($res) {
+                    $provider = $res->fetch_assoc();
+                    $res->free();
+                }
+                $stmt->close();
+            }
         } else {
-            $res = $mysqli->query("SELECT * FROM providers WHERE slug = '$val' LIMIT 1");
+            $stmt = $mysqli->prepare("SELECT * FROM providers WHERE slug = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param("s", $val);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                if ($res) {
+                    $provider = $res->fetch_assoc();
+                    $res->free();
+                }
+                $stmt->close();
+            }
         }
     }
-    if (!$res) return null;
-    $row = $res->fetch_assoc();
-    $res->free();
-    return $row ?: null;
+    return $provider ?: null;
 }
 
 function provider_create(array $data) {

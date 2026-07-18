@@ -36,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($firstName === '' || $lastName === '' || $companyName === '' || $email === '' || $password === '') {
         $error_message = 'Please fill all required fields.';
+    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
+        $error_message = 'Password must be at least 8 characters long, and contain at least one uppercase letter, one number, and one special character.';
     } elseif (!check_rate_limit($mysqli)) {
         // 2. Form Submission Throttling (Rate Limiting)
         $error_message = 'Too many registration attempts from this connection. Please wait a few minutes before trying again.';
@@ -246,7 +248,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               <div class="mb-4">
                 <label for="regPassword" class="auth-form-label">Password *</label>
-                <input type="password" class="form-control auth-input" id="regPassword" name="password" placeholder="Min 8 characters" minlength="8" required>
+                <div class="input-group auth-input-group mb-1">
+                  <input type="password" class="form-control auth-input" id="regPassword" name="password" placeholder="Min 8 characters" minlength="8" required>
+                </div>
+                <!-- Visual password strength meter -->
+                <div class="password-strength mt-2" style="display: flex; gap: 4px; height: 6px;">
+                  <span class="pw-seg flex-grow-1" style="background-color: #e5e7eb; border-radius: 3px; height: 100%;"></span>
+                  <span class="pw-seg flex-grow-1" style="background-color: #e5e7eb; border-radius: 3px; height: 100%;"></span>
+                  <span class="pw-seg flex-grow-1" style="background-color: #e5e7eb; border-radius: 3px; height: 100%;"></span>
+                  <span class="pw-seg flex-grow-1" style="background-color: #e5e7eb; border-radius: 3px; height: 100%;"></span>
+                </div>
+                <div id="pw-hint" class="small text-muted mt-1" style="font-size: 0.75rem;">Password must contain at least 8 characters, an uppercase letter, a number, and a special character.</div>
               </div>
 
               <button type="submit" class="btn btn-primary w-100 py-3 mb-3" style="border-radius: 50px; background: #1165EF; border: none; font-weight: 600;">
@@ -265,6 +277,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Asynchronous email check
+      const emailInput = document.getElementById('regEmail');
+      if (emailInput) {
+        emailInput.addEventListener('blur', function() {
+          const email = this.value.trim();
+          if (email === '') return;
+          fetch('api/check-email.php?email=' + encodeURIComponent(email))
+            .then(res => res.json())
+            .then(data => {
+              if (!data.available) {
+                emailInput.setCustomValidity('This email address is already registered.');
+                emailInput.classList.add('is-invalid');
+                alert('Notice: An account with this email address already exists.');
+              } else {
+                emailInput.setCustomValidity('');
+                emailInput.classList.remove('is-invalid');
+              }
+            })
+            .catch(err => console.error('Email verification error:', err));
+        });
+      }
+
+      // Password strength meter animation
+      const password = document.getElementById('regPassword');
+      const strengthSegs = document.querySelectorAll('.password-strength .pw-seg');
+
+      const scorePassword = (value) => {
+        let score = 0;
+        if (!value) return 0;
+        if (value.length >= 8) score += 1;
+        if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
+        if (/\d/.test(value)) score += 1;
+        if (/[^A-Za-z0-9]/.test(value)) score += 1;
+        return score;
+      };
+
+      if (password) {
+        password.addEventListener('input', () => {
+          const score = scorePassword(password.value);
+          const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+          strengthSegs.forEach((seg, idx) => {
+            if (idx < score) {
+              seg.style.backgroundColor = colors[score - 1];
+            } else {
+              seg.style.backgroundColor = '#e5e7eb';
+            }
+          });
+        });
+      }
+
       // Invisible Google reCAPTCHA v3 Token Request & Form Injection
       const registerVendorFormElement = document.getElementById('registerVendorForm');
       if (registerVendorFormElement) {
