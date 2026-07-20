@@ -3,10 +3,11 @@ require_once __DIR__ . '/../../lib/middleware.php';
 require_permission_or_die('roles.manage');
 require_once __DIR__ . '/../../lib/role_helpers.php';
 
-$id = intval($_GET['id'] ?? 0);
-$p = permission_find($id);
-if (!$p) { http_response_code(404); echo 'Not found'; exit; }
+// $id = intval($_GET['id'] ?? 0);
+$uuid = isset($_GET['uuid']) ? trim($_GET['uuid']) : '';
 
+$p = permission_find($uuid);
+if (!$p) { http_response_code(404); echo 'Not found'; exit; }
 include __DIR__ . '/../../partials/header.php';
 include __DIR__ . '/../../partials/sidebar.php';
 ?>
@@ -30,7 +31,7 @@ include __DIR__ . '/../../partials/sidebar.php';
 <?php endif; ?>
   <form method="post" action="<?php echo $domain;?>/admin/permissions/update.php">
     <?php echo csrf_field(); ?>
-    <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
     <div class="mb-3">
       <label class="form-label">System name</label>
       <input name="name" class="form-control" value="<?php echo htmlspecialchars($p['name'], ENT_QUOTES); ?>" required>

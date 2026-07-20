@@ -1,7 +1,7 @@
 <?php
 // admin/migrations/cache_clear_permission.php
-require_once __DIR__ . '/../../lib/db_mysqli.php';
-require_once __DIR__ . '/../../lib/uuid_helper.php';
+require_once __DIR__ . '../../lib/db_mysqli.php';
+require_once __DIR__ . '../../lib/uuid_helper.php';
 
 echo "Running cache clear permission seeding...\n";
 

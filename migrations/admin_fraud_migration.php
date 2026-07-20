@@ -1,6 +1,6 @@
 <?php
 // admin/migrations/fraud_migration.php
-require_once __DIR__ . '/../../lib/db_mysqli.php';
+require_once __DIR__ . '../../lib/db_mysqli.php';
 
 echo "Starting click-fraud validation table migration...\n";
 

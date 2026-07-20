@@ -1,6 +1,6 @@
 <?php
 // seed_ad_test.php
-require_once __DIR__ . '/lib/db_mysqli.php';
+require_once __DIR__ . '../../lib/db_mysqli.php';
 
 $campaign_name = 'Golden Visa Express Promotion';
 $ad_source_type = 'direct_sponsor';

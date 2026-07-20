@@ -1,6 +1,6 @@
 # GlobalWays Marketplace - Full-Site Security Audit & Penetration Testing Assessment
 
-This security report is compiled following an exhaustive, codebase-wide adversarial security audit and penetration testing assessment across all user-segments (Admin, Provider/Vendor, and Customer/Guest frontends) of the GlobalWays Marketplace repository.
+This security report is compiled following an exhaustive, codebase-wide adversarial security audit and penetration testing assessment across all user-segments (Admin, Provider/Vendor, and Customer/Guest frontends) of the Global Ways Marketplace repository.
 
 ---
 

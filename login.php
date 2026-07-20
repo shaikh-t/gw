@@ -79,8 +79,8 @@ if (!empty($_SESSION['user'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — GlobalWays</title>
-  <meta name="description" content="Sign in to your GlobalWays customer, vendor, or admin dashboard.">
+  <title>Sign In — Global Ways</title>
+  <meta name="description" content="Sign in to your Global Ways customer, vendor, or admin dashboard.">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/globalways.css" rel="stylesheet">
@@ -178,7 +178,7 @@ if (!empty($_SESSION['user'])) {
           <div class="w-100 fade-in auth-panel-inner login-hero-inner">
             <div class="login-hero-brand">
               <span class="login-hero-brand-icon"><i class="bi bi-globe2"></i></span>
-              <span class="login-hero-brand-name font-serif">globalways.</span>
+              <span class="login-hero-brand-name font-serif">global ways.</span>
             </div>
             <h2 class="login-hero-title font-serif">Your UAE journey in one dashboard</h2>
             <p class="login-hero-sub">Track applications, store documents securely, communicate with vendors, and manage payments — all in one place.</p>

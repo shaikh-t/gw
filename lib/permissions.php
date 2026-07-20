@@ -70,7 +70,7 @@ function can(string $permission): bool {
         $userId = $user['uuid'] ?? (int)$user['id'];
         $request_perms = load_user_permissions_mysqli($userId);
     }
-
+// print_r($request_perms);
     return in_array($permission, $request_perms, true);
 }
 

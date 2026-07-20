@@ -150,7 +150,7 @@ include __DIR__ . '/partials/frontend_header.php';
         <div class="protection-banner d-flex align-items-center gap-3 mt-4 fade-in">
           <i class="bi bi-shield-check"></i>
           <div>
-            <div class="fw-semibold small">GlobalWays Buyer Protection</div>
+            <div class="fw-semibold small">Global Ways Buyer Protection</div>
             <p class="small text-secondary mb-0">All orders are covered by our money-back guarantee</p>
           </div>
           <a href="#" class="protection-link">Learn more <i class="bi bi-chevron-right"></i></a>

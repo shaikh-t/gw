@@ -1,7 +1,7 @@
 <?php
 // seed_services.php
-require_once __DIR__ . '/lib/db_mysqli.php';
-require_once __DIR__ . '/lib/uuid_helper.php';
+require_once __DIR__ . '../../lib/db_mysqli.php';
+require_once __DIR__ . '../../lib/uuid_helper.php';
 
 echo "Seeding public published services...\n";
 

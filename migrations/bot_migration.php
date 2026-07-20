@@ -1,6 +1,6 @@
 <?php
 // bot_migration.php
-require_once __DIR__ . '/lib/db_mysqli.php';
+require_once __DIR__ . '../../lib/db_mysqli.php';
 
 echo "Starting Chat & Voice Bot database migrations...\n";
 
@@ -85,8 +85,8 @@ $nodes = [
         'parent_id' => null,
         'node_type' => 'greeting',
         'language_iso' => 'en',
-        'display_text' => 'Welcome to GlobalWays! Please select your preferred language to begin.',
-        'spoken_text' => 'Welcome to GlobalWays! Please select your preferred language to begin.',
+        'display_text' => 'Welcome to Global Ways! Please select your preferred language to begin.',
+        'spoken_text' => 'Welcome to Global Ways! Please select your preferred language to begin.',
         'target_action' => null
     ],
 
@@ -137,8 +137,8 @@ $nodes = [
         'parent_id' => 10,
         'node_type' => 'category_select',
         'language_iso' => 'en',
-        'display_text' => 'Hello! Welcome to GlobalWays. We simplify UAE documentation. Please select a service category to get started.',
-        'spoken_text' => 'Hello! Welcome to GlobalWays. We simplify UAE documentation. Please select a service category to get started.',
+        'display_text' => 'Hello! Welcome to Global Ways. We simplify UAE documentation. Please select a service category to get started.',
+        'spoken_text' => 'Hello! Welcome to Global Ways. We simplify UAE documentation. Please select a service category to get started.',
         'target_action' => 'fetch_categories'
     ],
     [
@@ -146,8 +146,8 @@ $nodes = [
         'parent_id' => 11,
         'node_type' => 'category_select',
         'language_iso' => 'fr',
-        'display_text' => 'Bonjour! Bienvenue sur GlobalWays. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
-        'spoken_text' => 'Bonjour! Bienvenue sur GlobalWays. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
+        'display_text' => 'Bonjour! Bienvenue sur Global Ways. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
+        'spoken_text' => 'Bonjour! Bienvenue sur Global Ways. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
         'target_action' => 'fetch_categories'
     ],
     [

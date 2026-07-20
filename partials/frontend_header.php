@@ -3,12 +3,16 @@ require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/db_mysqli.php';
 require_once __DIR__ . '/../lib/permissions.php';
 
+if (!isset($cspNonce)) {
+    $cspNonce = base64_encode(random_bytes(16));
+}
 // Redundant Security Headers
 if (!headers_sent()) {
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://google.com https://jsdelivr.net; style-src 'self' 'unsafe-inline' https://jsdelivr.net; img-src 'self' data:; frame-src https://google.com;");
+    //header("Content-Security-Policy: default-src 'self'; script-src 'self' https://google.com https://*.jsdelivr.net 'nonce-" . $cspNonce . "'; style-src 'self' 'unsafe-inline' https://*.jsdelivr.net; font-src 'self' https://*.jsdelivr.net https://*.googleapis.com; img-src 'self' data:; connect-src 'self' https://*.jsdelivr.net; frame-src https://google.com;");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://google.com https://*.jsdelivr.net 'nonce-" . $cspNonce . "'; style-src 'self' 'unsafe-inline' https://*.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://*.jsdelivr.net https://fonts.googleapis.com https://*.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.jsdelivr.net; frame-src https://google.com;");
     header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
 }
-
+$_SESSION['nonce']=$cspNonce;
 $current_user = current_user();
 
 // Persistent dynamic bot page-context tracking loop
@@ -55,15 +59,19 @@ if ($h_res) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/globalways.css" rel="stylesheet">
-  <script>
+  <link rel="icon" type="image/png" href="<?php echo $domain; ?>/assets/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="<?php echo $domain; ?>/assets/favicon.svg" />
+  <link rel="shortcut icon" href="<?php echo $domain; ?>/assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $domain; ?>/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="<?php echo $domain; ?>/assets/site.webmanifest" />
+  
+  <script nonce="<?php echo $cspNonce;?>">
     (function() {
       const savedTheme = localStorage.getItem('theme') || 'auto';
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       const activeTheme = savedTheme === 'auto' ? systemTheme : savedTheme;
       document.documentElement.setAttribute('data-bs-theme', activeTheme);
     })();
-  </script>
-  <script>
     function toggleSystemTheme() {
       const htmlEl = document.documentElement;
       const currentTheme = htmlEl.getAttribute('data-bs-theme');

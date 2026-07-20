@@ -114,7 +114,7 @@ include __DIR__ . '/../partials/sidebar.php';
 
 </div>
 
-<script>
+<script nonce="<?php echo $cspNonce; ?>">
 function showToast(type, message) {
   // Remove any existing dynamic alert first
   var oldAlert = document.getElementById('dynamicCacheAlert');
@@ -134,7 +134,6 @@ function showToast(type, message) {
 }
 
 function initDashboardScripts() {
-  console.log('initDashboardScripts called. readyState:', document.readyState);
   var successBox = document.getElementById('flashSuccess');
   var errorBox = document.getElementById('flashErrors');
   [successBox, errorBox].forEach(function(box) {
@@ -147,7 +146,6 @@ function initDashboardScripts() {
   });
 
   var btnClearCache = document.getElementById('btnClearCache');
-  console.log('btnClearCache found:', !!btnClearCache);
   if (btnClearCache) {
     if (btnClearCache.dataset.initCache === 'true') return;
     btnClearCache.dataset.initCache = 'true';

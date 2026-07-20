@@ -47,14 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $email_body = "
         <p>Hi " . htmlspecialchars($message['name']) . ",</p>
-        <p>Thank you for contacting GlobalWays. Here is our response to your inquiry regarding <strong>" . htmlspecialchars($message['topic']) . "</strong>:</p>
+        <p>Thank you for contacting Global Ways. Here is our response to your inquiry regarding <strong>" . htmlspecialchars($message['topic']) . "</strong>:</p>
         <blockquote style='border-left: 3px solid #0C4AC7; padding-left: 10px; margin-left: 0; color: #555;'>
             " . nl2br(htmlspecialchars($reply_text)) . "
         </blockquote>
         <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
         <p style='font-size: 12px; color: #888;'>Your original message:<br>
         " . nl2br(htmlspecialchars($message['message'])) . "</p>
-        <p style='font-size: 12px; color: #888;'>Best regards,<br>GlobalWays Team</p>
+        <p style='font-size: 12px; color: #888;'>Best regards,<br>Global Ways Team</p>
         ";
 
         // Logging Simulated Email Dispatch

@@ -1,6 +1,6 @@
 <?php
 // customer_migration.php
-require_once __DIR__ . '/lib/db_mysqli.php';
+require_once  '../lib/db_mysqli.php';
 
 echo "Starting customer database tables migration...\n";
 

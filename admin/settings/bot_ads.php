@@ -160,64 +160,64 @@ include __DIR__ . '/../../partials/sidebar.php';
 ?>
 <style>
 /* Enterprise Slate Dark-Mode Theme Styles */
-body, .main-content {
+/* body, .main-content {
   background-color: #0f172a !important;
   color: #f8fafc !important;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6, .main-content strong {
+} */
+/* .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6, .main-content strong {
   color: #f8fafc !important;
-}
+} */
 .card {
-  background-color: #1e293b !important;
+  /* background-color: #1e293b !important; */
   border: 1px solid #334155 !important;
   border-radius: 12px !important;
 }
 .card-header {
-  background-color: #1e293b !important;
+  /* background-color: #1e293b !important; */
   border-bottom: 1px solid #334155 !important;
-  color: #f8fafc !important;
+  /* color: #f8fafc !important; */
 }
 .table {
-  color: #cbd5e1 !important;
+  /* color: #cbd5e1 !important; */
 }
 .table-light {
-  background-color: #1e293b !important;
-  color: #94a3b8 !important;
+  /* background-color: #1e293b !important;
+  color: #94a3b8 !important; */
 }
 .table-hover tbody tr:hover {
-  background-color: #334155 !important;
+  /* background-color: #334155 !important; */
 }
 .table > :not(caption) > * > * {
-  background-color: transparent !important;
-  color: inherit !important;
+  /* background-color: transparent !important;
+  color: inherit !important; */
   border-bottom-color: #1e293b !important;
 }
 .text-dark {
-  color: #f8fafc !important;
+  /* color: #f8fafc !important; */
 }
 .text-muted {
   color: #94a3b8 !important;
 }
 .form-control, .form-select, .form-check-input {
-  background-color: #1e293b !important;
+  /* background-color: #1e293b !important; */
   border: 1px solid #475569 !important;
-  color: #f8fafc !important;
+  /* color: #f8fafc !important; */
 }
 .form-control:focus, .form-select:focus {
-  background-color: #334155 !important;
+  /* background-color: #334155 !important; */
   border-color: #10b981 !important;
-  color: #f8fafc !important;
+  /* color: #f8fafc !important; */
   box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
 }
 /* Emerald Accent Colors */
 .bg-success, .alert-success {
-  background-color: rgba(16, 185, 129, 0.15) !important;
+  /* background-color: rgba(16, 185, 129, 0.15) !important; */
   color: #10b981 !important;
   border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
 .bg-primary {
-  background-color: rgba(56, 189, 248, 0.15) !important;
+  /* background-color: rgba(56, 189, 248, 0.15) !important; */
   color: #38bdf8 !important;
   border: 1px solid rgba(56, 189, 248, 0.3) !important;
 }
@@ -239,14 +239,14 @@ body, .main-content {
   font-family: 'Playfair Display', Georgia, serif;
 }
 code {
-  background-color: #334155 !important;
+  /* background-color: #334155 !important; */
   color: #38bdf8 !important;
   padding: 2px 6px !important;
   border-radius: 4px !important;
 }
 </style>
 
-<main class="main-content p-4" style="background-color: #0f172a; min-height: 100vh;">
+<main class="main-content p-4" style=" min-height: 100vh;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-0 font-serif fw-bold">Site-Wide Monetization Ad Control Panel</h1>
@@ -265,7 +265,7 @@ code {
                 <input type="date" id="analytics_start" class="form-control form-control-sm" value="<?= date('Y-m-d', strtotime('-30 days')) ?>">
                 <span class="text-muted small">to</span>
                 <input type="date" id="analytics_end" class="form-control form-control-sm" value="<?= date('Y-m-d') ?>">
-                <button type="button" onclick="loadAdCharts()" class="btn btn-sm btn-primary px-3 rounded-pill">Refresh</button>
+                <button type="button" onclick="location.href='javascript:loadAdCharts()'" nonce="<?php echo $cspNonce; ?>" class="btn btn-sm btn-primary px-3 rounded-pill">Refresh</button>
             </div>
         </div>
 
@@ -364,7 +364,6 @@ code {
                                                     <a href="?edit_id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
                                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this ad campaign?')">
                                                         <?= csrf_field(); ?>
-                                                        <input type="hidden" name="_csrf" value="<?= htmlspecialchars($_SESSION['_csrf'] ?? '') ?>">
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="id" value="<?= $c['id'] ?>">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
@@ -390,7 +389,6 @@ code {
                 <div class="card-body">
                     <form method="POST">
                         <?= csrf_field(); ?>
-                        <input type="hidden" name="_csrf" value="<?= htmlspecialchars($_SESSION['_csrf'] ?? '') ?>">
                         <input type="hidden" name="action" value="<?= $edit_campaign ? 'edit' : 'create' ?>">
                         <?php if ($edit_campaign): ?>
                             <input type="hidden" name="id" value="<?= htmlspecialchars($edit_campaign['id']) ?>">
@@ -527,7 +525,7 @@ code {
 <!-- Load ChartJS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
+<script nonce="<?php echo $cspNonce; ?>">
 let dailyRevChart = null;
 let campChart = null;
 

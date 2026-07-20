@@ -1,7 +1,7 @@
 <?php
 // database_migration.php
-require_once __DIR__ . '/lib/db_mysqli.php';
-require_once __DIR__ . '/lib/uuid_helper.php';
+require_once  '../lib/db_mysqli.php';
+require_once  '../lib/uuid_helper.php';
 
 echo "Starting database migrations...\n";
 

@@ -12,7 +12,7 @@ RewriteEngine On
     </FilesMatch>
 
     # Security Headers via .htaccess
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://google.com https://jsdelivr.net; style-src 'self' 'unsafe-inline' https://jsdelivr.net; img-src 'self' data:; frame-src https://google.com;"
+    #Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://google.com https://*.jsdelivr.net 'sha256-WpTIMUrCU9VZRG73icCE8ifBD+08NLHMA1lvRUS0g48='; style-src 'self' 'unsafe-inline' https://*.jsdelivr.net; font-src 'self' https://*.jsdelivr.net; img-src 'self' data:; connect-src 'self' https://*.jsdelivr.net; frame-src https://google.com;"
     Header set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 </IfModule>
 

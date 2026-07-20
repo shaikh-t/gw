@@ -29,3 +29,5 @@ try {
         $mysqli = new MockMySQLi();
     }
 }
+if (isset($_SESSION['nonce']) && $_SESSION['nonce']!=='')
+$cspNonce=$_SESSION['nonce'];

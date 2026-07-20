@@ -76,7 +76,7 @@ if ($res3) {
         <h4 class="footer-col-title">Newsletter</h4>
         <p class="footer-text mb-3"><?= htmlspecialchars($footer_settings['footer_newsletter_text'] ?? '') ?></p>
         <div class="newsletter-input d-flex align-items-center gap-2">
-          <input type="email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
+          <input type="email" name="subscribe_email" id="subscribe_email" placeholder="yourmail@gmail.com" aria-label="Email for newsletter">
           <button class="btn btn-gw-blue btn-sm rounded-circle p-2 flex-shrink-0" type="button" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
         </div>
       </div>

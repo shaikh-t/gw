@@ -206,11 +206,43 @@
   70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
+/* Smooth pulsing animation for the AI star icon badge */
+/* CSS Keyframe Configurations for Premium Interactions */
+@keyframes corePulse {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; filter: blur(1px); }
+    100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.ai-pulse-core {
+    animation: corePulse 3s infinite ease-in-out;
+}
+
+/* Elevate and widen shadow glow on user hover states */
+.ai-floating-trigger:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4) !important;
+    background-color: #12131c !important;
+    border-color: rgba(108, 92, 231, 0.5) !important;
+}
+
+.ai-floating-trigger:hover .ai-pulse-core {
+    animation: corePulse 1s infinite linear; /* Speeds up pulse slightly on interaction */
+}
 </style>
 
 <!-- Floating Action Trigger -->
-<button class="bot-badge-trigger" id="botBadgeTrigger" onclick="toggleBotChat()">
-  <span>🤖 Ask AI Assistant</span>
+<button class="bot-badge-trigger" id="botBadgeTrigger">
+  <!-- <span>
+    <i class="bi bi-stars fs-4 text-white animate-pulse"></i> Ask AI Assistant</span> -->
+    <!-- Live Neural Indicator Orb -->
+        <div class="d-flex align-items-center text-primary-emphasis">
+            <i class="bi bi-chat-left-text fs-4 text-primary" style="color: #fff !important;"></i>
+        </div>
+        <!-- Vertical Separator Divider Line -->
+        <div class="bg-secondary bg-opacity-50" style="width: 1px; height: 24px;"></div>
+        <!-- Typography Label -->
+        <span class="fw-semibold text-white tracking-wide" style="font-size: 0.95rem; font-family: 'Manrope', 'DM Sans', sans-serif;">Ask AI Assistant</span>
 </button>
 
 <!-- Main Chat Drawer -->
@@ -218,10 +250,11 @@
   <div class="bot-chat-header">
     <div class="bot-chat-title">
       <i class="bi bi-robot"></i> AI Companion
+
     </div>
     <div class="bot-chat-header-actions">
-      <button class="bot-reset-btn" onclick="resetBot()"><i class="bi bi-arrow-counterclockwise"></i> 🔄 Reset</button>
-      <button class="bot-close-btn" onclick="toggleBotChat()">×</button>
+      <button class="bot-reset-btn" id="botChatReset"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+      <button class="bot-close-btn" id="botChatClose">×</button>
     </div>
   </div>
 
@@ -234,14 +267,14 @@
   </div>
 
   <div class="bot-input-area">
-    <button class="bot-mic-trigger" id="botMicTrigger" onclick="toggleSpeechInput()">
+    <button class="bot-mic-trigger" id="botMicTrigger">
       <i class="bi bi-mic-fill" id="botMicIcon"></i>
     </button>
     <div class="bot-status-text" id="botStatusText">Mic is offline</div>
   </div>
 </div>
 
-<script>
+<script nonce="<?php echo $cspNonce;?>">
 let botSessionToken = localStorage.getItem('globalways_bot_session') || '';
 let currentLang = 'en';
 let isListening = false;
@@ -486,6 +519,7 @@ function resetBot() {
   window.speechSynthesis.cancel();
   stopSpeechRecognition();
   sendQueryToController('', 1, 'Reset');
+  console.log('fired');
 }
 
 function handleClientAction(action) {
@@ -506,4 +540,31 @@ function handleClientAction(action) {
     .catch(err => console.error('Dynamic hydration failed:', err));
   }
 }
+  // Ensure the function exists in scope
+    // function toggleBotChat() {
+    //     // Your existing chat toggle logic stays here
+    //     console.log("Chat toggled safely!");
+    // }
+
+    // Bind the listener dynamically once the DOM loads
+    document.addEventListener("DOMContentLoaded", function() {
+        const botButton = document.getElementById("botBadgeTrigger");
+        const botCloseButton = document.getElementById("botChatClose");
+        if (botButton) {
+            botButton.addEventListener("click", toggleBotChat);
+        }
+        if (botCloseButton) {
+            botButton.addEventListener("click", toggleBotChat);
+        }
+    });
+     (function() {
+        const botResetButton = document.getElementById("botChatReset");
+        if (botResetButton) {
+            botResetButton.onclick = resetBot;
+        }
+const botMicTrigger = document.getElementById("botMicTrigger");
+        if (botMicTrigger) {
+            botMicTrigger.onclick = toggleSpeechInput;
+        }
+    })();
 </script>

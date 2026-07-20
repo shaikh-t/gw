@@ -65,7 +65,7 @@ include __DIR__ . '/partials/frontend_header.php';
               <span class="text-gradient-blue"><?= htmlspecialchars($s['hero_title_gradient'] ?? 'Measurable') ?></span><br>
               <?= nl2br(htmlspecialchars($s['hero_title_rest'] ?? "Performance for\nbusinesses")) ?>
             </h1>
-            <p class="text-secondary mb-4 pe-lg-4"><?= htmlspecialchars($s['hero_subtitle'] ?? 'GlobalWays is a marketplace built for teams that need direction, structure, and execution — not vague advice or long decks. Compare 500+ verified vendors and get guaranteed UAE results.') ?></p>
+            <p class="text-secondary mb-4 pe-lg-4"><?= htmlspecialchars($s['hero_subtitle'] ?? 'Global Ways is a marketplace built for teams that need direction, structure, and execution — not vague advice or long decks. Compare 500+ verified vendors and get guaranteed UAE results.') ?></p>
             <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
               <a href="<?= htmlspecialchars($s['hero_cta_url'] ?? 'services.php') ?>" class="btn btn-gw-dark"><?= htmlspecialchars($s['hero_cta_text'] ?? 'Start a Free Meeting') ?> <i class="bi bi-arrow-right ms-1"></i></a>
               <div class="d-flex align-items-center gap-2">
@@ -267,7 +267,7 @@ include __DIR__ . '/partials/frontend_header.php';
     <section class="cta-section d-flex align-items-center justify-content-center text-center text-white" style="background-image:url('<?= htmlspecialchars($s['cta_banner_bg'] ?? 'https://images.unsplash.com/photo-1539630417222-d685b659ffcc?w=1400&q=85') ?>')">
       <div class="cta-overlay"></div>
       <div class="container position-relative py-5 fade-in">
-        <p class="font-mono small text-white-50 mb-3" style="letter-spacing:0.18em">GlobalWays® is the most trusted UAE marketplace</p>
+        <p class="font-mono small text-white-50 mb-3" style="letter-spacing:0.18em">Global Ways® is the most trusted UAE marketplace</p>
         <h2 class="font-serif mb-4" style="font-size:clamp(2.2rem,5vw,4rem);max-width:700px;margin:0 auto"><?= htmlspecialchars($s['cta_banner_title'] ?? 'Ready to take your UAE journey with us!') ?></h2>
         <a href="register.php" class="btn btn-gw-blue btn-lg">Start a Free Meeting <i class="bi bi-arrow-right ms-1"></i></a>
       </div>

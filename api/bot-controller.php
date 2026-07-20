@@ -596,8 +596,8 @@ if ($is_mock_mode) {
     $mock_nodes = [
         1 => [
             'id' => 1, 'parent_id' => null, 'node_type' => 'greeting', 'language_iso' => 'en',
-            'display_text' => 'Welcome to GlobalWays! Please select your preferred language to begin.',
-            'spoken_text' => 'Welcome to GlobalWays! Please select your preferred language to begin.', 'target_action' => null
+            'display_text' => 'Welcome to Global Ways! Please select your preferred language to begin.',
+            'spoken_text' => 'Welcome to Global Ways! Please select your preferred language to begin.', 'target_action' => null
         ],
         10 => [
             'id' => 10, 'parent_id' => 1, 'node_type' => 'voice_selection', 'language_iso' => 'en',
@@ -621,13 +621,13 @@ if ($is_mock_mode) {
         ],
         2 => [
             'id' => 2, 'parent_id' => 10, 'node_type' => 'category_select', 'language_iso' => 'en',
-            'display_text' => 'Hello! Welcome to GlobalWays. We simplify UAE documentation. Please select a service category to get started.',
-            'spoken_text' => 'Hello! Welcome to GlobalWays. We simplify UAE documentation. Please select a service category to get started.', 'target_action' => 'fetch_categories'
+            'display_text' => 'Hello! Welcome to Global Ways. We simplify UAE documentation. Please select a service category to get started.',
+            'spoken_text' => 'Hello! Welcome to Global Ways. We simplify UAE documentation. Please select a service category to get started.', 'target_action' => 'fetch_categories'
         ],
         3 => [
             'id' => 3, 'parent_id' => 11, 'node_type' => 'category_select', 'language_iso' => 'fr',
-            'display_text' => 'Bonjour! Bienvenue sur GlobalWays. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
-            'spoken_text' => 'Bonjour! Bienvenue sur GlobalWays. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.', 'target_action' => 'fetch_categories'
+            'display_text' => 'Bonjour! Bienvenue sur Global Ways. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.',
+            'spoken_text' => 'Bonjour! Bienvenue sur Global Ways. Nous simplifions les démarches administratives aux Émirats Arabes Unis. Veuillez sélectionner une catégorie de service pour commencer.', 'target_action' => 'fetch_categories'
         ],
         4 => [
             'id' => 4, 'parent_id' => 12, 'node_type' => 'category_select', 'language_iso' => 'ar',

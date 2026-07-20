@@ -1,7 +1,6 @@
 <?php
 // bot-landing.php
 require_once __DIR__ . '/lib/db_mysqli.php';
-
 // Check global AI Kill-Switch status
 $ai_global_status = 'enabled';
 if (isset($mysqli) && !$mysqli->connect_errno) {
@@ -344,7 +343,7 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
     <!-- Controls & Microphone area -->
     <div class="ws-controls-area">
       <div class="text-center">
-        <button class="ws-mic-btn" id="wsMicTrigger" onclick="toggleSpeechInput()">
+        <button class="ws-mic-btn" id="wsMicTrigger" onclick="location.href='javascript:toggleSpeechInput()'" nonce="<?php echo $cspNonce; ?>">
           <i class="bi bi-mic-fill" id="wsMicIcon"></i>
         </button>
 
@@ -365,7 +364,7 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
       </div>
 
       <div class="d-flex flex-column gap-2 mt-2">
-        <button class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill" onclick="resetWorkspace()">
+        <button class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill" onclick="location.href='javascript:resetWorkspace()'" nonce="<?php echo $cspNonce; ?>">
           <i class="bi bi-arrow-counterclockwise"></i> 🔄 Start Completely Fresh
         </button>
         <a href="index.php" class="btn btn-dark btn-sm w-100 py-2 rounded-pill text-decoration-none text-center">
@@ -404,7 +403,7 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
   </main>
 </div>
 
-<script>
+<script nonce="<?php echo $cspNonce;?>">
 let botSessionToken = localStorage.getItem('globalways_bot_session') || '';
 let currentLang = 'en';
 let isListening = false;

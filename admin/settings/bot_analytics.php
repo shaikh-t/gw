@@ -164,7 +164,7 @@ include __DIR__ . '/../../partials/sidebar.php';
                       <td><span class="badge bg-light text-dark border font-mono small"><?= htmlspecialchars($s['entry_point'] ?: 'general') ?></span></td>
                       <td class="text-center fw-bold text-secondary"><?= $s['msg_count'] ?></td>
                       <td class="text-end">
-                        <button class="btn btn-xs btn-outline-info rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="viewTranscript(<?= $s['id'] ?>, '<?= htmlspecialchars($s['customer_name'] ?: 'Guest') ?>')">
+                        <button class="btn btn-xs btn-outline-info rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="location.href='javascript:viewTranscript(<?= $s['id'] ?>, '<?= htmlspecialchars($s['customer_name'] ?: 'Guest') ?>')'" nonce="<?php echo $cspNonce; ?>">
                           <i class="bi bi-clock-history"></i> Audit
                         </button>
                       </td>
@@ -209,7 +209,7 @@ include __DIR__ . '/../../partials/sidebar.php';
                         <span class="small text-muted font-mono text-truncate d-block" style="max-width: 150px;" title="<?= htmlspecialchars($q['page_context_url']) ?>"><?= htmlspecialchars(basename($q['page_context_url'] ?: 'bot-landing.php')) ?></span>
                       </td>
                       <td class="text-end">
-                        <button class="btn btn-xs btn-outline-danger rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="viewTranscript(<?= $q['session_id'] ?>, '<?= htmlspecialchars($q['customer_name'] ?: 'Guest') ?>')">
+                        <button class="btn btn-xs btn-outline-danger rounded-pill py-0 px-2" style="font-size: 0.75rem;" onclick="location.href='javascript:viewTranscript(<?= $q['session_id'] ?>, '<?= htmlspecialchars($q['customer_name'] ?: 'Guest') ?>')'" nonce="<?php echo $cspNonce; ?>">
                           <i class="bi bi-journal-text"></i> Trace
                         </button>
                       </td>

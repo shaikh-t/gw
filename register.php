@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'avatar' => null
                 ];
 
-                $_SESSION['flash_success'] = 'Account created successfully! Welcome to GlobalWays.';
+                $_SESSION['flash_success'] = 'Account created successfully! Welcome to Global Ways.';
 
                 if (!empty($_SESSION['redirect_after_login'])) {
                     $redirect = $_SESSION['redirect_after_login'];

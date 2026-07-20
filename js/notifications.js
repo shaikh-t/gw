@@ -8,15 +8,23 @@
     }
     window.NotificationSystemInitialized = true;
 
+const url = window.location.href;
+
+// Method 2: Using substring() and indexOf() (Highly efficient)
+const resultWithSubstring = url.substring(0, url.indexOf('admin'));
+
     // Base path helper to ensure relative paths are correct in all environments
     // Check if we are inside vendor, customer, or admin subfolders to resolve relative root
-    let baseDomain = './';
-    const path = window.location.pathname;
-    if (path.includes('/vendor/') || path.includes('/customer/')) {
-        baseDomain = '..';
-    } else if (path.includes('/admin/')) {
-        baseDomain = '../';
+    let baseDomain = resultWithSubstring;
+    if (resultWithSubstring=='') {
+        baseDomain='.';
     }
+    const path = window.location.pathname;
+    // if (path.includes('/vendor/') || path.includes('/customer/')) {
+    //     baseDomain = '../../';
+    // } else if (path.includes('/admin/')) {
+    //     baseDomain = '../../';
+    // }
 
     // Find notification elements in the current page
     function findBellButton() {
@@ -38,7 +46,6 @@
     // Check if user is logged in and fetch unread notifications
     async function checkNotifications() {
         try {
-            // console.log(domain);
             // console.log(baseDomain);
             const response = await fetch(baseDomain + '/get-unread-notifications.php');
             const data = await response.json();
