@@ -83,6 +83,10 @@ if ($ai_global_status === 'disabled') {
 
 require_once __DIR__ . '/lib/auth.php';
 
+if (!isset($cspNonce)) {
+    $cspNonce = base64_encode(random_bytes(16));
+}
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -343,7 +347,7 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
     <!-- Controls & Microphone area -->
     <div class="ws-controls-area">
       <div class="text-center">
-        <button class="ws-mic-btn" id="wsMicTrigger" onclick="location.href='javascript:toggleSpeechInput()'" nonce="<?php echo $cspNonce; ?>">
+        <button class="ws-mic-btn" id="wsMicTrigger">
           <i class="bi bi-mic-fill" id="wsMicIcon"></i>
         </button>
 
@@ -364,7 +368,7 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
       </div>
 
       <div class="d-flex flex-column gap-2 mt-2">
-        <button class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill" onclick="location.href='javascript:resetWorkspace()'" nonce="<?php echo $cspNonce; ?>">
+        <button class="btn btn-outline-danger btn-sm w-100 py-2 rounded-pill" id="wsResetTrigger">
           <i class="bi bi-arrow-counterclockwise"></i> 🔄 Start Completely Fresh
         </button>
         <a href="index.php" class="btn btn-dark btn-sm w-100 py-2 rounded-pill text-decoration-none text-center">
@@ -405,9 +409,11 @@ $session_context = $_SESSION['bot_page_context'] ?? null;
 
 <script nonce="<?php echo $cspNonce;?>">
 let botSessionToken = localStorage.getItem('globalways_bot_session') || '';
-let currentLang = 'en';
+let currentLang = localStorage.getItem('globalways_bot_language') || 'en';
 let isListening = false;
 let recognition = null;
+let pausedForSpeaking = false;
+let activeOptions = [];
 
 // Web Audio API Context variables
 let audioCtx = null;
@@ -468,6 +474,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load context stream from LocalStorage to bypass sequential API lookups on refresh
   loadChatStreamFromLocalStorage();
+
+  // Bind the mic and reset buttons cleanly to bypass CSP inline block
+  const wsMicBtn = document.getElementById('wsMicTrigger');
+  if (wsMicBtn) {
+    wsMicBtn.addEventListener('click', toggleSpeechInput);
+  }
+  const wsResetBtn = document.getElementById('wsResetTrigger');
+  if (wsResetBtn) {
+    wsResetBtn.addEventListener('click', resetWorkspace);
+  }
 
   // 2. Immediate Panel Pre-Hydration: Check if user arrived from a specific page and pre-hydrate
   if (window.botPageContext && window.botPageContext.page_name) {
@@ -533,17 +549,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+
+      // 1. Spoken Language Selection Parsing
+      const matchedLang = parseSpokenLanguage(transcript);
+      if (matchedLang) {
+        const clicked = findAndClickLanguageButton(matchedLang);
+        if (clicked) {
+          return;
+        }
+      }
+
+      // 2. Voice-Driven Option/Dynamic Menu Selection
+      const matchedOptionBtn = findMatchingOption(transcript);
+      if (matchedOptionBtn) {
+        matchedOptionBtn.click();
+        return;
+      }
+
       addMessageToStream('user', transcript);
       sendQueryToController('', null, transcript);
     };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
-      stopSpeechRecognition();
+      if (event.error !== 'no-speech') {
+        stopSpeechRecognition();
+      }
     };
 
     recognition.onend = () => {
-      stopSpeechRecognition();
+      if (isListening && !pausedForSpeaking) {
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error('Failed to auto-restart recognition:', e);
+        }
+      } else if (!pausedForSpeaking) {
+        stopSpeechRecognition();
+      }
     };
   } else {
     document.getElementById('wsMicTrigger').style.display = 'none';
@@ -680,6 +723,10 @@ function array_merge_payloads(obj1, obj2) {
 function renderOptions(options) {
   const rack = document.getElementById('wsOptionsRack');
   rack.innerHTML = '';
+
+  // State Lifecycle Management: Completely clear out and purge the stored active voice keywords
+  activeOptions = [];
+
   if (!options || options.length === 0) return;
 
   options.forEach(opt => {
@@ -691,6 +738,12 @@ function renderOptions(options) {
       sendQueryToController(opt.label, opt.node_id, opt.label);
     };
     rack.appendChild(btn);
+
+    // Store for voice-driven matching
+    activeOptions.push({
+      label: opt.label.toLowerCase(),
+      element: btn
+    });
   });
 }
 
@@ -706,8 +759,10 @@ function addMessageToStream(sender, text) {
 
 function toggleSpeechInput() {
   if (isListening) {
+    isListening = false;
     stopSpeechRecognition();
   } else {
+    isListening = true;
     startSpeechRecognition();
   }
 }
@@ -716,22 +771,28 @@ function startSpeechRecognition() {
   if (!recognition) return;
   const targetSpeechLang = langCodeMapping[currentLang] || 'en-US';
   recognition.lang = targetSpeechLang;
-  recognition.start();
+  try {
+    recognition.start();
+  } catch(e) {
+    console.error('Recognition start error:', e);
+  }
 }
 
 function stopSpeechRecognition() {
   if (!recognition) return;
-  isListening = false;
-  document.getElementById('wsMicTrigger').classList.remove('listening');
-  document.getElementById('wsStatusText').innerText = 'Mic is offline';
+  if (!pausedForSpeaking) {
+    isListening = false;
+    document.getElementById('wsMicTrigger').classList.remove('listening');
+    document.getElementById('wsStatusText').innerText = 'Mic is offline';
 
-  // Hide waveform SVG and stop animations
-  const wave = document.getElementById('waveformSvg');
-  if (wave) {
-    wave.style.display = 'none';
+    // Hide waveform SVG and stop animations
+    const wave = document.getElementById('waveformSvg');
+    if (wave) {
+      wave.style.display = 'none';
+    }
+
+    stopAudioVisualization();
   }
-
-  stopAudioVisualization();
 
   try {
     recognition.stop();
@@ -743,6 +804,15 @@ function speakOutLoud(text) {
 
   window.speechSynthesis.cancel();
 
+  const wasListening = isListening;
+  if (isListening) {
+    pausedForSpeaking = true;
+    try {
+      recognition.stop();
+    } catch(e) {}
+    document.getElementById('wsStatusText').innerText = 'Assistant is speaking...';
+  }
+
   const utterance = new SpeechSynthesisUtterance(text);
   const targetSpeechLang = langCodeMapping[currentLang] || 'en-US';
   utterance.lang = targetSpeechLang;
@@ -753,17 +823,133 @@ function speakOutLoud(text) {
     utterance.voice = matchedVoice;
   }
 
+  const resumeRecognition = () => {
+    if (wasListening) {
+      pausedForSpeaking = false;
+      isListening = true;
+      startSpeechRecognition();
+    }
+  };
+
+  utterance.onend = resumeRecognition;
+  utterance.onerror = resumeRecognition;
+
   window.speechSynthesis.speak(utterance);
 }
 
 function resetWorkspace() {
   window.speechSynthesis.cancel();
   stopSpeechRecognition();
+  activeOptions = [];
   document.getElementById('wsChatStream').innerHTML = '';
   localStorage.removeItem('globalways_chat_stream_html');
   localStorage.removeItem('globalways_bot_session');
+  localStorage.removeItem('globalways_bot_language');
   botSessionToken = '';
+  currentLang = 'en';
   sendQueryToController('', 1, 'Reset');
+}
+
+function parseSpokenLanguage(transcript) {
+  const text = transcript.toLowerCase().trim();
+
+  const enPatterns = [
+    /\benglish\b/, /\bselect english\b/,
+    /\banglais\b/, /\bselectionner l'anglais\b/, /\bselectionner anglais\b/,
+    /الانجليزية/, /الإنجليزية/, /انجليزي/, /إنجليزي/, /اختر الانجليزية/, /اختر الإنجليزية/,
+    /انگریزی/, /انگلش/, /انگریزی منتخب کریں/, /अंग्रेजी/, /इंग्लिश/, /अंग्रेजी चुनें/
+  ];
+
+  const frPatterns = [
+    /\bfrench\b/, /\bselect french\b/,
+    /\bfrançais\b/, /\bfrancais\b/, /\bselectionner le français\b/, /\bselectionner le francais\b/, /\bselectionner français\b/, /\bselectionner francais\b/,
+    /الفرنسية/, /فرنسي/, /اختر الفرنسية/,
+    /فرانسیسی/, /فرانسیسی منتخب کریں/, /फ्रेंच/, /फ्रांसीसी/, /फ्रेंच चुनें/
+  ];
+
+  const arPatterns = [
+    /\barabic\b/, /\bselect arabic\b/,
+    /\barabe\b/, /\bselectionner l'arabe\b/, /\bselectionner l'arabe\b/, /\bselectionner arabe\b/,
+    /العربية/, /عربي/, /اختر العربية/,
+    /عربی/, /عربی منتخب کریں/, /अरबी/, /अरबी चुनें/
+  ];
+
+  const urPatterns = [
+    /\burdu\b/, /\bhindi\b/, /\bselect urdu\b/, /\bselect hindi\b/, /\burdu hindi\b/,
+    /\bourdou\b/, /\bselectionner l'ourdou\b/, /\bourdou hindi\b/,
+    /الأردية/, /الأردو/, /اختر الأردية/,
+    /اردو/, /ہندی/, /اردو منتخب کریں/, /उर्दू/, /हिंदी/, /उर्दू चुनें/, /हिंदी चुनें/
+  ];
+
+  for (let pattern of enPatterns) {
+    if (pattern.test(text)) return 'en';
+  }
+  for (let pattern of frPatterns) {
+    if (pattern.test(text)) return 'fr';
+  }
+  for (let pattern of arPatterns) {
+    if (pattern.test(text)) return 'ar';
+  }
+  for (let pattern of urPatterns) {
+    if (pattern.test(text)) return 'ur';
+  }
+
+  return null;
+}
+
+function findAndClickLanguageButton(langCode) {
+  const rack = document.getElementById('wsOptionsRack');
+  if (!rack) return false;
+  const buttons = rack.querySelectorAll('button');
+  for (let btn of buttons) {
+    const text = btn.innerText.toLowerCase();
+    if (langCode === 'en' && text.includes('english')) {
+      btn.click();
+      return true;
+    }
+    if (langCode === 'fr' && (text.includes('français') || text.includes('francais') || text.includes('french'))) {
+      btn.click();
+      return true;
+    }
+    if (langCode === 'ar' && (text.includes('العربية') || text.includes('arabic') || text.includes('عربي'))) {
+      btn.click();
+      return true;
+    }
+    if (langCode === 'ur' && (text.includes('اردو') || text.includes('urdu') || text.includes('हिंदी') || text.includes('hindi'))) {
+      btn.click();
+      return true;
+    }
+  }
+  return false;
+}
+
+function findMatchingOption(transcript) {
+  const normalizedTranscript = transcript.toLowerCase().trim();
+
+  for (let opt of activeOptions) {
+    const label = opt.label;
+
+    // Direct or substring match
+    if (label.includes(normalizedTranscript) || normalizedTranscript.includes(label)) {
+      return opt.element;
+    }
+
+    const transcriptWords = normalizedTranscript.split(/\s+/).filter(w => w.length > 3);
+    const labelWords = label.split(/\s+/).filter(w => w.length > 3);
+
+    for (let tw of transcriptWords) {
+      if (labelWords.includes(tw) || label.includes(tw)) {
+        return opt.element;
+      }
+    }
+
+    for (let lw of labelWords) {
+      if (transcriptWords.includes(lw) || normalizedTranscript.includes(lw)) {
+        return opt.element;
+      }
+    }
+  }
+  return null;
 }
 
 function handleClientAction(action) {

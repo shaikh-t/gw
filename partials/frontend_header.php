@@ -95,6 +95,11 @@ if ($h_res) {
     document.addEventListener('DOMContentLoaded', () => {
       const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
       updateThemeToggleIcon(activeTheme);
+
+      const themeBtn = document.getElementById('themeToggleBtn');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleSystemTheme);
+      }
     });
   </script>
 </head>
@@ -121,7 +126,7 @@ if ($h_res) {
         </ul>
         <div class="d-flex align-items-center gap-3 navbar-actions">
           <!-- Theme Toggle Button -->
-          <button class="btn btn-link nav-link p-2 d-flex align-items-center justify-content-center" id="themeToggleBtn" onclick="toggleSystemTheme()" title="Toggle Light/Dark Theme" style="border: none; background: none;">
+          <button class="btn btn-link nav-link p-2 d-flex align-items-center justify-content-center" id="themeToggleBtn" title="Toggle Light/Dark Theme" style="border: none; background: none;">
             <i class="bi bi-moon-fill text-primary" id="themeToggleIcon" style="font-size: 1.25rem;"></i>
           </button>
 

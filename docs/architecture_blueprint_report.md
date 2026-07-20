@@ -587,4 +587,36 @@ Secures advertisers from click fraud using sliding-window verification.
 
 ---
 
+### Voice Assistant Refinements (Voice Interactivity Upgrades)
+To deliver a premium, seamless voice workspace experience, the following system refinements were introduced:
+
+1. **Persistent Listening Mode (Continuous Microphone Stream)**:
+   - Evaluates the standard Web Speech API (`SpeechRecognition`) and custom workspace lifecycles.
+   - Restarts the speech recognition stream programmatically inside the `onend` event handler of both standard and immersive views (`templates/bot-widget.php` and `bot-landing.php`) if the mic trigger remains enabled (`isListening === true`) and the bot is not speaking.
+   - Strictly honors user manual overrides by killing the listening loop and cleaning up variables when toggled off.
+   - Prevents feedback loops by temporarily pausing/suspending speech recognition immediately before `speechSynthesis.speak()` triggers and auto-resuming it upon the synthesis utterance firing `onend` or `onerror`.
+
+2. **Multilingual Spoken Language Selection Parsing**:
+   - Parses and normalizes transcription strings against case-insensitive regex patterns for English, French, Arabic, and Urdu/Hindi spoken natively (e.g. "Anglais", "الانجليزية", "انگریزی", etc.).
+   - Automatically maps matched language utterances to corresponding physical button elements in the options menu and programmatically dispatches `.click()` events, preserving identical system transition pathways.
+
+3. **Voice-Driven Option / Dynamic Menu Selection**:
+   - Stores active options inside a client-side global array (`activeOptions`) whenever new options are rendered.
+   - Employs a case-insensitive keyword match pattern (direct contains and word-by-word intersection) comparing transcripts against stored options (e.g., matching "Browse" to "Browse Independently").
+   - Automatically purges and completely clears `activeOptions` on node changes or resets to prevent stale collisions.
+
+4. **Post-Language Selection Redirection & Hydration**:
+   - Detects when a language selection node transitions inside the standard floating widget (`templates/bot-widget.php`).
+   - Cleanly persists the active session context and language configuration securely inside LocalStorage, and executes an instantaneous window redirection to `bot-landing.php`.
+   - On the immersive workspace page (`bot-landing.php`) itself, the redirection logic is bypassed to preserve view state, and LocalStorage values are used to smoothly hydrate workspace state upon mount.
+
+5. **CSP Compliance & Event Binding Refactoring**:
+   - Eliminated inline `onclick` attributes and `javascript:` URLs from theme toggles (`partials/frontend_header.php`), mic trigger, and reset buttons (`bot-landing.php`).
+   - Cleanly bound CSP-compliant event listeners inside nonce-protected script tags on `DOMContentLoaded` to pass strict Content Security Policy directives.
+
+6. **Playwright E2E Test Suite Addition**:
+   - Built a comprehensive Playwright suite (`tests/voice-interactivity.spec.js`) containing 4 exhaustive tests simulating continuous listening, multilingual translation parsing, option selection keywords, and redirection/hydration, completely mocked for headless CI environments.
+
+---
+
 This blueprint serves as the definitive reference manual for the GlobalWays marketplace, guaranteeing maintainable development patterns, strong security boundaries, and high-performance operation.

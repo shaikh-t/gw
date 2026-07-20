@@ -1,64 +1,73 @@
 {
-  "site_settings": {
-    "ai_bot_global_status": "enabled"
-  },
-  "ads": [
-    {
-      "id": 99,
-      "is_active": 1,
-      "destination_url": "http://127.0.0.1:8000/index.php",
-      "ad_source_type": "direct_sponsor",
-      "ad_billing_model": "cpc",
-      "click_cost": 2,
-      "max_budget": 100,
-      "current_spend": 10
-    }
-  ],
-  "cases": [
-    {
-      "uuid": "test-case-uuid",
-      "customer_user_id": 1,
-      "provider_id": 1,
-      "service_id": 1,
-      "status": "Quoted",
-      "service_price": 150,
-      "service_currency": "AED",
-      "customer_name": "John Doe",
-      "service_title": "Golden Visa Assistance",
-      "provider_name": "Apex Legal"
-    }
-  ],
-  "providers": [
-    {
-      "id": 1,
-      "uuid": "test-case-uuid",
-      "name": "Apex Legal",
-      "team_size": 3,
-      "deduction_type": "percentage",
-      "deduction_value": 10
-    }
-  ],
-  "provider_team_members": [],
-  "local_knowledge_base": [
-    {
-      "text_content": "This is the authoritative golden visa guide details.",
-      "file_name": "golden_visa_regulations.pdf",
-      "page_number": 4
-    }
-  ],
-  "bot_ad_fraud_logs": [],
-  "bot_failed_questions": [],
-  "payment_transactions": [],
-  "customer_payments": [],
-  "customer_applications": [],
-  "login_attempts": [],
-  "registration_attempts": [],
-  "users": [
-    {
-      "id": 1,
-      "uuid": "test-user-uuid",
-      "name": "John Doe",
-      "email": "john.doe@example.com"
-    }
-  ]
+    "site_settings": {
+        "ai_bot_global_status": "enabled"
+    },
+    "ads": [
+        {
+            "id": 99,
+            "is_active": 1,
+            "destination_url": "http:\/\/127.0.0.1:8000\/index.php",
+            "ad_source_type": "direct_sponsor",
+            "ad_billing_model": "cpc",
+            "click_cost": 2,
+            "max_budget": 100,
+            "current_spend": 10
+        }
+    ],
+    "cases": [
+        {
+            "uuid": "test-case-uuid",
+            "customer_user_id": 1,
+            "provider_id": 1,
+            "service_id": 1,
+            "status": "Quoted",
+            "service_price": 150,
+            "service_currency": "AED",
+            "customer_name": "John Doe",
+            "service_title": "Golden Visa Assistance",
+            "provider_name": "Apex Legal"
+        }
+    ],
+    "providers": [
+        {
+            "id": 1,
+            "uuid": "test-case-uuid",
+            "name": "Apex Legal",
+            "team_size": 3,
+            "deduction_type": "percentage",
+            "deduction_value": 10
+        }
+    ],
+    "provider_team_members": [],
+    "local_knowledge_base": [
+        {
+            "text_content": "This is the authoritative golden visa guide details.",
+            "file_name": "golden_visa_regulations.pdf",
+            "page_number": 4
+        }
+    ],
+    "bot_ad_fraud_logs": [],
+    "bot_failed_questions": [
+        {
+            "session_id": null,
+            "user_id": null,
+            "language_iso": "en",
+            "unanswered_question": "hello",
+            "page_context_url": "bot-landing.php",
+            "created_at": "2026-07-20 17:10:05"
+        }
+    ],
+    "payment_transactions": [],
+    "customer_payments": [],
+    "customer_applications": [],
+    "login_attempts": [],
+    "registration_attempts": [],
+    "users": [
+        {
+            "id": 1,
+            "uuid": "test-user-uuid",
+            "name": "John Doe",
+            "email": "john.doe@example.com"
+        }
+    ]
 }
