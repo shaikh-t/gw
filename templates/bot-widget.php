@@ -719,31 +719,31 @@ function handleClientAction(action) {
     .catch(err => console.error('Dynamic hydration failed:', err));
   }
 }
-  // Ensure the function exists in scope
-    // function toggleBotChat() {
-    //     // Your existing chat toggle logic stays here
-    //     console.log("Chat toggled safely!");
-    // }
+  (function() {
+      const targetElement = document.getElementById("botBadgeTrigger");
+      if (targetElement) {
+          targetElement.onclick = toggleBotChat;
+      }
+  })();
 
-    // Bind the listener dynamically once the DOM loads
-    document.addEventListener("DOMContentLoaded", function() {
-        const botButton = document.getElementById("botBadgeTrigger");
-        const botCloseButton = document.getElementById("botChatClose");
-        if (botButton) {
-            botButton.addEventListener("click", toggleBotChat);
-        }
-        if (botCloseButton) {
-            botButton.addEventListener("click", toggleBotChat);
-        }
-    });
-     (function() {
-        const botResetButton = document.getElementById("botChatReset");
-        if (botResetButton) {
-            botResetButton.onclick = resetBot;
-        }
-const botMicTrigger = document.getElementById("botMicTrigger");
-        if (botMicTrigger) {
-            botMicTrigger.onclick = toggleSpeechInput;
-        }
-    })();
+  (function() {
+      const targetElement = document.getElementById("botChatClose");
+      if (targetElement) {
+          targetElement.onclick = toggleBotChat;
+      }
+  })();
+
+  (function() {
+      const targetElement = document.getElementById("botChatReset");
+      if (targetElement) {
+          targetElement.onclick = resetBot;
+      }
+  })();
+
+  (function() {
+      const targetElement = document.getElementById("botMicTrigger");
+      if (targetElement) {
+          targetElement.onclick = toggleSpeechInput;
+      }
+  })();
 </script>

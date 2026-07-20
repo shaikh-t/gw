@@ -475,15 +475,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load context stream from LocalStorage to bypass sequential API lookups on refresh
   loadChatStreamFromLocalStorage();
 
-  // Bind the mic and reset buttons cleanly to bypass CSP inline block
-  const wsMicBtn = document.getElementById('wsMicTrigger');
-  if (wsMicBtn) {
-    wsMicBtn.addEventListener('click', toggleSpeechInput);
-  }
-  const wsResetBtn = document.getElementById('wsResetTrigger');
-  if (wsResetBtn) {
-    wsResetBtn.addEventListener('click', resetWorkspace);
-  }
+  // Bind the mic and reset buttons cleanly using the exact architectural syntax pattern
+  (function() {
+      const targetElement = document.getElementById("wsMicTrigger");
+      if (targetElement) {
+          targetElement.onclick = toggleSpeechInput;
+      }
+  })();
+
+  (function() {
+      const targetElement = document.getElementById("wsResetTrigger");
+      if (targetElement) {
+          targetElement.onclick = resetWorkspace;
+      }
+  })();
 
   // 2. Immediate Panel Pre-Hydration: Check if user arrived from a specific page and pre-hydrate
   if (window.botPageContext && window.botPageContext.page_name) {
