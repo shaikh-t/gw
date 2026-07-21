@@ -1,8 +1,15 @@
 <?php
 // admin/settings/voice_analytics.php
 require_once __DIR__ . '/../../lib/middleware.php';
-require_permission_or_die('manage_system_analytics');
-require_permission_or_die('view_voice_telemetry');
+
+// Strict permission check dropping execution stream with 403 Forbidden payload immediately
+if (!can('manage_system_analytics') || !can('view_voice_telemetry')) {
+    http_response_code(403);
+    header('HTTP/1.1 403 Forbidden');
+    echo "<h1>403 Forbidden</h1><p>Access Denied. Insufficient Permissions.</p>";
+    exit;
+}
+
 require_once __DIR__ . '/../../lib/db_mysqli.php';
 
 $success_message = '';
