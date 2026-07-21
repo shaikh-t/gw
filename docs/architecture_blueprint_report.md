@@ -619,4 +619,35 @@ To deliver a premium, seamless voice workspace experience, the following system 
 
 ---
 
+### Premium ElevenLabs TTS Pipeline, Analytics Telemetry, and Consolidated SQL Database Schema
+
+To deliver a premium high-fidelity voice experience, the following new integrations and features were introduced:
+
+1. **Global Google Analytics Integration**:
+   - Google Analytics tag script is dynamically injected into `<head>` inside `partials/frontend_header.php`.
+   - Settings are read live with zero caching directly from the `site_settings` database table (`google_analytics_status` and `google_analytics_measurement_id`).
+   - Standard inline bootstrap scripts are excluded, and the tag carries the dynamic `$cspNonce` token to strictly comply with the application's Content Security Policy.
+   - CSP whitelists in `.htaccess` and `partials/frontend_header.php` are updated to allow connection and script execution from `https://googletagmanager.com`, `https://google-analytics.com`, and `https://google.com`.
+
+2. **ElevenLabs Premium TTS Engine & Fallback Pipeline**:
+   - `api/tts-processor.php` handles communication with the ElevenLabs API, streams back high-fidelity `.mp3` audio data buffer, and logs usage into the new `voice_telemetry_logs` table.
+   - The ElevenLabs API call is wrapped in a try/catch block. If character limits are reached, the API is turned off, or an error is caught, it returns a fallback status, allowing the browser to gracefully fallback instantly to browser-native `speechSynthesis` so audio feedback is uninterrupted.
+   - Continuous audio feedback loops are avoided by synchronizing the TTS pipeline directly with the speech recognition pause/resume loop.
+
+3. **Unified Admin Settings & Telemetry Dashboard**:
+   - Renders a clean interface at `admin/settings/voice_analytics.php` protected under `manage_system_analytics` and `view_voice_telemetry` permissions.
+   - Provides administrative controls for toggling Google Analytics and ElevenLabs Premium Engine, key masking, and stability/clarity slider ranges.
+   - Embeds interactive, lightweight Chart.js graphs mapping:
+     - ElevenLabs vs. Native Fallback usage distribution.
+     - Character consumption and error telemetry trends over time.
+     - Real-time server load management spikes during TTS processing.
+   - Follows CSP programmatic event binding, avoiding any inline onclick, onchange, or onsubmit strings.
+
+4. **Consolidated SQL Database Schema (`gpa_gw2.sql`)**:
+   - Centralized all physical table structures and seed inputs from `migrations/` into a single unified `gpa_gw2.sql` file.
+   - Restructured all creations in parent-to-child logical foreign-key order.
+   - Added the new `voice_telemetry_logs` table and seeded the two new RBAC permission tokens (`manage_system_analytics` and `view_voice_telemetry`) mapped to Role ID 1 and 4 ('admin' and 'Super Admin').
+
+---
+
 This blueprint serves as the definitive reference manual for the GlobalWays marketplace, guaranteeing maintainable development patterns, strong security boundaries, and high-performance operation.

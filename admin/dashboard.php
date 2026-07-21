@@ -110,6 +110,20 @@ include __DIR__ . '/../partials/sidebar.php';
         </div>
       </div>
     </div>
+
+    <div class="col-md-3 mt-md-0 mt-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Voice & Analytics</h5>
+          <p class="card-text">Telemetry and premium engine controls.</p>
+          <?php if (can('view_voice_telemetry')): ?>
+            <a href="<?php echo $domain;?>/admin/settings/voice_analytics.php" class="btn btn-primary">Go</a>
+          <?php else: ?>
+            <button class="btn btn-secondary" disabled>Restricted</button>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

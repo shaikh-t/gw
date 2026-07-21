@@ -139,6 +139,9 @@ if (can('messages.manage')) {
       <?php nav_item($domain . '/admin/settings/bot_ads.php', 'Monetization Ads', '<i class="bi bi-megaphone"></i>', $current === $domain.'/admin/settings/bot_ads.php' ? 'active' : ''); ?>
       <?php nav_item($domain . '/admin/settings/ai_status.php', 'AI Global Kill-Switch', '<i class="bi bi-robot"></i>', $current === $domain.'/admin/settings/ai_status.php' ? 'active' : ''); ?>
     <?php endif; ?>
+    <?php if (can('view_voice_telemetry')): ?>
+      <?php nav_item($domain . '/admin/settings/voice_analytics.php', 'Voice & Analytics', '<i class="bi bi-soundwave"></i>', $current === $domain.'/admin/settings/voice_analytics.php' ? 'active' : ''); ?>
+    <?php endif; ?>
   </ul>
 
   <div class="sidebar-footer mt-auto p-3 border-top">

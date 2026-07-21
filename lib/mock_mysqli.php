@@ -84,6 +84,36 @@ class MockDbHelper {
                 "users" => []
             ];
             @file_put_contents($path, json_encode($default_db, JSON_PRETTY_PRINT));
+        } else {
+            $db = json_decode(@file_get_contents($path), true) ?: [];
+            $modified = false;
+            if (!isset($db['site_settings'])) {
+                $db['site_settings'] = [];
+                $modified = true;
+            }
+            $defaults = [
+                "ai_bot_global_status" => "enabled",
+                "google_analytics_status" => "OFF",
+                "google_analytics_measurement_id" => "UA-XXXXX-Y",
+                "elevenlabs_status" => "OFF",
+                "elevenlabs_api_key" => "",
+                "elevenlabs_voice_id" => "21m00Tcm4TlvDq8ikWAM",
+                "elevenlabs_stability" => "0.75",
+                "elevenlabs_clarity" => "0.75"
+            ];
+            foreach ($defaults as $k => $v) {
+                if (!isset($db['site_settings'][$k])) {
+                    $db['site_settings'][$k] = $v;
+                    $modified = true;
+                }
+            }
+            if (!isset($db['voice_telemetry_logs'])) {
+                $db['voice_telemetry_logs'] = [];
+                $modified = true;
+            }
+            if ($modified) {
+                @file_put_contents($path, json_encode($db, JSON_PRETTY_PRINT));
+            }
         }
     }
 
@@ -116,6 +146,13 @@ class MockMySQLi {
         }
 
         $db = MockDbHelper::read();
+        if (stripos($sql, 'site_settings') !== false) {
+            $rows = [];
+            foreach ($db['site_settings'] as $k => $v) {
+                $rows[] = ['key' => $k, 'value' => $v];
+            }
+            return new MockMySQLiResult($rows);
+        }
         if (stripos($sql, 'FROM provider_team_members') !== false || stripos($sql, 'FROM `provider_team_members`') !== false) {
             $provider_team = $db['provider_team_members'] ?? [];
             return new MockMySQLiResult($provider_team);
@@ -241,6 +278,7 @@ class MockMySQLiStmt {
     public function execute() {
         $db = MockDbHelper::read();
         $sql = trim(preg_replace('/\s+/', ' ', $this->sql));
+        $sql = str_replace('`', '', $sql);
         $this->currentRowIndex = 0;
 
         if (stripos($sql, 'SELECT text_content, file_name, page_number FROM local_knowledge_base') !== false) {
@@ -304,10 +342,39 @@ class MockMySQLiStmt {
             $db['login_attempts'] = $filtered;
             MockDbHelper::write($db);
         }
-        elseif (stripos($sql, 'SELECT `value` FROM `site_settings` WHERE `key` =') !== false || stripos($sql, 'SELECT value FROM site_settings') !== false) {
+        elseif (stripos($sql, 'SELECT key, value FROM site_settings') !== false) {
+            $rows = [];
+            foreach ($db['site_settings'] as $k => $v) {
+                $rows[] = ['key' => $k, 'value' => $v];
+            }
+            $this->result_rows = $rows;
+        }
+        elseif (stripos($sql, 'SELECT value FROM site_settings WHERE key =') !== false || stripos($sql, 'SELECT value FROM site_settings') !== false) {
             $key = $this->params[0] ?? 'ai_bot_global_status';
             $val = $db['site_settings'][$key] ?? 'enabled';
             $this->result_rows = [['value' => $val]];
+        }
+        elseif (stripos($sql, 'UPDATE site_settings SET value = ? WHERE key = ?') !== false) {
+            $val = $this->params[0] ?? '';
+            $key = $this->params[1] ?? '';
+            $db['site_settings'][$key] = $val;
+            MockDbHelper::write($db);
+        }
+        elseif (stripos($sql, 'INSERT INTO voice_telemetry_logs') !== false) {
+            $db['voice_telemetry_logs'][] = [
+                'id' => count($db['voice_telemetry_logs'] ?? []) + 1,
+                'engine' => $this->params[0] ?? 'native',
+                'characters_used' => (int)($this->params[1] ?? 0),
+                'is_error' => (int)($this->params[2] ?? 0),
+                'error_message' => $this->params[3] ?? '',
+                'server_load' => (float)($this->params[4] ?? 0.0),
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = count($db['voice_telemetry_logs']);
+        }
+        elseif (stripos($sql, 'SELECT') !== false && stripos($sql, 'voice_telemetry_logs') !== false) {
+            $this->result_rows = $db['voice_telemetry_logs'] ?? [];
         }
         elseif (stripos($sql, 'INSERT INTO bot_failed_questions') !== false) {
             $db['bot_failed_questions'][] = [

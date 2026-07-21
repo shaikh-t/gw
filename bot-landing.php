@@ -412,6 +412,7 @@ let botSessionToken = localStorage.getItem('globalways_bot_session') || '';
 let currentLang = localStorage.getItem('globalways_bot_language') || 'en';
 let isListening = false;
 let recognition = null;
+let activeSpeaker = null;
 let pausedForSpeaking = false;
 let activeOptions = [];
 
@@ -804,10 +805,34 @@ function stopSpeechRecognition() {
   } catch(e) {}
 }
 
-function speakOutLoud(text) {
-  if (!('speechSynthesis' in window)) return;
-
+function speakNativeSpeech(text, callback) {
+  if (!('speechSynthesis' in window)) {
+    if (callback) callback();
+    return;
+  }
   window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const targetSpeechLang = langCodeMapping[currentLang] || 'en-US';
+  utterance.lang = targetSpeechLang;
+  const voices = window.speechSynthesis.getVoices();
+  const matchedVoice = voices.find(v => v.lang.includes(targetSpeechLang));
+  if (matchedVoice) {
+    utterance.voice = matchedVoice;
+  }
+  utterance.onend = callback;
+  utterance.onerror = callback;
+  window.speechSynthesis.speak(utterance);
+}
+
+function speakOutLoud(text) {
+  // Cancel previous playbacks
+  if (activeSpeaker) {
+    try { activeSpeaker.pause(); } catch(e) {}
+    activeSpeaker = null;
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
 
   const wasListening = isListening;
   if (isListening) {
@@ -818,28 +843,45 @@ function speakOutLoud(text) {
     document.getElementById('wsStatusText').innerText = 'Assistant is speaking...';
   }
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  const targetSpeechLang = langCodeMapping[currentLang] || 'en-US';
-  utterance.lang = targetSpeechLang;
-
-  const voices = window.speechSynthesis.getVoices();
-  const matchedVoice = voices.find(v => v.lang.includes(targetSpeechLang));
-  if (matchedVoice) {
-    utterance.voice = matchedVoice;
-  }
-
   const resumeRecognition = () => {
     if (wasListening) {
       pausedForSpeaking = false;
       isListening = true;
       startSpeechRecognition();
+    } else {
+      document.getElementById('wsStatusText').innerText = 'Mic is offline';
     }
   };
 
-  utterance.onend = resumeRecognition;
-  utterance.onerror = resumeRecognition;
-
-  window.speechSynthesis.speak(utterance);
+  // Try Premium ElevenLabs TTS Pipeline via local endpoint
+  fetch('api/tts-processor.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text })
+  })
+  .then(async response => {
+    const contentType = response.headers.get('content-type') || '';
+    if (response.ok && contentType.includes('audio/')) {
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      activeSpeaker = new Audio(audioUrl);
+      activeSpeaker.onended = resumeRecognition;
+      activeSpeaker.onerror = () => {
+        speakNativeSpeech(text, resumeRecognition);
+      };
+      activeSpeaker.play().catch(err => {
+        console.warn('Playback block or error, falling back:', err);
+        speakNativeSpeech(text, resumeRecognition);
+      });
+    } else {
+      // JSON response indicating fallback
+      speakNativeSpeech(text, resumeRecognition);
+    }
+  })
+  .catch(err => {
+    console.warn('ElevenLabs API fetch error, falling back:', err);
+    speakNativeSpeech(text, resumeRecognition);
+  });
 }
 
 function resetWorkspace() {
