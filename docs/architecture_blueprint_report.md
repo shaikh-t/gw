@@ -650,4 +650,33 @@ To deliver a premium high-fidelity voice experience, the following new integrati
 
 ---
 
+### Conversational Workflow Engine & Telemetry Integration (State-Machine Architecture)
+
+To support complete administrative control over interactive onboarding funnels, the following advanced capabilities were introduced:
+
+1. **Dynamic State-Machine Database Schema (`bot_workflow_steps`)**:
+   - Structured and centralization of the onboarding steps inside the `bot_workflow_steps` table.
+   - Allows administrators to configure conversational funnels, translations (English, French, Arabic, Urdu/Hindi), sorting configurations, viewport target windows (`left_window`, `right_window`), and client-side execution actions (`redirect_landing`, `hydrate_right_panel`, `apply_filters`, `dispatch_case_meeting`).
+   - Mapped out cleanly inside parent-to-child foreign key restraints.
+
+2. **Chronological Conversation Interactions Log (`bot_interaction_logs`)**:
+   - Tracks the entire lifecycle of guest and logged-in user conversations chronologically.
+   - Captures active session tokens, match types (`workflow_step` or `rag_fallback`), full spoken text transcripts, and AI-synthesis responses.
+   - Provides administrative widgets to visualize funnel fallout counts, filter conversations by user/session, and isolate dropoff nodes.
+
+3. **Secure Auth Redirection & Automated Case Creation Layer**:
+   - Binds target state contexts securely in LocalStorage when unauthenticated guests request high-value actions (e.g., direct vendor consultations).
+   - Once the user completes registration/login, a specialized JS listener captures the active token on reload, bypasses keyword matching via clean empty-message controller routing, and automatically dispatches automated vendor meeting dispatches and background case generation routines.
+   - Leverages a real-time bootstrap toast overlay to display instant success notifications of successful dispatch loops.
+
+4. **Granular RBAC Guards and Programmatic Nonce Compliance**:
+   - Registered two brand new RBAC system permissions named `'manage_bot_steps'` and `'view_bot_interaction_logs'` mapped to Role ID 1 and 4 ('admin' and 'Super Admin').
+   - Guarded administrative settings and telemetry analytics directories with strict HTTP 403 Forbidden terminations.
+   - Programmed all client-side triggers, modal setups, filter options, and edit forms using Content Security Policy compliant nonce-protected event handlers, avoiding any inline onclick/onchange strings.
+
+5. **Automated Playwright Integration Coverage**:
+   - Developed `tests/bot-workflow-telemetry.spec.js` asserting full workflow CRUD mutations, voice-driven panel swaps, guest-to-auth automated consulting dispatch triggers, and RBAC boundary blocks.
+
+---
+
 This blueprint serves as the definitive reference manual for the GlobalWays marketplace, guaranteeing maintainable development patterns, strong security boundaries, and high-performance operation.

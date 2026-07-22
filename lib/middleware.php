@@ -13,21 +13,23 @@ function require_permission_or_die(string $perm) {
         exit;
     }
     if (!can($perm)) {
+        http_response_code(403);
         // AJAX request -> JSON 403
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            http_response_code(403);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'forbidden']);
             exit;
         }
-        // normal request -> redirect or show forbidden page
-        http_response_code(403);
+        // If logged in but unauthorized, terminate with 403 directly to avoid redirect loops
+        if (current_user()) {
+            die('Forbidden: You do not have permission to access this resource.');
+        }
         // If it's a provider, redirect to their dashboard instead of a 404/403 page if they try to access admin
         if (is_role('provider')) {
             header('Location: '.$domain.'/vendor/index.php');
             exit;
         }
-        // Option A: redirect to a no-access page or login
+        // Option A: redirect to login
         header('Location: '.$domain.'/login.php');
         exit;
     }

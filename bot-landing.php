@@ -599,13 +599,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('wsStatusText').innerText = 'Speech-to-text not supported';
   }
 
-  // Sync / Resume exact conversational nodes
-  if (window.botPageContext && window.botPageContext.page_name) {
-    sendQueryToController('', null, '', true);
-  } else if (botSessionToken) {
-    sendQueryToController('', null, '');
+  // Auth Synchronization Listener
+  const pendingState = localStorage.getItem('pending_active_state_token');
+  const pendingContext = localStorage.getItem('pending_vendor_context');
+
+  if (pendingState && pendingContext && <?php echo isset($_SESSION['user']['id']) ? 'true' : 'false'; ?>) {
+      localStorage.removeItem('pending_active_state_token');
+      localStorage.removeItem('pending_vendor_context');
+      sendQueryToController('', null, '', false, pendingState);
   } else {
-    sendQueryToController('', 1, '');
+      // Sync / Resume exact conversational nodes
+      if (window.botPageContext && window.botPageContext.page_name) {
+        sendQueryToController('', null, '', true);
+      } else if (botSessionToken) {
+        sendQueryToController('', null, '');
+      } else {
+        sendQueryToController('', 1, '');
+      }
   }
 });
 
@@ -674,7 +684,7 @@ function stopAudioVisualization() {
   });
 }
 
-function sendQueryToController(messageText, nodeId = null, userInputText = '', forceBadgeContext = false) {
+function sendQueryToController(messageText, nodeId = null, userInputText = '', forceBadgeContext = false, stepKey = null) {
   let pageName = 'bot-landing.php';
   let payload = {
     session_token: botSessionToken,
@@ -686,6 +696,10 @@ function sendQueryToController(messageText, nodeId = null, userInputText = '', f
       url: window.location.href
     }
   };
+
+  if (stepKey) {
+    payload.step_key = stepKey;
+  }
 
   if (forceBadgeContext && window.botPageContext) {
     payload.badge_click = true;
@@ -1000,6 +1014,66 @@ function findMatchingOption(transcript) {
 }
 
 function handleClientAction(action) {
+  if (!action) return;
+
+  if (action.type === 'redirect_auth' && action.url) {
+      localStorage.setItem('pending_active_state_token', action.state_token || 'category_selection');
+      localStorage.setItem('pending_vendor_context', JSON.stringify(window.botPageContext || {}));
+      window.location.href = action.url;
+      return;
+  }
+
+  if (action.type === 'toast_success') {
+      let toastContainer = document.getElementById('toastNotificationOverlay');
+      if (!toastContainer) {
+          toastContainer = document.createElement('div');
+          toastContainer.id = 'toastNotificationOverlay';
+          toastContainer.className = 'position-fixed top-0 end-0 p-3';
+          toastContainer.style.zIndex = '9999';
+          document.body.appendChild(toastContainer);
+      }
+      toastContainer.innerHTML = `
+          <div class="toast show align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body">
+                <i class="bi bi-check-circle-fill me-2"></i> ${action.message || 'Action completed successfully!'}
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div>
+      `;
+      setTimeout(() => {
+          if (toastContainer) {
+              toastContainer.remove();
+          }
+      }, 5000);
+      return;
+  }
+
+  if (action.type === 'apply_filters' && action.url) {
+       fetch(action.url)
+       .then(r => r.text())
+       .then(html => {
+         const parser = new DOMParser();
+         const doc = parser.parseFromString(html, 'text/html');
+         const newMain = doc.querySelector('#main-content-layout') || doc.body;
+         if (newMain) {
+           document.getElementById('bot-workspace-view').innerHTML = newMain.innerHTML;
+           const filterVal = (action.category_name || '').toLowerCase();
+           const cards = document.getElementById('bot-workspace-view').querySelectorAll('.card, .gw-card, .service-card');
+           cards.forEach(card => {
+               if (filterVal && !card.innerText.toLowerCase().includes(filterVal)) {
+                   card.style.opacity = '0.4';
+               } else {
+                   card.style.border = '2px solid var(--bot-primary)';
+               }
+           });
+         }
+       })
+       .catch(err => console.error('Filter hydration failed:', err));
+       return;
+  }
+
   if (action.type === 'page_swap' && action.url) {
     // 3. Restrict handleClientAction page swapping scripts to local routes to prevent redirect hijacking
     if (!isLocalRoute(action.url)) {

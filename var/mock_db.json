@@ -1,8 +1,8 @@
 {
     "site_settings": {
         "ai_bot_global_status": "enabled",
-        "google_analytics_status": "ON",
-        "google_analytics_measurement_id": "G-PLAYWRIGHT-999",
+        "google_analytics_status": "OFF",
+        "google_analytics_measurement_id": "UA-XXXXX-Y",
         "elevenlabs_status": "OFF",
         "elevenlabs_api_key": "",
         "elevenlabs_voice_id": "21m00Tcm4TlvDq8ikWAM",
@@ -54,16 +54,7 @@
         }
     ],
     "bot_ad_fraud_logs": [],
-    "bot_failed_questions": [
-        {
-            "session_id": null,
-            "user_id": null,
-            "language_iso": "en",
-            "unanswered_question": "hello",
-            "page_context_url": "bot-landing.php",
-            "created_at": "2026-07-20 23:47:00"
-        }
-    ],
+    "bot_failed_questions": [],
     "payment_transactions": [],
     "customer_payments": [],
     "customer_applications": [],
@@ -77,5 +68,44 @@
             "email": "john.doe@example.com"
         }
     ],
+    "bot_workflow_steps": [
+        {
+            "id": 1,
+            "step_key": "welcome_funnel",
+            "step_order": 10,
+            "primary_question_en": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "primary_question_fr": "Bienvenue sur GlobalWays ! Veuillez s\u00e9lectionner votre cat\u00e9gorie de service ci-dessous pour personnaliser votre parcours.",
+            "primary_question_ar": "\u0645\u0631\u062d\u0628\u0627\u064b \u0628\u0643 \u0641\u064a \u063a\u0644\u0648\u0628\u0627\u0644 \u0648\u0627\u064a\u0632! \u064a\u0631\u062c\u0649 \u062a\u062d\u062f\u064a\u062f \u0641\u0626\u0629 \u0627\u0644\u062e\u062f\u0645\u0629 \u0627\u0644\u062e\u0627\u0635\u0629 \u0628\u0643 \u0623\u062f\u0646\u0627\u0647 \u0644\u062a\u062e\u0635\u064a\u0635 \u0631\u062d\u0644\u062a\u0643.",
+            "primary_question_ur": "\u06af\u0644\u0648\u0628\u0644 \u0648\u06cc\u0632 \u0645\u06cc\u06ba \u062e\u0648\u0634 \u0622\u0645\u062f\u06cc\u062f! \u0628\u0631\u0627\u0626\u06d2 \u0645\u06c1\u0631\u0628\u0627\u0646\u06cc \u0627\u067e\u0646\u0627 \u0633\u0641\u0631 \u0630\u0627\u062a\u06cc \u0628\u0646\u0627\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2 \u0646\u06cc\u0686\u06d2 \u0627\u067e\u0646\u06cc \u0633\u0631\u0648\u0633 \u06a9\u06cc\u0679\u06cc\u06af\u0631\u06cc \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "interface_target": "left_window",
+            "execution_action": "none",
+            "parent_step_id": null
+        },
+        {
+            "id": 2,
+            "step_key": "category_selection",
+            "step_order": 20,
+            "primary_question_en": "Excellent! We have updated the right panel layout with customized service options. What would you like to do next?",
+            "primary_question_fr": "Excellent ! Nous avons mis \u00e0 jour la mise en page du panneau de droite avec des options de service personnalis\u00e9es. Que souhaitez-vous faire ensuite ?",
+            "primary_question_ar": "\u0645\u0645\u062a\u0627\u0632! \u0644\u0642\u062f \u0642\u0645\u0646\u0627 \u0628\u062a\u062d\u062f\u064a\u062b \u062a\u062e\u0637\u064a\u0637 \u0627\u0644\u0644\u0648\u062d\u0629 \u0627\u0644\u064a\u0645\u0646\u0649 \u0628\u062e\u064a\u0627\u0631\u0627\u062a \u0627\u0644\u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u062e\u0635\u0635\u0629. \u0645\u0627\u0630\u0627 \u062a\u062d\u0628 \u0623\u0646 \u062a\u0641\u0639\u0644 \u0628\u0639\u062f \u0630\u0644\u0643\u061f",
+            "primary_question_ur": "\u0628\u06c1\u062a \u062e\u0648\u0628! \u06c1\u0645 \u0646\u06d2 \u06a9\u0633\u0679\u0645\u0627\u0626\u0632\u0688 \u0633\u0631\u0648\u0633 \u0622\u067e\u0634\u0646\u0632 \u06a9\u06d2 \u0633\u0627\u062a\u06be \u062f\u0627\u0626\u06cc\u06ba \u067e\u06cc\u0646\u0644 \u06a9\u0627 \u0644\u06d2 \u0622\u0624\u0679 \u0627\u067e \u0688\u06cc\u0679 \u06a9\u0631 \u062f\u06cc\u0627 \u06c1\u06d2\u06d4 \u0627\u0628 \u0622\u067e \u0622\u06af\u06d2 \u06a9\u06cc\u0627 \u06a9\u0631\u0646\u0627 \u0686\u0627\u06c1\u06cc\u06ba \u06af\u06d2\u061f",
+            "interface_target": "right_window",
+            "execution_action": "hydrate_right_panel",
+            "parent_step_id": 1
+        },
+        {
+            "id": 3,
+            "step_key": "business_setup_dispatch",
+            "step_order": 30,
+            "primary_question_en": "We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?",
+            "primary_question_fr": "Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la cr\u00e9ation d'entreprise. Souhaitez-vous continuer ?",
+            "primary_question_ar": "\u064a\u0645\u0643\u0646\u0646\u0627 \u0625\u0631\u0633\u0627\u0644 \u0637\u0644\u0628 \u0627\u062c\u062a\u0645\u0627\u0639 \u062a\u0644\u0642\u0627\u0626\u064a \u0644\u062c\u062f\u0648\u0644\u0629 \u0627\u0633\u062a\u0634\u0627\u0631\u0629 \u0644\u062a\u0623\u0633\u064a\u0633 \u0627\u0644\u0634\u0631\u0643\u0629. \u0647\u0644 \u062a\u0631\u063a\u0628 \u0641\u064a \u0627\u0644\u0645\u062a\u0627\u0628\u0639\u0629\u061f",
+            "primary_question_ur": "\u06c1\u0645 \u0628\u0632\u0646\u0633 \u0633\u06cc\u0679 \u0627\u067e \u0645\u0634\u0627\u0648\u0631\u062a \u06a9\u06d2 \u0644\u06cc\u06d2 \u0627\u06cc\u06a9 \u062e\u0648\u062f\u06a9\u0627\u0631 \u0645\u06cc\u0679\u0646\u06af \u06a9\u06cc \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0628\u06be\u06cc\u062c \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4 \u06a9\u06cc\u0627 \u0622\u067e \u0622\u06af\u06d2 \u0628\u0691\u06be\u0646\u0627 \u0686\u0627\u06c1\u06cc\u06ba \u06af\u06d2\u061f",
+            "interface_target": "right_window",
+            "execution_action": "dispatch_case_meeting",
+            "parent_step_id": 2
+        }
+    ],
+    "bot_interaction_logs": [],
     "voice_telemetry_logs": []
 }

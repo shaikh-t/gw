@@ -1,6 +1,10 @@
 <?php
 // partials/header.php
+global $domain;
 require_once __DIR__ . '/../lib/auth.php';
+if (isset($GLOBALS['domain'])) {
+    $domain = $GLOBALS['domain'];
+}
 if (!isset($cspNonce)) {
     $cspNonce = base64_encode(random_bytes(16));
 }

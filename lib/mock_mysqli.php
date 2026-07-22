@@ -81,12 +81,96 @@ class MockDbHelper {
                 "customer_applications" => [],
                 "login_attempts" => [],
                 "registration_attempts" => [],
-                "users" => []
+                "users" => [],
+                "bot_workflow_steps" => [
+                    [
+                        "id" => 1,
+                        "step_key" => "welcome_funnel",
+                        "step_order" => 10,
+                        "primary_question_en" => "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+                        "primary_question_fr" => "Bienvenue sur GlobalWays ! Veuillez sélectionner votre catégorie de service ci-dessous pour personnaliser votre parcours.",
+                        "primary_question_ar" => "مرحباً بك في غلوبال وايز! يرجى تحديد فئة الخدمة الخاصة بك أدناه لتخصيص رحلتك.",
+                        "primary_question_ur" => "گلوبل ویز میں خوش آمدید! برائے مہربانی اپنا سفر ذاتی بنانے کے لیے نیچے اپنی سروس کیٹیگری منتخب کریں۔",
+                        "interface_target" => "left_window",
+                        "execution_action" => "none",
+                        "parent_step_id" => null
+                    ],
+                    [
+                        "id" => 2,
+                        "step_key" => "category_selection",
+                        "step_order" => 20,
+                        "primary_question_en" => "Excellent! We have updated the right panel layout with customized service options. What would you like to do next?",
+                        "primary_question_fr" => "Excellent ! Nous avons mis à jour la mise en page du panneau de droite avec des options de service personnalisées. Que souhaitez-vous faire ensuite ?",
+                        "primary_question_ar" => "ممتاز! لقد قمنا بتحديث تخطيط اللوحة اليمنى بخيارات الخدمة المخصصة. ماذا تحب أن تفعل بعد ذلك؟",
+                        "primary_question_ur" => "بہت خوب! ہم نے کسٹمائزڈ سروس آپشنز کے ساتھ دائیں پینل کا لے آؤٹ اپ ڈیٹ کر دیا ہے۔ اب آپ آگے کیا کرنا چاہیں گے؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
+                    ],
+                    [
+                        "id" => 3,
+                        "step_key" => "business_setup_dispatch",
+                        "step_order" => 30,
+                        "primary_question_en" => "We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?",
+                        "primary_question_fr" => "Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d'entreprise. Souhaitez-vous continuer ?",
+                        "primary_question_ar" => "يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟",
+                        "primary_question_ur" => "ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "dispatch_case_meeting",
+                        "parent_step_id" => 2
+                    ]
+                ],
+                "bot_interaction_logs" => []
             ];
             @file_put_contents($path, json_encode($default_db, JSON_PRETTY_PRINT));
         } else {
             $db = json_decode(@file_get_contents($path), true) ?: [];
             $modified = false;
+            if (!isset($db['bot_workflow_steps'])) {
+                $db['bot_workflow_steps'] = [
+                    [
+                        "id" => 1,
+                        "step_key" => "welcome_funnel",
+                        "step_order" => 10,
+                        "primary_question_en" => "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+                        "primary_question_fr" => "Bienvenue sur GlobalWays ! Veuillez sélectionner votre catégorie de service ci-dessous pour personnaliser votre parcours.",
+                        "primary_question_ar" => "مرحباً بك في غلوبال وايز! يرجى تحديد فئة الخدمة الخاصة بك أدناه لتخصيص رحلتك.",
+                        "primary_question_ur" => "گلوبل ویز میں خوش آمدید! برائے مہربانی اپنا سفر ذاتی بنانے کے لیے نیچے اپنی سروس کیٹیگری منتخب کریں۔",
+                        "interface_target" => "left_window",
+                        "execution_action" => "none",
+                        "parent_step_id" => null
+                    ],
+                    [
+                        "id" => 2,
+                        "step_key" => "category_selection",
+                        "step_order" => 20,
+                        "primary_question_en" => "Excellent! We have updated the right panel layout with customized service options. What would you like to do next?",
+                        "primary_question_fr" => "Excellent ! Nous avons mis à jour la mise en page du panneau de droite avec des options de service personnalisées. Que souhaitez-vous faire ensuite ?",
+                        "primary_question_ar" => "ممتاز! لقد قمنا بتحديث تخطيط اللوحة اليمنى بخيارات الخدمة المخصصة. ماذا تحب أن تفعل بعد ذلك؟",
+                        "primary_question_ur" => "بہت خوب! ہم نے کسٹمائزڈ سروس آپشنز کے ساتھ دائیں پینل کا لے آؤٹ اپ ڈیٹ کر دیا ہے۔ اب آپ آگے کیا کرنا چاہیں گے؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
+                    ],
+                    [
+                        "id" => 3,
+                        "step_key" => "business_setup_dispatch",
+                        "step_order" => 30,
+                        "primary_question_en" => "We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?",
+                        "primary_question_fr" => "Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d'entreprise. Souhaitez-vous continuer ?",
+                        "primary_question_ar" => "يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟",
+                        "primary_question_ur" => "ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "dispatch_case_meeting",
+                        "parent_step_id" => 2
+                    ]
+                ];
+                $modified = true;
+            }
+            if (!isset($db['bot_interaction_logs'])) {
+                $db['bot_interaction_logs'] = [];
+                $modified = true;
+            }
             if (!isset($db['site_settings'])) {
                 $db['site_settings'] = [];
                 $modified = true;
@@ -146,6 +230,31 @@ class MockMySQLi {
         }
 
         $db = MockDbHelper::read();
+        if (stripos($sql, 'bot_workflow_steps') !== false) {
+            $rows = $db['bot_workflow_steps'] ?? [];
+            usort($rows, function($a, $b) {
+                return ($a['step_order'] ?? 0) <=> ($b['step_order'] ?? 0);
+            });
+            return new MockMySQLiResult($rows);
+        }
+        if (stripos($sql, 'bot_interaction_logs') !== false) {
+            if (stripos($sql, 'COUNT(*)') !== false && stripos($sql, 'GROUP BY') !== false) {
+                $counts = [];
+                foreach ($db['bot_interaction_logs'] ?? [] as $log) {
+                    $token = $log['active_state_token'] ?? '';
+                    if (!isset($counts[$token])) {
+                        $counts[$token] = 0;
+                    }
+                    $counts[$token]++;
+                }
+                $rows = [];
+                foreach ($counts as $tok => $c) {
+                    $rows[] = ['active_state_token' => $tok, 'cnt' => $c];
+                }
+                return new MockMySQLiResult($rows);
+            }
+            return new MockMySQLiResult($db['bot_interaction_logs'] ?? []);
+        }
         if (stripos($sql, 'site_settings') !== false) {
             $rows = [];
             foreach ($db['site_settings'] as $k => $v) {
@@ -159,6 +268,13 @@ class MockMySQLi {
         }
         if (stripos($sql, 'FROM providers') !== false || stripos($sql, 'FROM `providers`') !== false) {
             return new MockMySQLiResult($db['providers']);
+        }
+        if (stripos($sql, 'FROM service_categories') !== false || stripos($sql, 'FROM `service_categories`') !== false) {
+            return new MockMySQLiResult([
+                ['id' => 1, 'uuid' => 'cat-imm-123', 'name' => 'Immigration Services'],
+                ['id' => 2, 'uuid' => 'cat-vis-456', 'name' => 'Visit Visa'],
+                ['id' => 3, 'uuid' => 'cat-bus-789', 'name' => 'Business Setup']
+            ]);
         }
         if (stripos($sql, 'FROM services') !== false || stripos($sql, 'FROM `services`') !== false) {
             return new MockMySQLiResult([
@@ -281,7 +397,108 @@ class MockMySQLiStmt {
         $sql = str_replace('`', '', $sql);
         $this->currentRowIndex = 0;
 
-        if (stripos($sql, 'SELECT text_content, file_name, page_number FROM local_knowledge_base') !== false) {
+        if (stripos($sql, 'INSERT INTO bot_workflow_steps') !== false) {
+            $new_id = 1;
+            foreach (($db['bot_workflow_steps'] ?? []) as $item) {
+                if ($item['id'] >= $new_id) {
+                    $new_id = $item['id'] + 1;
+                }
+            }
+            $db['bot_workflow_steps'][] = [
+                'id' => $new_id,
+                'step_key' => $this->params[0] ?? '',
+                'step_order' => (int)($this->params[1] ?? 0),
+                'primary_question_en' => $this->params[2] ?? '',
+                'primary_question_fr' => $this->params[3] ?? '',
+                'primary_question_ar' => $this->params[4] ?? '',
+                'primary_question_ur' => $this->params[5] ?? '',
+                'interface_target' => $this->params[6] ?? 'left_window',
+                'execution_action' => $this->params[7] ?? 'none',
+                'parent_step_id' => isset($this->params[8]) ? (int)$this->params[8] : null
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+            return true;
+        }
+        elseif (stripos($sql, 'UPDATE bot_workflow_steps') !== false) {
+            $id = (int)($this->params[9] ?? 0);
+            file_put_contents('php://stderr', "MOCK DB UPDATE ID: " . $id . " PARAMS: " . json_encode($this->params) . "\n");
+            if (isset($db['bot_workflow_steps'])) {
+                foreach ($db['bot_workflow_steps'] as &$item) {
+                    if ($item['id'] === $id) {
+                        $item['step_key'] = $this->params[0] ?? '';
+                        $item['step_order'] = (int)($this->params[1] ?? 0);
+                        $item['primary_question_en'] = $this->params[2] ?? '';
+                        $item['primary_question_fr'] = $this->params[3] ?? '';
+                        $item['primary_question_ar'] = $this->params[4] ?? '';
+                        $item['primary_question_ur'] = $this->params[5] ?? '';
+                        $item['interface_target'] = $this->params[6] ?? 'left_window';
+                        $item['execution_action'] = $this->params[7] ?? 'none';
+                        $item['parent_step_id'] = !empty($this->params[8]) ? (int)$this->params[8] : null;
+                    }
+                }
+            }
+            MockDbHelper::write($db);
+            return true;
+        }
+        elseif (stripos($sql, 'DELETE FROM bot_workflow_steps') !== false) {
+            $id = (int)($this->params[0] ?? 0);
+            $filtered = [];
+            if (isset($db['bot_workflow_steps'])) {
+                foreach ($db['bot_workflow_steps'] as $item) {
+                    if ($item['id'] !== $id) {
+                        $filtered[] = $item;
+                    }
+                }
+            }
+            $db['bot_workflow_steps'] = $filtered;
+            MockDbHelper::write($db);
+            return true;
+        }
+        elseif (stripos($sql, 'INSERT INTO bot_interaction_logs') !== false) {
+            $new_id = count($db['bot_interaction_logs'] ?? []) + 1;
+            $db['bot_interaction_logs'][] = [
+                'id' => $new_id,
+                'session_id' => $this->params[0] ?? '',
+                'user_id' => isset($this->params[1]) ? (int)$this->params[1] : null,
+                'spoken_text_transcript' => $this->params[2] ?? '',
+                'bot_response_text' => $this->params[3] ?? '',
+                'match_type' => $this->params[4] ?? 'workflow_step',
+                'active_state_token' => $this->params[5] ?? 'welcome_funnel',
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+            return true;
+        }
+        elseif (stripos($sql, 'FROM bot_interaction_logs') !== false) {
+            $matched = $db['bot_interaction_logs'] ?? [];
+            usort($matched, function($a, $b) {
+                return ($b['id'] ?? 0) <=> ($a['id'] ?? 0);
+            });
+            $this->result_rows = $matched;
+            return true;
+        }
+        elseif (stripos($sql, 'FROM bot_workflow_steps') !== false) {
+            $step_key = null;
+            if (!empty($this->params)) {
+                $step_key = $this->params[0];
+            }
+            $matched = [];
+            foreach (($db['bot_workflow_steps'] ?? []) as $row) {
+                if ($step_key !== null) {
+                    if ($row['step_key'] === $step_key || $row['id'] == $step_key) {
+                        $matched[] = $row;
+                        break;
+                    }
+                } else {
+                    $matched[] = $row;
+                }
+            }
+            $this->result_rows = $matched;
+            return true;
+        }
+        elseif (stripos($sql, 'SELECT text_content, file_name, page_number FROM local_knowledge_base') !== false) {
             $search = $this->params[0] ?? '';
             $matched_rows = [];
             if (!empty($search)) {

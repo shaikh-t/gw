@@ -33,9 +33,11 @@ DROP TABLE IF EXISTS `customer_applications`;
 DROP TABLE IF EXISTS `bot_ad_fraud_logs`;
 DROP TABLE IF EXISTS `bot_ad_clicks`;
 DROP TABLE IF EXISTS `bot_ads`;
+DROP TABLE IF EXISTS `bot_interaction_logs`;
 DROP TABLE IF EXISTS `bot_failed_questions`;
 DROP TABLE IF EXISTS `bot_chat_logs`;
 DROP TABLE IF EXISTS `bot_sessions`;
+DROP TABLE IF EXISTS `bot_workflow_steps`;
 DROP TABLE IF EXISTS `notifications`;
 DROP TABLE IF EXISTS `payment_transactions`;
 DROP TABLE IF EXISTS `cases`;
@@ -803,6 +805,43 @@ CREATE TABLE `bot_chat_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Table structure for table `bot_workflow_steps`
+--
+
+CREATE TABLE `bot_workflow_steps` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `step_key` varchar(150) NOT NULL UNIQUE,
+  `step_order` int(11) NOT NULL DEFAULT 0,
+  `primary_question_en` text NOT NULL,
+  `primary_question_fr` text NOT NULL,
+  `primary_question_ar` text NOT NULL,
+  `primary_question_ur` text NOT NULL,
+  `interface_target` enum('left_window','right_window') NOT NULL DEFAULT 'left_window',
+  `execution_action` enum('none','redirect_landing','hydrate_right_panel','apply_filters','dispatch_case_meeting') NOT NULL DEFAULT 'none',
+  `parent_step_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_bot_workflow_steps_parent` FOREIGN KEY (`parent_step_id`) REFERENCES `bot_workflow_steps` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `bot_interaction_logs`
+--
+
+CREATE TABLE `bot_interaction_logs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(64) NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `spoken_text_transcript` text DEFAULT NULL,
+  `bot_response_text` text NOT NULL,
+  `match_type` enum('workflow_step','rag_fallback') NOT NULL DEFAULT 'workflow_step',
+  `active_state_token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_session_id` (`session_id`),
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `bot_failed_questions`
 --
 
@@ -1016,7 +1055,9 @@ INSERT INTO `permissions` VALUES
 (23,'ad7e06e3-ab78-4061-9c3f-c906f21c22cb','can_edit_knowledge_base','Edit Knowledge Base','Allows access to our local PDF/text CRUD manager at admin/crm/knowledge-base.php','2026-07-17 12:00:00');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */,
 (24,'f5c9ef31-86f5-41d4-9315-cd18ce733f36','manage_system_analytics','Voice & Analytics Control','Allows managing site analytics and premium voice settings',current_timestamp()),
-(25,'72ac51ad-bb63-4d01-aeab-d5d1b64481df','view_voice_telemetry','Voice & Analytics Telemetry','Allows viewing voice assistant analytics and telemetry',current_timestamp());
+(25,'72ac51ad-bb63-4d01-aeab-d5d1b64481df','view_voice_telemetry','Voice & Analytics Telemetry','Allows viewing voice assistant analytics and telemetry',current_timestamp()),
+(26,'3c10b24d-de91-4993-847c-7206b12a831e','manage_bot_steps','Manage Bot Steps','List, create, edit, delete and reorder conversational workflow steps',current_timestamp()),
+(27,'01217e99-994c-47bc-ad7e-90e0b3c8eb72','view_bot_interaction_logs','View Bot Interaction Logs','List, filter and view chronological multilingual conversational interaction logs',current_timestamp());
 UNLOCK TABLES;
 
 --
@@ -1200,6 +1241,17 @@ INSERT INTO `bot_nodes` VALUES
 (22, 12, 'independent_browse', 'ar', 'مفهوم. سأظل متاحاً بصمت في الزاوية السفلية من شاشتك. بينما تتصفح خدماتنا، سأتابع تقدمك تلقائياً حتى نتمكن من المتابعة من حيث توقفت تماماً كلما احتجت إلى توجيه.', 'مفهوم. سأظل متاحاً بصمت في الزاوية السفلية من شاشتك. بينما تتصفح خدماتنا، سأتابع تقدمك تلقائياً حتى نتمكن من المتابعة من حيث توقفت تماماً كلما احتجت إلى توجيه.', 'independent_browse'),
 (23, 13, 'independent_browse', 'ur', 'سمجھ گیا۔ میں آپ کی اسکرین کے نچلے کونے میں خاموشی سے دستیاب رہوں گا۔ جیسے ہی آپ ہماری خدمات کو براؤز کریں گے، میں خود بخود آپ کی پیشرفت پر نظر رکھوں گا تاکہ جب بھی آپ کو رہنمائی کی ضرورت ہو، ہم وہیں سے بغیر کسی رکاوٹ کے شروع کر سکیں جہاں سے آپ نے چھوڑا تھا۔', 'سمجھ گیا۔ میں آپ کی اسکرین کے نچلے کونے میں خاموشی سے دستیاب رہوں گا۔ جیسے ہی آپ ہماری خدمات کو براؤز کریں گے، میں خود بخود آپ کی پیشرفت پر نظر رکھوں گا تاکہ جب بھی آپ کو رہنمائی کی ضرورت ہو، ہم وہیں سے بغیر کسی رکاوٹ کے شروع کر سکیں جہاں سے آپ نے چھوڑا تھا۔', 'independent_browse'),
 (6, NULL, 'category_handler', 'en', 'Got it! You''ve selected a service category. We are preparing the registration and booking context for you.', 'Got it! You''ve selected a service category. We are preparing the registration and booking context for you.', 'handle_category');
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bot_workflow_steps`
+--
+
+LOCK TABLES `bot_workflow_steps` WRITE;
+INSERT INTO `bot_workflow_steps` (`id`, `step_key`, `step_order`, `primary_question_en`, `primary_question_fr`, `primary_question_ar`, `primary_question_ur`, `interface_target`, `execution_action`, `parent_step_id`) VALUES
+(1, 'welcome_funnel', 10, 'Welcome to GlobalWays! Please select your service category below to personalize your journey.', 'Bienvenue sur GlobalWays ! Veuillez sélectionner votre catégorie de service ci-dessous pour personnaliser votre parcours.', 'مرحباً بك في غلوبال وايز! يرجى تحديد فئة الخدمة الخاصة بك أدناه لتخصيص رحلتك.', 'گلوبل ویز میں خوش آمدید! برائے مہربانی اپنا سفر ذاتی بنانے کے لیے نیچے اپنی سروس کیٹیگری منتخب کریں۔', 'left_window', 'none', NULL),
+(2, 'category_selection', 20, 'Excellent! We have updated the right panel layout with customized service options. What would you like to do next?', 'Excellent ! Nous avons mis à jour la mise en page du panneau de droite avec des options de service personnalisées. Que souhaitez-vous faire ensuite ?', 'ممتاز! لقد قمنا بتحديث تخطيط اللوحة اليمنى بخيارات الخدمة المخصصة. ماذا تحب أن تفعل بعد ذلك؟', 'بہت خوب! ہم نے کسٹمائزڈ سروس آپشنز کے ساتھ دائیں پینل کا لے آؤٹ اپ ڈیٹ کر دیا ہے۔ اب آپ آگے کیا کرنا چاہیں گے؟', 'right_window', 'hydrate_right_panel', 1),
+(3, 'business_setup_dispatch', 30, 'We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?', 'Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d\'entreprise. Souhaitez-vous continuer ?', 'يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟', 'ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟', 'right_window', 'dispatch_case_meeting', 2);
 UNLOCK TABLES;
 
 --
@@ -1422,7 +1474,11 @@ INSERT INTO `role_permissions` VALUES
 (1,24,current_timestamp()),
 (1,25,current_timestamp()),
 (4,24,current_timestamp()),
-(4,25,current_timestamp());
+(4,25,current_timestamp()),
+(1,26,current_timestamp()),
+(1,27,current_timestamp()),
+(4,26,current_timestamp()),
+(4,27,current_timestamp());
 UNLOCK TABLES;
 
 --
