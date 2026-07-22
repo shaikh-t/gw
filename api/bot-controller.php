@@ -577,12 +577,332 @@ if (!$is_logged_in && ($is_trigger_word || !empty($_SESSION['registration_state'
     }
 }
 
+// Define Helper Functions for State Machine
+if (!function_exists('get_workflow_options')) {
+    function get_workflow_options($step, $lang) {
+        global $mysqli;
+        $options = [];
+
+        if ($step['step_key'] === 'welcome_funnel') {
+            $res = $mysqli->query("SELECT * FROM service_categories ORDER BY name ASC");
+            if ($res) {
+                while ($row = $res->fetch_assoc()) {
+                    $options[] = [
+                        'step_key' => 'category_selection',
+                        'label' => $row['name'],
+                        'payload_value' => $row['name']
+                    ];
+                }
+                $res->free();
+            }
+        }
+        elseif ($step['step_key'] === 'category_selection') {
+            $options[] = [
+                'step_key' => 'business_setup_dispatch',
+                'label' => 'Schedule Consultation Meeting'
+            ];
+            $options[] = [
+                'step_key' => 'welcome_funnel',
+                'label' => 'Start Fresh'
+            ];
+        }
+
+        $stmt = $mysqli->prepare("SELECT * FROM bot_workflow_steps WHERE parent_step_id = ? ORDER BY step_order ASC");
+        if ($stmt) {
+            $stmt->bind_param('i', $step['id']);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            while ($row = $res->fetch_assoc()) {
+                $label_col = 'primary_question_' . $lang;
+                if (empty($row[$label_col])) {
+                    $label_col = 'primary_question_en';
+                }
+                $options[] = [
+                    'step_key' => $row['step_key'],
+                    'label' => substr($row[$label_col], 0, 40)
+                ];
+            }
+            $stmt->close();
+        }
+
+        return $options;
+    }
+}
+
+if (!function_exists('get_workflow_options_by_key')) {
+    function get_workflow_options_by_key($step_key, $lang) {
+        global $mysqli;
+        $stmt = $mysqli->prepare("SELECT * FROM bot_workflow_steps WHERE step_key = ? LIMIT 1");
+        if ($stmt) {
+            $stmt->bind_param('s', $step_key);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            $step = $res->fetch_assoc();
+            $stmt->close();
+            if ($step) {
+                return get_workflow_options($step, $lang);
+            }
+        }
+        return [];
+    }
+}
+
+if (!function_exists('log_bot_interaction')) {
+    function log_bot_interaction($session_id, $transcript, $response, $match_type, $state_token) {
+        global $mysqli;
+        $user_id = isset($_SESSION['user']['id']) ? (int)$_SESSION['user']['id'] : null;
+        $stmt = $mysqli->prepare("INSERT INTO bot_interaction_logs (session_id, user_id, spoken_text_transcript, bot_response_text, match_type, active_state_token) VALUES (?, ?, ?, ?, ?, ?)");
+        if ($stmt) {
+            $stmt->bind_param('sissss', $session_id, $user_id, $transcript, $response, $match_type, $state_token);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+}
+
+// Check if we should execute via Conversational State-Machine Funnel
+$is_immersive = ($entry_point_input === 'immersive_landing' || isset($input['step_key']) || isset($_SESSION['active_workflow_state_token']));
+
+if ($is_immersive) {
+    // Determine language
+    $lang = isset($_SESSION['bot_page_context']['language_iso']) ? $_SESSION['bot_page_context']['language_iso'] : 'en';
+    if (!in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
+        $lang = 'en';
+    }
+
+    // Handle resets
+    if (strtolower($message_content) === 'reset' || strtolower($message_content) === 'start fresh') {
+        $_SESSION['active_workflow_state_token'] = 'welcome_funnel';
+        $_SESSION['selected_workflow_payload'] = null;
+        unset($_SESSION['registration_state']);
+    }
+
+    $active_state_token = isset($input['step_key']) ? trim($input['step_key']) : ($_SESSION['active_workflow_state_token'] ?? 'welcome_funnel');
+
+    // Process voice or click interaction based on matched option labels
+    if ($message_content !== '' && strtolower($message_content) !== 'reset' && strtolower($message_content) !== 'start fresh') {
+        // Resolve options for active step and match
+        $stmt_step = $mysqli->prepare("SELECT * FROM bot_workflow_steps WHERE step_key = ? LIMIT 1");
+        if ($stmt_step) {
+            $stmt_step->bind_param('s', $active_state_token);
+            $stmt_step->execute();
+            $res_step = $stmt_step->get_result();
+            $current_step = $res_step->fetch_assoc();
+            $stmt_step->close();
+        }
+
+        $matched_opt = null;
+        if ($current_step) {
+            $options = get_workflow_options($current_step, $lang);
+            foreach ($options as $opt) {
+                if (strcasecmp($opt['label'], $message_content) === 0 || stripos($message_content, $opt['label']) !== false) {
+                    $matched_opt = $opt;
+                    break;
+                }
+            }
+        }
+
+        if ($matched_opt) {
+            $active_state_token = $matched_opt['step_key'];
+            $_SESSION['active_workflow_state_token'] = $active_state_token;
+            if (isset($matched_opt['payload_value'])) {
+                $_SESSION['selected_workflow_payload'] = $matched_opt['payload_value'];
+            }
+        } else {
+            // Intent/Option did not match directly -> hand off to RAG or Fail-Closed
+            $rag_context = "";
+            $has_rag_matches = false;
+            $source_files = [];
+            $chunks = [];
+
+            $stmt_rag = $mysqli->prepare("SELECT text_content, file_name, page_number FROM local_knowledge_base WHERE MATCH(text_content) AGAINST(?) LIMIT 3");
+            if ($stmt_rag) {
+                $stmt_rag->bind_param('s', $message_content);
+                $stmt_rag->execute();
+                $res_rag = $stmt_rag->get_result();
+                if ($res_rag && $res_rag->num_rows > 0) {
+                    $has_rag_matches = true;
+                    while ($row_rag = $res_rag->fetch_assoc()) {
+                        $chunks[] = $row_rag['text_content'];
+                        $source_files[] = "[Source: " . $row_rag['file_name'] . ", Page " . $row_rag['page_number'] . "]";
+                    }
+                    $rag_context = implode("\n\n", $chunks);
+                }
+                $stmt_rag->close();
+            }
+
+            if ($has_rag_matches) {
+                $top_match = $chunks[0];
+                $display_text = "Verified Guidelines: " . $top_match;
+                if (strlen($display_text) > 180) {
+                    $display_text = substr($display_text, 0, 180) . "...";
+                }
+                if (!empty($source_files)) {
+                    $display_text .= "\n\n" . implode(", ", array_unique($source_files));
+                }
+
+                log_bot_interaction($session_token, $message_content, $display_text, 'rag_fallback', $active_state_token);
+
+                send_json_response([
+                    'status' => 'success',
+                    'session_token' => $session_token,
+                    'display_text' => $display_text,
+                    'spoken_text' => "According to our guidelines: " . substr($top_match, 0, 100),
+                    'language_iso' => $lang,
+                    'active_state_token' => $active_state_token,
+                    'next_options' => get_workflow_options_by_key($active_state_token, $lang)
+                ]);
+            } else {
+                // Fail-Closed
+                $page_url = $current_page_context['url'] ?? 'bot-landing.php';
+                $userId = isset($_SESSION['user']['id']) ? (int)$_SESSION['user']['id'] : null;
+
+                $stmt_fail = $mysqli->prepare("INSERT INTO bot_failed_questions (session_id, user_id, language_iso, unanswered_question, page_context_url) VALUES (?, ?, ?, ?, ?)");
+                if ($stmt_fail) {
+                    $session_db_id = 1;
+                    $stmt_fail->bind_param('iisss', $session_db_id, $userId, $lang, $message_content, $page_url);
+                    $stmt_fail->execute();
+                    $stmt_fail->close();
+                }
+
+                $fallback_display = "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.";
+
+                log_bot_interaction($session_token, $message_content, $fallback_display, 'rag_fallback', $active_state_token);
+
+                send_json_response([
+                    'status' => 'success',
+                    'session_token' => $session_token,
+                    'display_text' => $fallback_display,
+                    'spoken_text' => $fallback_display,
+                    'language_iso' => $lang,
+                    'active_state_token' => $active_state_token,
+                    'next_options' => get_workflow_options_by_key($active_state_token, $lang)
+                ]);
+            }
+        }
+    }
+
+    // Check for Context Preservation & Automated Funnel Acceleration
+    $has_category_context = !empty($current_page_context['category_name']) || !empty($current_page_context['service_title']);
+    if ($active_state_token === 'welcome_funnel' && $has_category_context) {
+        $active_state_token = 'category_selection';
+        $_SESSION['active_workflow_state_token'] = 'category_selection';
+        $category_name = $current_page_context['category_name'] ?? $current_page_context['service_title'] ?? 'Selected Service';
+        $_SESSION['selected_workflow_payload'] = $category_name;
+
+        $context_greeting = "I see you are looking for " . $category_name . ". Excellent! We have updated the right panel layout with customized service options. What would you like to do next?";
+        log_bot_interaction($session_token, $message_content, $context_greeting, 'workflow_step', 'category_selection');
+
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => $context_greeting,
+            'spoken_text' => "I see you are looking for " . $category_name . ". We have updated the right panel layout. What would you like to do next?",
+            'language_iso' => $lang,
+            'active_state_token' => 'category_selection',
+            'next_options' => get_workflow_options_by_key('category_selection', $lang),
+            'client_action' => [
+                'type' => 'apply_filters',
+                'category_name' => $category_name,
+                'url' => 'services.php?category=' . urlencode($category_name)
+            ]
+        ]);
+    }
+
+    // Retrieve active step details
+    $stmt_step = $mysqli->prepare("SELECT * FROM bot_workflow_steps WHERE step_key = ? LIMIT 1");
+    if ($stmt_step) {
+        $stmt_step->bind_param('s', $active_state_token);
+        $stmt_step->execute();
+        $res_step = $stmt_step->get_result();
+        $step = $res_step->fetch_assoc();
+        $stmt_step->close();
+    }
+
+    if ($step) {
+        $_SESSION['active_workflow_state_token'] = $step['step_key'];
+
+        $question_col = 'primary_question_' . $lang;
+        if (empty($step[$question_col])) {
+            $question_col = 'primary_question_en';
+        }
+        $display_text = $step[$question_col];
+
+        // Handle execution actions
+        $client_action = null;
+        if ($step['execution_action'] === 'hydrate_right_panel') {
+            $cat_name = $_SESSION['selected_workflow_payload'] ?? 'all';
+            $client_action = [
+                'type' => 'page_swap',
+                'url' => 'services.php?category=' . urlencode($cat_name)
+            ];
+        } elseif ($step['execution_action'] === 'apply_filters') {
+            $cat_name = $_SESSION['selected_workflow_payload'] ?? 'all';
+            $client_action = [
+                'type' => 'apply_filters',
+                'category_name' => $cat_name,
+                'url' => 'services.php?category=' . urlencode($cat_name)
+            ];
+        } elseif ($step['execution_action'] === 'dispatch_case_meeting') {
+            if (!isset($_SESSION['user']['id'])) {
+                // Return redirect payload to register/login
+                $_SESSION['redirect_after_login'] = 'bot-landing.php';
+                $display_text = "To schedule a direct consultation meeting, please sign in or register an account first. We have saved your target context securely.";
+                $client_action = [
+                    'type' => 'redirect_auth',
+                    'url' => 'login.php',
+                    'state_token' => $step['step_key']
+                ];
+            } else {
+                // Auto create the case
+                $provider_id = 1;
+                $service_id = 1;
+                $case_uuid = generate_uuid();
+                $customer_user_id = (int)$_SESSION['user']['id'];
+                $status = 'Pending Appointment';
+                $customer_message = "Automated meeting request initialized via AI Assistant";
+
+                $stmt_case = $mysqli->prepare("INSERT INTO cases (uuid, customer_user_id, provider_id, service_id, status, customer_message) VALUES (?, ?, ?, ?, ?, ?)");
+                if ($stmt_case) {
+                    $stmt_case->bind_param('siiiss', $case_uuid, $customer_user_id, $provider_id, $service_id, $status, $customer_message);
+                    $stmt_case->execute();
+                    $stmt_case->close();
+
+                    require_once __DIR__ . '/../lib/notifications_helper.php';
+                    notify_vendor($provider_id, "New Meeting Request", "Customer " . $_SESSION['user']['name'] . " has requested an automated appointment.", "vendor/index.php");
+
+                    $display_text = "Thank you! Your automated consultation appointment request has been successfully dispatched to the provider. They will reach out to you shortly.";
+                    $client_action = [
+                        'type' => 'toast_success',
+                        'message' => 'Consultation appointment request successfully dispatched!'
+                    ];
+                }
+            }
+        }
+
+        log_bot_interaction($session_token, $message_content, $display_text, 'workflow_step', $step['step_key']);
+
+        $options = get_workflow_options($step, $lang);
+
+        send_json_response([
+            'status' => 'success',
+            'session_token' => $session_token,
+            'display_text' => $display_text,
+            'spoken_text' => $display_text,
+            'language_iso' => $lang,
+            'active_state_token' => $step['step_key'],
+            'next_options' => $options,
+            'client_action' => $client_action
+        ]);
+    }
+}
+
 // --- Predefined dialog values ---
 $lang_labels = [
     'en' => 'English',
     'fr' => 'Français (French)',
     'ar' => 'العربية (Arabic)',
-    'ur' => 'اردو / हिंदी (Hindi/Urdu)'
+    'ur' => 'اردو / hindi (Hindi/Urdu)'
 ];
 
 // Helper to check if a node triggers independent browse collapse

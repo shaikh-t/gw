@@ -142,6 +142,12 @@ if (can('messages.manage')) {
     <?php if (can('view_voice_telemetry')): ?>
       <?php nav_item($domain . '/admin/settings/voice_analytics.php', 'Voice & Analytics', '<i class="bi bi-soundwave"></i>', $current === $domain.'/admin/settings/voice_analytics.php' ? 'active' : ''); ?>
     <?php endif; ?>
+    <?php if (can('manage_bot_steps')): ?>
+      <?php nav_item($domain . '/admin/settings/bot_steps.php', 'Bot Steps & Funnel', '<i class="bi bi-diagram-3-fill"></i>', $current === $domain.'/admin/settings/bot_steps.php' ? 'active' : ''); ?>
+    <?php endif; ?>
+    <?php if (can('view_bot_interaction_logs')): ?>
+      <?php nav_item($domain . '/admin/analytics/bot_logs.php', 'Bot Telemetry Logs', '<i class="bi bi-activity"></i>', $current === $domain.'/admin/analytics/bot_logs.php' ? 'active' : ''); ?>
+    <?php endif; ?>
   </ul>
 
   <div class="sidebar-footer mt-auto p-3 border-top">

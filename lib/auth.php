@@ -12,7 +12,12 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 require_once __DIR__ . '/db_mysqli.php';
 
+global $domain;
 $domain="/gw3/gw";
+if (isset($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], '8000') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false || ($_SERVER['SERVER_PORT'] ?? '') == 8000)) {
+    $domain = "";
+}
+$GLOBALS['domain'] = $domain;
 define('REMEMBER_ME_SECRET', 'GlobalWays_Remember_Me_Secret_2026!');
 
 function get_client_subnet(): string {
