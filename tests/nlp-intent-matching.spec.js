@@ -105,4 +105,49 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     // Assert resolved question is now resolved and no longer exists in the list
     await expect(page.locator('text="how to fly to mars on a pink unicorn"')).toBeHidden();
   });
+
+  test('4. Approved Keywords Admin CRUD Management panel flow', async ({ page }) => {
+    // Authenticate as permitted administrator
+    await page.goto('/tests/test-login-helper.php?role=admin_with_permission');
+    await expect(page.locator('body')).toContainText('Session set for role: admin_with_permission');
+
+    // Navigate to approved keywords settings page
+    await page.goto('/admin/settings/bot_keywords.php');
+
+    // Assert headers and container exist
+    await expect(page.locator('text="Database-Driven Typo Spelling Dictionary"')).toBeVisible();
+
+    // Assert submit button is programmatically bound and has no inline onclick attribute
+    const addBtn = page.locator('#submitNewSystemKeyword');
+    await expect(addBtn).toBeVisible();
+    const inlineOnclick = await addBtn.getAttribute('onclick');
+    expect(inlineOnclick).toBeNull();
+
+    // Add a new system keyword
+    await page.fill('#new_keyword_token', 'unicorn');
+    await page.selectOption('#new_language_code', 'en');
+    await addBtn.click();
+
+    // Assert success alert
+    const successAlert = page.locator('.alert-success');
+    await expect(successAlert).toBeVisible();
+    await expect(successAlert).toContainText("Approved keyword 'unicorn' added successfully.");
+
+    // Assert keyword token exists in table list
+    await expect(page.locator('strong:has-text("unicorn")')).toBeVisible();
+
+    // Setup dialog handler to automatically accept delete confirmation dialog
+    page.on('dialog', async dialog => {
+      expect(dialog.message()).toContain('permanently delete');
+      await dialog.accept();
+    });
+
+    // Delete the newly registered keyword
+    const deleteBtn = page.locator('tr:has-text("unicorn") .btn-delete-keyword');
+    await deleteBtn.click();
+
+    // Assert success alert of deletion
+    await expect(page.locator('.alert-success')).toContainText("Approved keyword successfully deleted.");
+    await expect(page.locator('strong:has-text("unicorn")')).toBeHidden();
+  });
 });

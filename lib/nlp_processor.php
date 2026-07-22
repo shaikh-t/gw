@@ -1,11 +1,13 @@
 <?php
 // lib/nlp_processor.php
+require_once __DIR__ . '/db_mysqli.php';
+require_once __DIR__ . '/cache_helper.php';
 
 class NlpProcessor {
     /**
-     * Set of approved keywords for typo correction.
+     * Fallback approved keywords for typo correction if DB is empty.
      */
-    public static $approved_keywords = [
+    public static $fallback_keywords = [
         'business', 'setup', 'company', 'immigration', 'visa', 'office',
         'consultation', 'start', 'launch', 'open', 'incorporate', 'firm',
         'services', 'meeting', 'schedule', 'register', 'welcome', 'funnel',
@@ -25,22 +27,62 @@ class NlpProcessor {
         global $mysqli;
 
         // Step A (Normalization): Strip punctuation, convert to lowercase, and clear whitespace
-        // Strip punctuation using \p{P} Unicode selector
         $normalized = preg_replace('/\p{P}/u', '', $input);
-        // Convert to lowercase
         $normalized = mb_strtolower($normalized, 'UTF-8');
-        // Clear whitespace
         $normalized = preg_replace('/\s+/', ' ', trim($normalized));
 
         if ($normalized === '') {
             return '';
         }
 
+        // Determine if requested inside Admin Panels or public widget
+        $is_admin = false;
+        $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+        $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (stripos($script_name, '/admin/') !== false || stripos($request_uri, '/admin/') !== false) {
+            $is_admin = true;
+        }
+
+        $approved_keywords = [];
+        $cache_key = 'bot_approved_keywords_' . $lang;
+
+        if (!$is_admin) {
+            // Public Chat Widget: use short 5-minute (300s) performance cache block
+            $approved_keywords = CacheUtility::get($cache_key) ?: [];
+        }
+
+        // Database I/O fallback/forced query
+        if (empty($approved_keywords)) {
+            if (isset($mysqli) && !$mysqli->connect_errno) {
+                $stmt_keys = $mysqli->prepare("SELECT keyword_token FROM bot_approved_keywords WHERE language_code = ?");
+                if ($stmt_keys) {
+                    $stmt_keys->bind_param('s', $lang);
+                    $stmt_keys->execute();
+                    $res_keys = $stmt_keys->get_result();
+                    if ($res_keys) {
+                        while ($row_key = $res_keys->fetch_assoc()) {
+                            $approved_keywords[] = $row_key['keyword_token'];
+                        }
+                    }
+                    $stmt_keys->close();
+                }
+            }
+
+            // Save to transient cache if not in admin lifecycle
+            if (!$is_admin && !empty($approved_keywords)) {
+                CacheUtility::set($cache_key, $approved_keywords, 300);
+            }
+        }
+
+        // Apply fallback if still empty
+        if (empty($approved_keywords)) {
+            $approved_keywords = self::$fallback_keywords;
+        }
+
         // Step B (Levenshtein Distance Check): Compare input words against approved keywords word-by-word
         $words = explode(' ', $normalized);
         foreach ($words as &$word) {
             $word_len = mb_strlen($word, 'UTF-8');
-            // Exclude short words (< 4 characters)
             if ($word_len < 4) {
                 continue;
             }
@@ -48,9 +90,8 @@ class NlpProcessor {
             $best_match = null;
             $min_distance = 9999;
 
-            foreach (self::$approved_keywords as $keyword) {
+            foreach ($approved_keywords as $keyword) {
                 $keyword_len = strlen($keyword);
-                // Proportional formula: max_allowed = max(1, floor(keyword_length / 4))
                 $max_allowed = max(1, (int)floor($keyword_len / 4));
 
                 $dist = levenshtein($word, $keyword);
@@ -68,11 +109,9 @@ class NlpProcessor {
 
         // Step C (Synonym Resolution): Query the 'bot_intent_synonyms' table
         if (!isset($mysqli) || $mysqli->connect_errno) {
-            // Fallback if DB is not set or mock mode lacks mysqli connection
             return $corrected;
         }
 
-        // Dual-Layer Evaluation
         // Layer 1: Attempt exact clean match of the entire processed, normalized user input string
         $stmt = $mysqli->prepare("SELECT system_intent_key FROM bot_intent_synonyms WHERE phrase_variant = ? AND language_code = ? LIMIT 1");
         if ($stmt) {
@@ -87,7 +126,6 @@ class NlpProcessor {
         }
 
         // Layer 2: Substring boundary evaluation fallback
-        // Fetch all synonym phrase variants for the current language
         $stmt_all = $mysqli->prepare("SELECT system_intent_key, phrase_variant FROM bot_intent_synonyms WHERE language_code = ?");
         if ($stmt_all) {
             $stmt_all->bind_param('s', $lang);
@@ -96,9 +134,6 @@ class NlpProcessor {
             if ($res_all) {
                 while ($row = $res_all->fetch_assoc()) {
                     $variant = $row['phrase_variant'];
-                    // Boundary check: variant must match cleanly as isolated concept block
-                    // For english/latin-based languages we use word boundary \b.
-                    // For Arabic/Urdu, we can use clean whitespace/edge boundaries or regex lookarounds.
                     $pattern = '/(?<=^|\s)' . preg_quote($variant, '/') . '(?=$|\s)/u';
                     if (preg_match($pattern, $corrected)) {
                         $stmt_all->close();

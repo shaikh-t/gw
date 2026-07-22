@@ -76,6 +76,41 @@ class MockDbHelper {
                 ],
                 "bot_ad_fraud_logs" => [],
                 "bot_failed_questions" => [],
+                "bot_approved_keywords" => [
+                    ["id" => 1, "keyword_token" => "business", "language_code" => "en"],
+                    ["id" => 2, "keyword_token" => "setup", "language_code" => "en"],
+                    ["id" => 3, "keyword_token" => "company", "language_code" => "en"],
+                    ["id" => 4, "keyword_token" => "immigration", "language_code" => "en"],
+                    ["id" => 5, "keyword_token" => "visa", "language_code" => "en"],
+                    ["id" => 6, "keyword_token" => "office", "language_code" => "en"],
+                    ["id" => 7, "keyword_token" => "consultation", "language_code" => "en"],
+                    ["id" => 8, "keyword_token" => "start", "language_code" => "en"],
+                    ["id" => 9, "keyword_token" => "launch", "language_code" => "en"],
+                    ["id" => 10, "keyword_token" => "open", "language_code" => "en"],
+                    ["id" => 11, "keyword_token" => "incorporate", "language_code" => "en"],
+                    ["id" => 12, "keyword_token" => "firm", "language_code" => "en"],
+                    ["id" => 13, "keyword_token" => "services", "language_code" => "en"],
+                    ["id" => 14, "keyword_token" => "meeting", "language_code" => "en"],
+                    ["id" => 15, "keyword_token" => "schedule", "language_code" => "en"],
+                    ["id" => 16, "keyword_token" => "register", "language_code" => "en"],
+                    ["id" => 17, "keyword_token" => "welcome", "language_code" => "en"],
+                    ["id" => 18, "keyword_token" => "funnel", "language_code" => "en"],
+                    ["id" => 19, "keyword_token" => "selection", "language_code" => "en"],
+                    ["id" => 20, "keyword_token" => "dispatch", "language_code" => "en"],
+                    ["id" => 21, "keyword_token" => "visit", "language_code" => "en"],
+                    ["id" => 22, "keyword_token" => "tourism", "language_code" => "en"],
+                    ["id" => 23, "keyword_token" => "license", "language_code" => "en"],
+                    ["id" => 24, "keyword_token" => "permit", "language_code" => "en"],
+                    ["id" => 25, "keyword_token" => "emirates", "language_code" => "en"],
+                    ["id" => 26, "keyword_token" => "national", "language_code" => "en"],
+                    ["id" => 27, "keyword_token" => "stamping", "language_code" => "en"],
+                    ["id" => 28, "keyword_token" => "attestation", "language_code" => "en"],
+                    ["id" => 29, "keyword_token" => "renewal", "language_code" => "en"],
+                    ["id" => 30, "keyword_token" => "consultant", "language_code" => "en"],
+                    ["id" => 31, "keyword_token" => "advisory", "language_code" => "en"],
+                    ["id" => 32, "keyword_token" => "partner", "language_code" => "en"],
+                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"]
+                ],
                 "bot_intent_synonyms" => [
                     [
                         "id" => 1,
@@ -234,6 +269,45 @@ class MockDbHelper {
                 }
             }
 
+            if (!isset($db['bot_approved_keywords'])) {
+                $db['bot_approved_keywords'] = [
+                    ["id" => 1, "keyword_token" => "business", "language_code" => "en"],
+                    ["id" => 2, "keyword_token" => "setup", "language_code" => "en"],
+                    ["id" => 3, "keyword_token" => "company", "language_code" => "en"],
+                    ["id" => 4, "keyword_token" => "immigration", "language_code" => "en"],
+                    ["id" => 5, "keyword_token" => "visa", "language_code" => "en"],
+                    ["id" => 6, "keyword_token" => "office", "language_code" => "en"],
+                    ["id" => 7, "keyword_token" => "consultation", "language_code" => "en"],
+                    ["id" => 8, "keyword_token" => "start", "language_code" => "en"],
+                    ["id" => 9, "keyword_token" => "launch", "language_code" => "en"],
+                    ["id" => 10, "keyword_token" => "open", "language_code" => "en"],
+                    ["id" => 11, "keyword_token" => "incorporate", "language_code" => "en"],
+                    ["id" => 12, "keyword_token" => "firm", "language_code" => "en"],
+                    ["id" => 13, "keyword_token" => "services", "language_code" => "en"],
+                    ["id" => 14, "keyword_token" => "meeting", "language_code" => "en"],
+                    ["id" => 15, "keyword_token" => "schedule", "language_code" => "en"],
+                    ["id" => 16, "keyword_token" => "register", "language_code" => "en"],
+                    ["id" => 17, "keyword_token" => "welcome", "language_code" => "en"],
+                    ["id" => 18, "keyword_token" => "funnel", "language_code" => "en"],
+                    ["id" => 19, "keyword_token" => "selection", "language_code" => "en"],
+                    ["id" => 20, "keyword_token" => "dispatch", "language_code" => "en"],
+                    ["id" => 21, "keyword_token" => "visit", "language_code" => "en"],
+                    ["id" => 22, "keyword_token" => "tourism", "language_code" => "en"],
+                    ["id" => 23, "keyword_token" => "license", "language_code" => "en"],
+                    ["id" => 24, "keyword_token" => "permit", "language_code" => "en"],
+                    ["id" => 25, "keyword_token" => "emirates", "language_code" => "en"],
+                    ["id" => 26, "keyword_token" => "national", "language_code" => "en"],
+                    ["id" => 27, "keyword_token" => "stamping", "language_code" => "en"],
+                    ["id" => 28, "keyword_token" => "attestation", "language_code" => "en"],
+                    ["id" => 29, "keyword_token" => "renewal", "language_code" => "en"],
+                    ["id" => 30, "keyword_token" => "consultant", "language_code" => "en"],
+                    ["id" => 31, "keyword_token" => "advisory", "language_code" => "en"],
+                    ["id" => 32, "keyword_token" => "partner", "language_code" => "en"],
+                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"]
+                ];
+                $modified = true;
+            }
+
             if (!isset($db['bot_intent_synonyms'])) {
                 $db['bot_intent_synonyms'] = [
                     ["id" => 1, "system_intent_key" => "intent_business_setup", "phrase_variant" => "start a business", "language_code" => "en"],
@@ -339,6 +413,9 @@ class MockMySQLi {
                 return ($a['step_order'] ?? 0) <=> ($b['step_order'] ?? 0);
             });
             return new MockMySQLiResult($rows);
+        }
+        if (stripos($sql, 'bot_approved_keywords') !== false) {
+            return new MockMySQLiResult($db['bot_approved_keywords'] ?? []);
         }
         if (stripos($sql, 'bot_failed_questions') !== false) {
             $failed_list = [];
@@ -774,6 +851,35 @@ class MockMySQLiStmt {
                 $matched = $db['bot_intent_synonyms'] ?? [];
             }
             $this->result_rows = $matched;
+        }
+        elseif (stripos($sql, 'INSERT INTO bot_approved_keywords') !== false) {
+            if (!isset($db['bot_approved_keywords'])) {
+                $db['bot_approved_keywords'] = [];
+            }
+            $new_id = count($db['bot_approved_keywords']) + 1;
+            $db['bot_approved_keywords'][] = [
+                'id' => $new_id,
+                'keyword_token' => $this->params[0] ?? '',
+                'language_code' => $this->params[1] ?? 'en'
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'DELETE FROM bot_approved_keywords') !== false) {
+            $k_id = (int)($this->params[0] ?? 0);
+            $filtered = [];
+            if (isset($db['bot_approved_keywords'])) {
+                foreach ($db['bot_approved_keywords'] as $item) {
+                    if ((int)$item['id'] !== $k_id) {
+                        $filtered[] = $item;
+                    }
+                }
+                $db['bot_approved_keywords'] = $filtered;
+                MockDbHelper::write($db);
+            }
+        }
+        elseif (stripos($sql, 'FROM bot_approved_keywords') !== false) {
+            $this->result_rows = $db['bot_approved_keywords'] ?? [];
         }
         elseif (stripos($sql, 'FROM bot_failed_questions') !== false) {
             // Emulate the failed questions list with sessions joined if needed

@@ -38,10 +38,11 @@
     "providers": [
         {
             "id": 1,
-            "uuid": "test-vendor-uuid",
+            "uuid": "test-case-uuid",
             "name": "Apex Legal",
-            "rating_avg": 0,
-            "rating_count": 0
+            "team_size": 3,
+            "deduction_type": "percentage",
+            "deduction_value": 10
         }
     ],
     "provider_team_members": [],
@@ -53,43 +54,15 @@
         }
     ],
     "bot_ad_fraud_logs": [],
-    "bot_failed_questions": [],
-    "bot_intent_synonyms": [
+    "bot_failed_questions": [
         {
             "id": 1,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "start a business",
-            "language_code": "en"
-        },
-        {
-            "id": 2,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "launch a company",
-            "language_code": "en"
-        },
-        {
-            "id": 3,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "open an office",
-            "language_code": "en"
-        },
-        {
-            "id": 4,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "incorporate a firm",
-            "language_code": "en"
-        },
-        {
-            "id": 5,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "launch a brand new company",
-            "language_code": "en"
-        },
-        {
-            "id": 6,
-            "system_intent_key": "intent_business_setup",
-            "phrase_variant": "how to fly to mars on a pink unicorn",
-            "language_code": "en"
+            "session_id": 1,
+            "user_id": null,
+            "language_iso": "en",
+            "unanswered_question": "hello",
+            "page_context_url": "http:\/\/127.0.0.1:8000\/bot-landing.php",
+            "created_at": "2026-07-22 22:33:48"
         }
     ],
     "payment_transactions": [],
@@ -97,7 +70,14 @@
     "customer_applications": [],
     "login_attempts": [],
     "registration_attempts": [],
-    "users": [],
+    "users": [
+        {
+            "id": 1,
+            "uuid": "test-user-uuid",
+            "name": "John Doe",
+            "email": "john.doe@example.com"
+        }
+    ],
     "bot_workflow_steps": [
         {
             "id": 1,
@@ -148,6 +128,211 @@
             "parent_step_id": 1
         }
     ],
+    "bot_approved_keywords": [
+        {
+            "id": 1,
+            "keyword_token": "business",
+            "language_code": "en"
+        },
+        {
+            "id": 2,
+            "keyword_token": "setup",
+            "language_code": "en"
+        },
+        {
+            "id": 3,
+            "keyword_token": "company",
+            "language_code": "en"
+        },
+        {
+            "id": 4,
+            "keyword_token": "immigration",
+            "language_code": "en"
+        },
+        {
+            "id": 5,
+            "keyword_token": "visa",
+            "language_code": "en"
+        },
+        {
+            "id": 6,
+            "keyword_token": "office",
+            "language_code": "en"
+        },
+        {
+            "id": 7,
+            "keyword_token": "consultation",
+            "language_code": "en"
+        },
+        {
+            "id": 8,
+            "keyword_token": "start",
+            "language_code": "en"
+        },
+        {
+            "id": 9,
+            "keyword_token": "launch",
+            "language_code": "en"
+        },
+        {
+            "id": 10,
+            "keyword_token": "open",
+            "language_code": "en"
+        },
+        {
+            "id": 11,
+            "keyword_token": "incorporate",
+            "language_code": "en"
+        },
+        {
+            "id": 12,
+            "keyword_token": "firm",
+            "language_code": "en"
+        },
+        {
+            "id": 13,
+            "keyword_token": "services",
+            "language_code": "en"
+        },
+        {
+            "id": 14,
+            "keyword_token": "meeting",
+            "language_code": "en"
+        },
+        {
+            "id": 15,
+            "keyword_token": "schedule",
+            "language_code": "en"
+        },
+        {
+            "id": 16,
+            "keyword_token": "register",
+            "language_code": "en"
+        },
+        {
+            "id": 17,
+            "keyword_token": "welcome",
+            "language_code": "en"
+        },
+        {
+            "id": 18,
+            "keyword_token": "funnel",
+            "language_code": "en"
+        },
+        {
+            "id": 19,
+            "keyword_token": "selection",
+            "language_code": "en"
+        },
+        {
+            "id": 20,
+            "keyword_token": "dispatch",
+            "language_code": "en"
+        },
+        {
+            "id": 21,
+            "keyword_token": "visit",
+            "language_code": "en"
+        },
+        {
+            "id": 22,
+            "keyword_token": "tourism",
+            "language_code": "en"
+        },
+        {
+            "id": 23,
+            "keyword_token": "license",
+            "language_code": "en"
+        },
+        {
+            "id": 24,
+            "keyword_token": "permit",
+            "language_code": "en"
+        },
+        {
+            "id": 25,
+            "keyword_token": "emirates",
+            "language_code": "en"
+        },
+        {
+            "id": 26,
+            "keyword_token": "national",
+            "language_code": "en"
+        },
+        {
+            "id": 27,
+            "keyword_token": "stamping",
+            "language_code": "en"
+        },
+        {
+            "id": 28,
+            "keyword_token": "attestation",
+            "language_code": "en"
+        },
+        {
+            "id": 29,
+            "keyword_token": "renewal",
+            "language_code": "en"
+        },
+        {
+            "id": 30,
+            "keyword_token": "consultant",
+            "language_code": "en"
+        },
+        {
+            "id": 31,
+            "keyword_token": "advisory",
+            "language_code": "en"
+        },
+        {
+            "id": 32,
+            "keyword_token": "partner",
+            "language_code": "en"
+        },
+        {
+            "id": 33,
+            "keyword_token": "booking",
+            "language_code": "en"
+        }
+    ],
+    "bot_intent_synonyms": [
+        {
+            "id": 1,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "start a business",
+            "language_code": "en"
+        },
+        {
+            "id": 2,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "launch a company",
+            "language_code": "en"
+        },
+        {
+            "id": 3,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "open an office",
+            "language_code": "en"
+        },
+        {
+            "id": 4,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "incorporate a firm",
+            "language_code": "en"
+        },
+        {
+            "id": 5,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "launch a brand new company",
+            "language_code": "en"
+        },
+        {
+            "id": 6,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "how to fly to mars on a pink unicorn",
+            "language_code": "en"
+        }
+    ],
     "bot_interaction_logs": [
         {
             "id": 1,
@@ -157,7 +342,7 @@
             "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
             "match_type": "workflow_step",
             "active_state_token": "intent_business_setup",
-            "created_at": "2026-07-22 21:34:29"
+            "created_at": "2026-07-22 22:33:44"
         },
         {
             "id": 2,
@@ -167,7 +352,7 @@
             "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
             "match_type": "workflow_step",
             "active_state_token": "intent_business_setup",
-            "created_at": "2026-07-22 21:34:29"
+            "created_at": "2026-07-22 22:33:44"
         },
         {
             "id": 3,
@@ -177,7 +362,7 @@
             "bot_response_text": "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.",
             "match_type": "rag_fallback",
             "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 21:34:30"
+            "created_at": "2026-07-22 22:33:44"
         },
         {
             "id": 4,
@@ -187,7 +372,7 @@
             "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
             "match_type": "workflow_step",
             "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 21:35:05"
+            "created_at": "2026-07-22 22:33:47"
         },
         {
             "id": 5,
@@ -197,9 +382,68 @@
             "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
             "match_type": "workflow_step",
             "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 21:35:05"
+            "created_at": "2026-07-22 22:33:47"
+        },
+        {
+            "id": 6,
+            "session_id": "",
+            "user_id": null,
+            "spoken_text_transcript": "",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:33:47"
+        },
+        {
+            "id": 7,
+            "session_id": "",
+            "user_id": null,
+            "spoken_text_transcript": "reset",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:33:48"
+        },
+        {
+            "id": 8,
+            "session_id": "",
+            "user_id": null,
+            "spoken_text_transcript": "hello",
+            "bot_response_text": "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.",
+            "match_type": "rag_fallback",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:33:48"
+        },
+        {
+            "id": 9,
+            "session_id": "",
+            "user_id": null,
+            "spoken_text_transcript": "",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:34:25"
+        },
+        {
+            "id": 10,
+            "session_id": "",
+            "user_id": null,
+            "spoken_text_transcript": "reset",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:34:25"
+        },
+        {
+            "id": 11,
+            "session_id": "de92002c42a8986499aa0956ed44446b218d9d54fac163ec769dcb385d29b3f1",
+            "user_id": null,
+            "spoken_text_transcript": "",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 22:34:56"
         }
     ],
-    "voice_telemetry_logs": [],
-    "reviews": []
+    "voice_telemetry_logs": []
 }

@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `customer_applications`;
 DROP TABLE IF EXISTS `bot_ad_fraud_logs`;
 DROP TABLE IF EXISTS `bot_ad_clicks`;
 DROP TABLE IF EXISTS `bot_ads`;
+DROP TABLE IF EXISTS `bot_approved_keywords`;
 DROP TABLE IF EXISTS `bot_intent_synonyms`;
 DROP TABLE IF EXISTS `bot_interaction_logs`;
 DROP TABLE IF EXISTS `bot_failed_questions`;
@@ -843,6 +844,18 @@ CREATE TABLE `bot_interaction_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Table structure for table `bot_approved_keywords`
+--
+
+CREATE TABLE `bot_approved_keywords` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `keyword_token` varchar(255) NOT NULL UNIQUE,
+  `language_code` varchar(10) NOT NULL,
+  `created_at` timestamp DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `bot_intent_synonyms`
 --
 
@@ -1071,7 +1084,8 @@ INSERT INTO `permissions` VALUES
 (24,'f5c9ef31-86f5-41d4-9315-cd18ce733f36','manage_system_analytics','Voice & Analytics Control','Allows managing site analytics and premium voice settings',current_timestamp()),
 (25,'72ac51ad-bb63-4d01-aeab-d5d1b64481df','view_voice_telemetry','Voice & Analytics Telemetry','Allows viewing voice assistant analytics and telemetry',current_timestamp()),
 (26,'3c10b24d-de91-4993-847c-7206b12a831e','manage_bot_steps','Manage Bot Steps','List, create, edit, delete and reorder conversational workflow steps',current_timestamp()),
-(27,'01217e99-994c-47bc-ad7e-90e0b3c8eb72','view_bot_interaction_logs','View Bot Interaction Logs','List, filter and view chronological multilingual conversational interaction logs',current_timestamp());
+(27,'01217e99-994c-47bc-ad7e-90e0b3c8eb72','view_bot_interaction_logs','View Bot Interaction Logs','List, filter and view chronological multilingual conversational interaction logs',current_timestamp()),
+(28,'5c10b24d-de91-4993-847c-7206b12a831f','manage_bot_keywords','Manage Bot Keywords','Allows administrators to list, create, and delete bot approved keywords',current_timestamp());
 UNLOCK TABLES;
 
 --
@@ -1280,6 +1294,47 @@ INSERT INTO `bot_intent_synonyms` (`id`, `system_intent_key`, `phrase_variant`, 
 (3, 'intent_business_setup', 'open an office', 'en'),
 (4, 'intent_business_setup', 'incorporate a firm', 'en'),
 (5, 'intent_business_setup', 'launch a brand new company', 'en');
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bot_approved_keywords`
+--
+
+LOCK TABLES `bot_approved_keywords` WRITE;
+INSERT INTO `bot_approved_keywords` (`keyword_token`, `language_code`) VALUES
+('business', 'en'),
+('setup', 'en'),
+('company', 'en'),
+('immigration', 'en'),
+('visa', 'en'),
+('office', 'en'),
+('consultation', 'en'),
+('start', 'en'),
+('launch', 'en'),
+('open', 'en'),
+('incorporate', 'en'),
+('firm', 'en'),
+('services', 'en'),
+('meeting', 'en'),
+('schedule', 'en'),
+('register', 'en'),
+('welcome', 'en'),
+('funnel', 'en'),
+('selection', 'en'),
+('dispatch', 'en'),
+('visit', 'en'),
+('tourism', 'en'),
+('license', 'en'),
+('permit', 'en'),
+('emirates', 'en'),
+('national', 'en'),
+('stamping', 'en'),
+('attestation', 'en'),
+('renewal', 'en'),
+('consultant', 'en'),
+('advisory', 'en'),
+('partner', 'en'),
+('booking', 'en');
 UNLOCK TABLES;
 
 --
@@ -1506,7 +1561,9 @@ INSERT INTO `role_permissions` VALUES
 (1,26,current_timestamp()),
 (1,27,current_timestamp()),
 (4,26,current_timestamp()),
-(4,27,current_timestamp());
+(4,27,current_timestamp()),
+(1,28,current_timestamp()),
+(4,28,current_timestamp());
 UNLOCK TABLES;
 
 --
