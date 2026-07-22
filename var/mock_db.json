@@ -1,8 +1,8 @@
 {
     "site_settings": {
         "ai_bot_global_status": "enabled",
-        "google_analytics_status": "OFF",
-        "google_analytics_measurement_id": "UA-XXXXX-Y",
+        "google_analytics_status": "ON",
+        "google_analytics_measurement_id": "G-PLAYWRIGHT-999",
         "elevenlabs_status": "OFF",
         "elevenlabs_api_key": "",
         "elevenlabs_voice_id": "21m00Tcm4TlvDq8ikWAM",
@@ -38,11 +38,10 @@
     "providers": [
         {
             "id": 1,
-            "uuid": "test-case-uuid",
+            "uuid": "test-vendor-uuid",
             "name": "Apex Legal",
-            "team_size": 3,
-            "deduction_type": "percentage",
-            "deduction_value": 10
+            "rating_avg": 0,
+            "rating_count": 0
         }
     ],
     "provider_team_members": [],
@@ -55,19 +54,50 @@
     ],
     "bot_ad_fraud_logs": [],
     "bot_failed_questions": [],
+    "bot_intent_synonyms": [
+        {
+            "id": 1,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "start a business",
+            "language_code": "en"
+        },
+        {
+            "id": 2,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "launch a company",
+            "language_code": "en"
+        },
+        {
+            "id": 3,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "open an office",
+            "language_code": "en"
+        },
+        {
+            "id": 4,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "incorporate a firm",
+            "language_code": "en"
+        },
+        {
+            "id": 5,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "launch a brand new company",
+            "language_code": "en"
+        },
+        {
+            "id": 6,
+            "system_intent_key": "intent_business_setup",
+            "phrase_variant": "how to fly to mars on a pink unicorn",
+            "language_code": "en"
+        }
+    ],
     "payment_transactions": [],
     "customer_payments": [],
     "customer_applications": [],
     "login_attempts": [],
     "registration_attempts": [],
-    "users": [
-        {
-            "id": 1,
-            "uuid": "test-user-uuid",
-            "name": "John Doe",
-            "email": "john.doe@example.com"
-        }
-    ],
+    "users": [],
     "bot_workflow_steps": [
         {
             "id": 1,
@@ -104,8 +134,72 @@
             "interface_target": "right_window",
             "execution_action": "dispatch_case_meeting",
             "parent_step_id": 2
+        },
+        {
+            "id": 4,
+            "step_key": "intent_business_setup",
+            "step_order": 25,
+            "primary_question_en": "Loading the Business Setup module with customized service options. How can I help you today?",
+            "primary_question_fr": "Chargement du module de cr\u00e9ation d'entreprise avec des options de service personnalis\u00e9es. Comment puis-je vous aider ?",
+            "primary_question_ar": "\u0646\u0642\u0648\u0645 \u0628\u062a\u062d\u0645\u064a\u0644 \u0642\u0633\u0645 \u062a\u0623\u0633\u064a\u0633 \u0627\u0644\u0634\u0631\u0643\u0627\u062a \u0628\u062e\u064a\u0627\u0631\u0627\u062a \u0627\u0644\u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u062e\u0635\u0635\u0629. \u0643\u064a\u0641 \u064a\u0645\u0643\u0646\u0646\u064a \u0645\u0633\u0627\u0639\u062f\u062a\u0643 \u0627\u0644\u064a\u0648\u0645\u061f",
+            "primary_question_ur": "\u06c1\u0645 \u06a9\u0633\u0679\u0645\u0627\u0626\u0632\u0688 \u0633\u0631\u0648\u0633 \u0622\u067e\u0634\u0646\u0632 \u06a9\u06d2 \u0633\u0627\u062a\u06be \u0628\u0632\u0646\u0633 \u0633\u06cc\u0679 \u0627\u067e \u0645\u0627\u0688\u06cc\u0648\u0644 \u0644\u0648\u0688 \u06a9\u0631 \u0631\u06c1\u06d2 \u06c1\u06cc\u06ba\u06d4 \u0622\u062c \u0622\u067e \u06a9\u06cc \u06a9\u06cc\u0627 \u0645\u062f\u062f \u06a9\u0631 \u0633\u06a9\u062a\u0627 \u06c1\u0648\u06ba\u061f",
+            "interface_target": "right_window",
+            "execution_action": "hydrate_right_panel",
+            "parent_step_id": 1
         }
     ],
-    "bot_interaction_logs": [],
-    "voice_telemetry_logs": []
+    "bot_interaction_logs": [
+        {
+            "id": 1,
+            "session_id": "test-session-nlp-spelling",
+            "user_id": null,
+            "spoken_text_transcript": "intent_business_setup",
+            "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
+            "match_type": "workflow_step",
+            "active_state_token": "intent_business_setup",
+            "created_at": "2026-07-22 21:34:29"
+        },
+        {
+            "id": 2,
+            "session_id": "test-session-nlp-synonym",
+            "user_id": null,
+            "spoken_text_transcript": "intent_business_setup",
+            "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
+            "match_type": "workflow_step",
+            "active_state_token": "intent_business_setup",
+            "created_at": "2026-07-22 21:34:29"
+        },
+        {
+            "id": 3,
+            "session_id": "test-session-failed-log",
+            "user_id": null,
+            "spoken_text_transcript": "how to fly to mars on a pink unicorn",
+            "bot_response_text": "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.",
+            "match_type": "rag_fallback",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 21:34:30"
+        },
+        {
+            "id": 4,
+            "session_id": "",
+            "user_id": 1,
+            "spoken_text_transcript": "",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 21:35:05"
+        },
+        {
+            "id": 5,
+            "session_id": "",
+            "user_id": 1,
+            "spoken_text_transcript": "reset",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
+            "match_type": "workflow_step",
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-22 21:35:05"
+        }
+    ],
+    "voice_telemetry_logs": [],
+    "reviews": []
 }

@@ -76,6 +76,38 @@ class MockDbHelper {
                 ],
                 "bot_ad_fraud_logs" => [],
                 "bot_failed_questions" => [],
+                "bot_intent_synonyms" => [
+                    [
+                        "id" => 1,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "start a business",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 2,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "launch a company",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 3,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "open an office",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 4,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "incorporate a firm",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 5,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "launch a brand new company",
+                        "language_code" => "en"
+                    ]
+                ],
                 "payment_transactions" => [],
                 "customer_payments" => [],
                 "customer_applications" => [],
@@ -118,6 +150,18 @@ class MockDbHelper {
                         "interface_target" => "right_window",
                         "execution_action" => "dispatch_case_meeting",
                         "parent_step_id" => 2
+                    ],
+                    [
+                        "id" => 4,
+                        "step_key" => "intent_business_setup",
+                        "step_order" => 25,
+                        "primary_question_en" => "Loading the Business Setup module with customized service options. How can I help you today?",
+                        "primary_question_fr" => "Chargement du module de création d'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?",
+                        "primary_question_ar" => "نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟",
+                        "primary_question_ur" => "ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
                     ]
                 ],
                 "bot_interaction_logs" => []
@@ -166,7 +210,66 @@ class MockDbHelper {
                     ]
                 ];
                 $modified = true;
+            } else {
+                $has_intent_step = false;
+                foreach ($db['bot_workflow_steps'] as $st) {
+                    if (($st['step_key'] ?? '') === 'intent_business_setup') {
+                        $has_intent_step = true;
+                    }
+                }
+                if (!$has_intent_step) {
+                    $db['bot_workflow_steps'][] = [
+                        "id" => 4,
+                        "step_key" => "intent_business_setup",
+                        "step_order" => 25,
+                        "primary_question_en" => "Loading the Business Setup module with customized service options. How can I help you today?",
+                        "primary_question_fr" => "Chargement du module de création d'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?",
+                        "primary_question_ar" => "نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟",
+                        "primary_question_ur" => "ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
+                    ];
+                    $modified = true;
+                }
             }
+
+            if (!isset($db['bot_intent_synonyms'])) {
+                $db['bot_intent_synonyms'] = [
+                    ["id" => 1, "system_intent_key" => "intent_business_setup", "phrase_variant" => "start a business", "language_code" => "en"],
+                    ["id" => 2, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a company", "language_code" => "en"],
+                    ["id" => 3, "system_intent_key" => "intent_business_setup", "phrase_variant" => "open an office", "language_code" => "en"],
+                    ["id" => 4, "system_intent_key" => "intent_business_setup", "phrase_variant" => "incorporate a firm", "language_code" => "en"]
+                ];
+                $modified = true;
+            } else {
+                $has_synonyms = false;
+                foreach ($db['bot_intent_synonyms'] as $sy) {
+                    if (($sy['phrase_variant'] ?? '') === 'start a business') {
+                        $has_synonyms = true;
+                    }
+                }
+                if (!$has_synonyms) {
+                    $db['bot_intent_synonyms'][] = ["id" => 1, "system_intent_key" => "intent_business_setup", "phrase_variant" => "start a business", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 2, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a company", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 3, "system_intent_key" => "intent_business_setup", "phrase_variant" => "open an office", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 4, "system_intent_key" => "intent_business_setup", "phrase_variant" => "incorporate a firm", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 5, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a brand new company", "language_code" => "en"];
+                    $modified = true;
+                } else {
+                    $has_brand_new = false;
+                    foreach ($db['bot_intent_synonyms'] as $sy) {
+                        if (($sy['phrase_variant'] ?? '') === 'launch a brand new company') {
+                            $has_brand_new = true;
+                        }
+                    }
+                    if (!$has_brand_new) {
+                        $db['bot_intent_synonyms'][] = ["id" => 5, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a brand new company", "language_code" => "en"];
+                        $modified = true;
+                    }
+                }
+            }
+
             if (!isset($db['bot_interaction_logs'])) {
                 $db['bot_interaction_logs'] = [];
                 $modified = true;
@@ -236,6 +339,25 @@ class MockMySQLi {
                 return ($a['step_order'] ?? 0) <=> ($b['step_order'] ?? 0);
             });
             return new MockMySQLiResult($rows);
+        }
+        if (stripos($sql, 'bot_failed_questions') !== false) {
+            $failed_list = [];
+            foreach ($db['bot_failed_questions'] ?? [] as $q) {
+                $failed_list[] = [
+                    'id' => $q['id'],
+                    'session_id' => $q['session_id'] ?? 1,
+                    'user_id' => $q['user_id'] ?? null,
+                    'customer_name' => 'Guest Customer',
+                    'customer_email' => '',
+                    'language_iso' => $q['language_iso'] ?? 'en',
+                    'unanswered_question' => $q['unanswered_question'] ?? '',
+                    'page_context_url' => $q['page_context_url'] ?? 'bot-landing.php',
+                    'session_token' => 'mock-token',
+                    'entry_point' => 'mock-entry',
+                    'created_at' => $q['created_at'] ?? date('Y-m-d H:i:s')
+                ];
+            }
+            return new MockMySQLiResult($failed_list);
         }
         if (stripos($sql, 'bot_interaction_logs') !== false) {
             if (stripos($sql, 'COUNT(*)') !== false && stripos($sql, 'GROUP BY') !== false) {
@@ -594,7 +716,13 @@ class MockMySQLiStmt {
             $this->result_rows = $db['voice_telemetry_logs'] ?? [];
         }
         elseif (stripos($sql, 'INSERT INTO bot_failed_questions') !== false) {
+            // Check table exists or init
+            if (!isset($db['bot_failed_questions'])) {
+                $db['bot_failed_questions'] = [];
+            }
+            $new_id = count($db['bot_failed_questions']) + 1;
             $db['bot_failed_questions'][] = [
+                'id' => $new_id,
                 'session_id' => $this->params[0] ?? null,
                 'user_id' => $this->params[1] ?? null,
                 'language_iso' => $this->params[2] ?? null,
@@ -603,7 +731,69 @@ class MockMySQLiStmt {
                 'created_at' => date('Y-m-d H:i:s')
             ];
             MockDbHelper::write($db);
-            $this->insert_id = count($db['bot_failed_questions']);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'DELETE FROM bot_failed_questions') !== false) {
+            $q_id = (int)($this->params[0] ?? 0);
+            $filtered = [];
+            if (isset($db['bot_failed_questions'])) {
+                foreach ($db['bot_failed_questions'] as $item) {
+                    if ((int)$item['id'] !== $q_id) {
+                        $filtered[] = $item;
+                    }
+                }
+                $db['bot_failed_questions'] = $filtered;
+                MockDbHelper::write($db);
+            }
+        }
+        elseif (stripos($sql, 'INSERT INTO bot_intent_synonyms') !== false) {
+            if (!isset($db['bot_intent_synonyms'])) {
+                $db['bot_intent_synonyms'] = [];
+            }
+            $new_id = count($db['bot_intent_synonyms']) + 1;
+            $db['bot_intent_synonyms'][] = [
+                'id' => $new_id,
+                'system_intent_key' => $this->params[0] ?? '',
+                'phrase_variant' => $this->params[1] ?? '',
+                'language_code' => $this->params[2] ?? ''
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'FROM bot_intent_synonyms') !== false) {
+            $matched = [];
+            if (stripos($sql, 'phrase_variant') !== false && count($this->params) >= 2) {
+                $phrase = $this->params[0];
+                $lang_val = $this->params[1];
+                foreach ($db['bot_intent_synonyms'] ?? [] as $syn) {
+                    if ($syn['phrase_variant'] === $phrase && $syn['language_code'] === $lang_val) {
+                        $matched[] = $syn;
+                    }
+                }
+            } else {
+                $matched = $db['bot_intent_synonyms'] ?? [];
+            }
+            $this->result_rows = $matched;
+        }
+        elseif (stripos($sql, 'FROM bot_failed_questions') !== false) {
+            // Emulate the failed questions list with sessions joined if needed
+            $failed_list = [];
+            foreach ($db['bot_failed_questions'] ?? [] as $q) {
+                $failed_list[] = [
+                    'id' => $q['id'],
+                    'session_id' => $q['session_id'],
+                    'user_id' => $q['user_id'],
+                    'customer_name' => 'Guest Customer',
+                    'customer_email' => '',
+                    'language_iso' => $q['language_iso'],
+                    'unanswered_question' => $q['unanswered_question'],
+                    'page_context_url' => $q['page_context_url'],
+                    'session_token' => 'mock-token',
+                    'entry_point' => 'mock-entry',
+                    'created_at' => $q['created_at']
+                ];
+            }
+            $this->result_rows = $failed_list;
         }
         elseif (stripos($sql, 'SELECT * FROM bot_ads WHERE id = ?') !== false) {
             $ad_id = (int)($this->params[0] ?? 0);

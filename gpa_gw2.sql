@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `customer_applications`;
 DROP TABLE IF EXISTS `bot_ad_fraud_logs`;
 DROP TABLE IF EXISTS `bot_ad_clicks`;
 DROP TABLE IF EXISTS `bot_ads`;
+DROP TABLE IF EXISTS `bot_intent_synonyms`;
 DROP TABLE IF EXISTS `bot_interaction_logs`;
 DROP TABLE IF EXISTS `bot_failed_questions`;
 DROP TABLE IF EXISTS `bot_chat_logs`;
@@ -842,6 +843,19 @@ CREATE TABLE `bot_interaction_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Table structure for table `bot_intent_synonyms`
+--
+
+CREATE TABLE `bot_intent_synonyms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `system_intent_key` varchar(150) NOT NULL,
+  `phrase_variant` varchar(255) NOT NULL,
+  `language_code` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_phrase_variant` (`phrase_variant`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `bot_failed_questions`
 --
 
@@ -1251,7 +1265,21 @@ LOCK TABLES `bot_workflow_steps` WRITE;
 INSERT INTO `bot_workflow_steps` (`id`, `step_key`, `step_order`, `primary_question_en`, `primary_question_fr`, `primary_question_ar`, `primary_question_ur`, `interface_target`, `execution_action`, `parent_step_id`) VALUES
 (1, 'welcome_funnel', 10, 'Welcome to GlobalWays! Please select your service category below to personalize your journey.', 'Bienvenue sur GlobalWays ! Veuillez sélectionner votre catégorie de service ci-dessous pour personnaliser votre parcours.', 'مرحباً بك في غلوبال وايز! يرجى تحديد فئة الخدمة الخاصة بك أدناه لتخصيص رحلتك.', 'گلوبل ویز میں خوش آمدید! برائے مہربانی اپنا سفر ذاتی بنانے کے لیے نیچے اپنی سروس کیٹیگری منتخب کریں۔', 'left_window', 'none', NULL),
 (2, 'category_selection', 20, 'Excellent! We have updated the right panel layout with customized service options. What would you like to do next?', 'Excellent ! Nous avons mis à jour la mise en page du panneau de droite avec des options de service personnalisées. Que souhaitez-vous faire ensuite ?', 'ممتاز! لقد قمنا بتحديث تخطيط اللوحة اليمنى بخيارات الخدمة المخصصة. ماذا تحب أن تفعل بعد ذلك؟', 'بہت خوب! ہم نے کسٹمائزڈ سروس آپشنز کے ساتھ دائیں پینل کا لے آؤٹ اپ ڈیٹ کر دیا ہے۔ اب آپ آگے کیا کرنا چاہیں گے؟', 'right_window', 'hydrate_right_panel', 1),
-(3, 'business_setup_dispatch', 30, 'We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?', 'Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d\'entreprise. Souhaitez-vous continuer ?', 'يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟', 'ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟', 'right_window', 'dispatch_case_meeting', 2);
+(3, 'business_setup_dispatch', 30, 'We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?', 'Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d\'entreprise. Souhaitez-vous continuer ?', 'يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟', 'ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟', 'right_window', 'dispatch_case_meeting', 2),
+(4, 'intent_business_setup', 25, 'Loading the Business Setup module with customized service options. How can I help you today?', 'Chargement du module de création d\'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?', 'نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟', 'ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟', 'right_window', 'hydrate_right_panel', 1);
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bot_intent_synonyms`
+--
+
+LOCK TABLES `bot_intent_synonyms` WRITE;
+INSERT INTO `bot_intent_synonyms` (`id`, `system_intent_key`, `phrase_variant`, `language_code`) VALUES
+(1, 'intent_business_setup', 'start a business', 'en'),
+(2, 'intent_business_setup', 'launch a company', 'en'),
+(3, 'intent_business_setup', 'open an office', 'en'),
+(4, 'intent_business_setup', 'incorporate a firm', 'en'),
+(5, 'intent_business_setup', 'launch a brand new company', 'en');
 UNLOCK TABLES;
 
 --

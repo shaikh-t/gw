@@ -239,19 +239,35 @@ if (!is_array($input)) {
 $session_token = isset($input['session_token']) ? trim($input['session_token']) : '';
 $node_id = isset($input['node_id']) ? (int)$input['node_id'] : null;
 
-// Strongly Type and Sanitize spoken and textual inputs to prevent XSS
+// Extract raw inputs for clean NLP processing
 $message_content = isset($input['message']) ? trim($input['message']) : '';
-if ($message_content !== '') {
-    $message_content = htmlspecialchars($message_content, ENT_QUOTES, 'UTF-8');
+$spoken_input_message = isset($input['spoken_input_message']) ? trim($input['spoken_input_message']) : '';
+if ($message_content === '' && $spoken_input_message !== '') {
+    $message_content = $spoken_input_message;
 }
 
-$spoken_input_message = isset($input['spoken_input_message']) ? trim($input['spoken_input_message']) : '';
-if ($spoken_input_message !== '') {
-    $spoken_input_message = htmlspecialchars($spoken_input_message, ENT_QUOTES, 'UTF-8');
-    // If message is empty but spoken is set, sync them
-    if ($message_content === '') {
-        $message_content = $spoken_input_message;
-    }
+// Resolve active language early
+$lang = 'en';
+if (isset($_SESSION['bot_page_context']['language_iso'])) {
+    $lang = $_SESSION['bot_page_context']['language_iso'];
+} elseif (isset($_SESSION['selected_language'])) {
+    $lang = $_SESSION['selected_language'];
+} elseif (isset($input['language_iso'])) {
+    $lang = $input['language_iso'];
+}
+if (!in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
+    $lang = 'en';
+}
+
+// Apply NLP Pre-Processing & Intent Matching Layer
+require_once __DIR__ . '/../lib/nlp_processor.php';
+if ($message_content !== '') {
+    $message_content = NlpProcessor::process($message_content, $lang);
+}
+
+// Strongly Type and Sanitize spoken and textual inputs to prevent XSS
+if ($message_content !== '') {
+    $message_content = htmlspecialchars($message_content, ENT_QUOTES, 'UTF-8');
 }
 
 // Enforce strict regex validation for payload_value
@@ -679,6 +695,25 @@ if ($is_immersive) {
 
     $active_state_token = isset($input['step_key']) ? trim($input['step_key']) : ($_SESSION['active_workflow_state_token'] ?? 'welcome_funnel');
 
+    // If message matches a valid step key in the database, transition to it instantly
+    if ($message_content !== '' && strtolower($message_content) !== 'reset' && strtolower($message_content) !== 'start fresh') {
+        $stmt_check = $mysqli->prepare("SELECT step_key FROM bot_workflow_steps WHERE step_key = ? LIMIT 1");
+        if ($stmt_check) {
+            $stmt_check->bind_param('s', $message_content);
+            $stmt_check->execute();
+            $res_check = $stmt_check->get_result();
+            if ($res_check && $res_check->num_rows > 0) {
+                $active_state_token = $message_content;
+                $_SESSION['active_workflow_state_token'] = $active_state_token;
+            }
+            $stmt_check->close();
+        }
+    }
+
+    if ($active_state_token === 'intent_business_setup') {
+        $_SESSION['selected_workflow_payload'] = 'Business Setup';
+    }
+
     // Process voice or click interaction based on matched option labels
     if ($message_content !== '' && strtolower($message_content) !== 'reset' && strtolower($message_content) !== 'start fresh') {
         // Resolve options for active step and match
@@ -695,7 +730,9 @@ if ($is_immersive) {
         if ($current_step) {
             $options = get_workflow_options($current_step, $lang);
             foreach ($options as $opt) {
-                if (strcasecmp($opt['label'], $message_content) === 0 || stripos($message_content, $opt['label']) !== false) {
+                if (strcasecmp($opt['label'], $message_content) === 0
+                    || stripos($message_content, $opt['label']) !== false
+                    || (isset($opt['step_key']) && strcasecmp($opt['step_key'], $message_content) === 0)) {
                     $matched_opt = $opt;
                     break;
                 }

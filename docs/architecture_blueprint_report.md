@@ -324,6 +324,16 @@ graph TD
 #### 3. Control Character Mitigation
 To block command injection or terminal escape sequence bypasses inside voice logging environments, `api/bot-controller.php` strictly strips out raw terminal control characters (e.g. ASCII ranges `0-31` and `127`) and applies aggressive `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')` filtering prior to database commits.
 
+#### 4. NLP Pre-Processing & Intent Matching Layer
+To handle colloquial variations, spelling errors, and multi-lingual synonyms uniformly across English, French, Arabic, and Urdu/Hindi, the system incorporates a data-driven NLP Pre-Processing and Intent Matching Layer (`lib/nlp_processor.php`).
+*   **Step A (Normalization)**: Input text is stripped of punctuation flags uniformly using the standard unicode `\p{P}` regular expression, mapped to lowercase via `mb_strtolower()`, and cleared of excessive spacing.
+*   **Step B (Spelling / Typo Correction)**: Words 4 characters or longer are evaluated word-by-word against approved system keywords. The maximum allowed edit distance is calculated using the dynamic proportional formula: `max_allowed = max(1, floor(keyword_length / 4))`. Typo tokens are automatically replaced by corrected keywords instantly.
+*   **Step C (Dual-Layer Synonym Resolution)**:
+    1.  *Exact Match Pass*: The clean normalized string is compared directly against the `bot_intent_synonyms` table records for the active language.
+    2.  *Substring Boundary Fallback*: If no exact match is found, the engine falls back to a substring boundary evaluation loop checking if an isolated concept block synonym matches.
+    3.  *Workflow Step Mapping & Transition*: If a match is caught, the user's raw input message context is swapped for the resolved `system_intent_key`, and the workflow engine automatically transitions the active conversational token programmatically.
+*   **Live Mapping & Failed Question Resolution**: Inside `admin/crm/failed-questions.php`, administrators review chronological unmapped conversational queries and can click "Map as Alternative Phrase" to open a CSP-compliant modal and map it directly to an active `step_key` from `bot_workflow_steps`. Submitting recorded synonyms automatically resolves and purges the unmapped question from `bot_failed_questions`.
+
 ---
 
 ### C. Gateway Protocols & Secure Transaction Pipelines
