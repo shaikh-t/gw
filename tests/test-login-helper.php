@@ -22,7 +22,7 @@ if ($role === 'admin_with_permission') {
         'name' => 'Authorized Admin',
         'email' => 'auth-admin@example.com'
     ];
-    $_SESSION['mock_permissions'] = ['dashboard.view', 'cache.clear', 'manage_system_analytics', 'view_voice_telemetry', 'manage_bot_steps', 'view_bot_interaction_logs'];
+    $_SESSION['mock_permissions'] = ['dashboard.view', 'cache.clear', 'manage_system_analytics', 'view_voice_telemetry', 'manage_bot_steps', 'view_bot_interaction_logs', 'can_view_failed_queries', 'manage_bot_keywords'];
     $_SESSION['mock_roles'] = ['Super Admin'];
 } elseif ($role === 'admin_no_permission') {
     $_SESSION['user'] = [

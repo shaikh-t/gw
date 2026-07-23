@@ -33,6 +33,8 @@ DROP TABLE IF EXISTS `customer_applications`;
 DROP TABLE IF EXISTS `bot_ad_fraud_logs`;
 DROP TABLE IF EXISTS `bot_ad_clicks`;
 DROP TABLE IF EXISTS `bot_ads`;
+DROP TABLE IF EXISTS `bot_approved_keywords`;
+DROP TABLE IF EXISTS `bot_intent_synonyms`;
 DROP TABLE IF EXISTS `bot_interaction_logs`;
 DROP TABLE IF EXISTS `bot_failed_questions`;
 DROP TABLE IF EXISTS `bot_chat_logs`;
@@ -842,6 +844,31 @@ CREATE TABLE `bot_interaction_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Table structure for table `bot_approved_keywords`
+--
+
+CREATE TABLE `bot_approved_keywords` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `keyword_token` varchar(255) NOT NULL UNIQUE,
+  `language_code` varchar(10) NOT NULL,
+  `created_at` timestamp DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `bot_intent_synonyms`
+--
+
+CREATE TABLE `bot_intent_synonyms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `system_intent_key` varchar(150) NOT NULL,
+  `phrase_variant` varchar(255) NOT NULL,
+  `language_code` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_phrase_variant` (`phrase_variant`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `bot_failed_questions`
 --
 
@@ -1057,7 +1084,8 @@ INSERT INTO `permissions` VALUES
 (24,'f5c9ef31-86f5-41d4-9315-cd18ce733f36','manage_system_analytics','Voice & Analytics Control','Allows managing site analytics and premium voice settings',current_timestamp()),
 (25,'72ac51ad-bb63-4d01-aeab-d5d1b64481df','view_voice_telemetry','Voice & Analytics Telemetry','Allows viewing voice assistant analytics and telemetry',current_timestamp()),
 (26,'3c10b24d-de91-4993-847c-7206b12a831e','manage_bot_steps','Manage Bot Steps','List, create, edit, delete and reorder conversational workflow steps',current_timestamp()),
-(27,'01217e99-994c-47bc-ad7e-90e0b3c8eb72','view_bot_interaction_logs','View Bot Interaction Logs','List, filter and view chronological multilingual conversational interaction logs',current_timestamp());
+(27,'01217e99-994c-47bc-ad7e-90e0b3c8eb72','view_bot_interaction_logs','View Bot Interaction Logs','List, filter and view chronological multilingual conversational interaction logs',current_timestamp()),
+(28,'5c10b24d-de91-4993-847c-7206b12a831f','manage_bot_keywords','Manage Bot Keywords','Allows administrators to list, create, and delete bot approved keywords',current_timestamp());
 UNLOCK TABLES;
 
 --
@@ -1251,7 +1279,132 @@ LOCK TABLES `bot_workflow_steps` WRITE;
 INSERT INTO `bot_workflow_steps` (`id`, `step_key`, `step_order`, `primary_question_en`, `primary_question_fr`, `primary_question_ar`, `primary_question_ur`, `interface_target`, `execution_action`, `parent_step_id`) VALUES
 (1, 'welcome_funnel', 10, 'Welcome to GlobalWays! Please select your service category below to personalize your journey.', 'Bienvenue sur GlobalWays ! Veuillez sélectionner votre catégorie de service ci-dessous pour personnaliser votre parcours.', 'مرحباً بك في غلوبال وايز! يرجى تحديد فئة الخدمة الخاصة بك أدناه لتخصيص رحلتك.', 'گلوبل ویز میں خوش آمدید! برائے مہربانی اپنا سفر ذاتی بنانے کے لیے نیچے اپنی سروس کیٹیگری منتخب کریں۔', 'left_window', 'none', NULL),
 (2, 'category_selection', 20, 'Excellent! We have updated the right panel layout with customized service options. What would you like to do next?', 'Excellent ! Nous avons mis à jour la mise en page du panneau de droite avec des options de service personnalisées. Que souhaitez-vous faire ensuite ?', 'ممتاز! لقد قمنا بتحديث تخطيط اللوحة اليمنى بخيارات الخدمة المخصصة. ماذا تحب أن تفعل بعد ذلك؟', 'بہت خوب! ہم نے کسٹمائزڈ سروس آپشنز کے ساتھ دائیں پینل کا لے آؤٹ اپ ڈیٹ کر دیا ہے۔ اب آپ آگے کیا کرنا چاہیں گے؟', 'right_window', 'hydrate_right_panel', 1),
-(3, 'business_setup_dispatch', 30, 'We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?', 'Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d\'entreprise. Souhaitez-vous continuer ?', 'يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟', 'ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟', 'right_window', 'dispatch_case_meeting', 2);
+(3, 'business_setup_dispatch', 30, 'We can dispatch an automated meeting request to schedule a business setup consultation. Would you like to proceed?', 'Nous pouvons envoyer une demande de rendez-vous automatique pour planifier une consultation sur la création d\'entreprise. Souhaitez-vous continuer ?', 'يمكننا إرسال طلب اجتماع تلقائي لجدولة استشارة لتأسيس الشركة. هل ترغب في المتابعة؟', 'ہم بزنس سیٹ اپ مشاورت کے لیے ایک خودکار میٹنگ کی درخواست بھیج سکتے ہیں۔ کیا آپ آگے بڑھنا چاہیں گے؟', 'right_window', 'dispatch_case_meeting', 2),
+(4, 'intent_business_setup', 25, 'Loading the Business Setup module with customized service options. How can I help you today?', 'Chargement du module de création d\'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?', 'نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟', 'ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟', 'right_window', 'hydrate_right_panel', 1);
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bot_intent_synonyms`
+--
+
+LOCK TABLES `bot_intent_synonyms` WRITE;
+INSERT INTO `bot_intent_synonyms` (`id`, `system_intent_key`, `phrase_variant`, `language_code`) VALUES
+(1, 'intent_business_setup', 'start a business', 'en'),
+(2, 'intent_business_setup', 'launch a company', 'en'),
+(3, 'intent_business_setup', 'open an office', 'en'),
+(4, 'intent_business_setup', 'incorporate a firm', 'en'),
+(5, 'intent_business_setup', 'launch a brand new company', 'en'),
+(6, 'intent_business_setup', 'کاروبار', 'ur');
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bot_approved_keywords`
+--
+
+LOCK TABLES `bot_approved_keywords` WRITE;
+INSERT INTO `bot_approved_keywords` (`keyword_token`, `language_code`) VALUES
+('business', 'en'),
+('setup', 'en'),
+('company', 'en'),
+('immigration', 'en'),
+('visa', 'en'),
+('office', 'en'),
+('consultation', 'en'),
+('start', 'en'),
+('launch', 'en'),
+('open', 'en'),
+('incorporate', 'en'),
+('firm', 'en'),
+('services', 'en'),
+('meeting', 'en'),
+('schedule', 'en'),
+('register', 'en'),
+('welcome', 'en'),
+('funnel', 'en'),
+('selection', 'en'),
+('dispatch', 'en'),
+('visit', 'en'),
+('tourism', 'en'),
+('license', 'en'),
+('permit', 'en'),
+('emirates', 'en'),
+('national', 'en'),
+('stamping', 'en'),
+('attestation', 'en'),
+('renewal', 'en'),
+('consultant', 'en'),
+('advisory', 'en'),
+('partner', 'en'),
+('booking', 'en'),
+('entreprise', 'fr'),
+('installation', 'fr'),
+('societe', 'fr'),
+('immigration', 'fr'),
+('visa', 'fr'),
+('bureau', 'fr'),
+('consultation', 'fr'),
+('commencer', 'fr'),
+('lancement', 'fr'),
+('ouvrir', 'fr'),
+('incorporer', 'fr'),
+('firme', 'fr'),
+('services', 'fr'),
+('rendezvous', 'fr'),
+('planifier', 'fr'),
+('enregistrer', 'fr'),
+('bienvenue', 'fr'),
+('selection', 'fr'),
+('visite', 'fr'),
+('tourisme', 'fr'),
+('permis', 'fr'),
+('licence', 'fr'),
+('stamping', 'fr'),
+('attestation', 'fr'),
+('renouvellement', 'fr'),
+('partenaire', 'fr'),
+('reservation', 'fr'),
+('شركة', 'ar'),
+('تأسيس', 'ar'),
+('هجرة', 'ar'),
+('تأشيرة', 'ar'),
+('مكتب', 'ar'),
+('استشارة', 'ar'),
+('بدء', 'ar'),
+('إطلاق', 'ar'),
+('فتح', 'ar'),
+('خدمات', 'ar'),
+('اجتماع', 'ar'),
+('جدول', 'ar'),
+('سجل', 'ar'),
+('مرحبا', 'ar'),
+('اختيار', 'ar'),
+('زيارة', 'ar'),
+('سياحة', 'ar'),
+('رخصة', 'ar'),
+('تصريح', 'ar'),
+('شريك', 'ar'),
+('حجز', 'ar'),
+('کاروبار', 'ur'),
+('سیٹ_اپ', 'ur'),
+('کمپنی', 'ur'),
+('امیگریشن', 'ur'),
+('ویزہ', 'ur'),
+('دفتر', 'ur'),
+('مشاورت', 'ur'),
+('شروع', 'ur'),
+('لانچ', 'ur'),
+('کھولیں', 'ur'),
+('سروسز', 'ur'),
+('میٹنگ', 'ur'),
+('شیڈول', 'ur'),
+('رجسٹر', 'ur'),
+('خوش_آمدید', 'ur'),
+('انتخاب', 'ur'),
+('دورہ', 'ur'),
+('سیاحت', 'ur'),
+('لائسنس', 'ur'),
+('شراکت_دار', 'ur'),
+('بکنگ', 'ur');
 UNLOCK TABLES;
 
 --
@@ -1478,7 +1631,9 @@ INSERT INTO `role_permissions` VALUES
 (1,26,current_timestamp()),
 (1,27,current_timestamp()),
 (4,26,current_timestamp()),
-(4,27,current_timestamp());
+(4,27,current_timestamp()),
+(1,28,current_timestamp()),
+(4,28,current_timestamp());
 UNLOCK TABLES;
 
 --

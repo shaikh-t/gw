@@ -76,6 +76,148 @@ class MockDbHelper {
                 ],
                 "bot_ad_fraud_logs" => [],
                 "bot_failed_questions" => [],
+                "bot_approved_keywords" => [
+                    ["id" => 1, "keyword_token" => "business", "language_code" => "en"],
+                    ["id" => 2, "keyword_token" => "setup", "language_code" => "en"],
+                    ["id" => 3, "keyword_token" => "company", "language_code" => "en"],
+                    ["id" => 4, "keyword_token" => "immigration", "language_code" => "en"],
+                    ["id" => 5, "keyword_token" => "visa", "language_code" => "en"],
+                    ["id" => 6, "keyword_token" => "office", "language_code" => "en"],
+                    ["id" => 7, "keyword_token" => "consultation", "language_code" => "en"],
+                    ["id" => 8, "keyword_token" => "start", "language_code" => "en"],
+                    ["id" => 9, "keyword_token" => "launch", "language_code" => "en"],
+                    ["id" => 10, "keyword_token" => "open", "language_code" => "en"],
+                    ["id" => 11, "keyword_token" => "incorporate", "language_code" => "en"],
+                    ["id" => 12, "keyword_token" => "firm", "language_code" => "en"],
+                    ["id" => 13, "keyword_token" => "services", "language_code" => "en"],
+                    ["id" => 14, "keyword_token" => "meeting", "language_code" => "en"],
+                    ["id" => 15, "keyword_token" => "schedule", "language_code" => "en"],
+                    ["id" => 16, "keyword_token" => "register", "language_code" => "en"],
+                    ["id" => 17, "keyword_token" => "welcome", "language_code" => "en"],
+                    ["id" => 18, "keyword_token" => "funnel", "language_code" => "en"],
+                    ["id" => 19, "keyword_token" => "selection", "language_code" => "en"],
+                    ["id" => 20, "keyword_token" => "dispatch", "language_code" => "en"],
+                    ["id" => 21, "keyword_token" => "visit", "language_code" => "en"],
+                    ["id" => 22, "keyword_token" => "tourism", "language_code" => "en"],
+                    ["id" => 23, "keyword_token" => "license", "language_code" => "en"],
+                    ["id" => 24, "keyword_token" => "permit", "language_code" => "en"],
+                    ["id" => 25, "keyword_token" => "emirates", "language_code" => "en"],
+                    ["id" => 26, "keyword_token" => "national", "language_code" => "en"],
+                    ["id" => 27, "keyword_token" => "stamping", "language_code" => "en"],
+                    ["id" => 28, "keyword_token" => "attestation", "language_code" => "en"],
+                    ["id" => 29, "keyword_token" => "renewal", "language_code" => "en"],
+                    ["id" => 30, "keyword_token" => "consultant", "language_code" => "en"],
+                    ["id" => 31, "keyword_token" => "advisory", "language_code" => "en"],
+                    ["id" => 32, "keyword_token" => "partner", "language_code" => "en"],
+                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"],
+                    ["id" => 34, "keyword_token" => "entreprise", "language_code" => "fr"],
+                    ["id" => 35, "keyword_token" => "installation", "language_code" => "fr"],
+                    ["id" => 36, "keyword_token" => "societe", "language_code" => "fr"],
+                    ["id" => 37, "keyword_token" => "immigration", "language_code" => "fr"],
+                    ["id" => 38, "keyword_token" => "visa", "language_code" => "fr"],
+                    ["id" => 39, "keyword_token" => "bureau", "language_code" => "fr"],
+                    ["id" => 40, "keyword_token" => "consultation", "language_code" => "fr"],
+                    ["id" => 41, "keyword_token" => "commencer", "language_code" => "fr"],
+                    ["id" => 42, "keyword_token" => "lancement", "language_code" => "fr"],
+                    ["id" => 43, "keyword_token" => "ouvrir", "language_code" => "fr"],
+                    ["id" => 44, "keyword_token" => "incorporer", "language_code" => "fr"],
+                    ["id" => 45, "keyword_token" => "firme", "language_code" => "fr"],
+                    ["id" => 46, "keyword_token" => "services", "language_code" => "fr"],
+                    ["id" => 47, "keyword_token" => "rendezvous", "language_code" => "fr"],
+                    ["id" => 48, "keyword_token" => "planifier", "language_code" => "fr"],
+                    ["id" => 49, "keyword_token" => "enregistrer", "language_code" => "fr"],
+                    ["id" => 50, "keyword_token" => "bienvenue", "language_code" => "fr"],
+                    ["id" => 51, "keyword_token" => "selection", "language_code" => "fr"],
+                    ["id" => 52, "keyword_token" => "visite", "language_code" => "fr"],
+                    ["id" => 53, "keyword_token" => "tourisme", "language_code" => "fr"],
+                    ["id" => 54, "keyword_token" => "permis", "language_code" => "fr"],
+                    ["id" => 55, "keyword_token" => "licence", "language_code" => "fr"],
+                    ["id" => 56, "keyword_token" => "stamping", "language_code" => "fr"],
+                    ["id" => 57, "keyword_token" => "attestation", "language_code" => "fr"],
+                    ["id" => 58, "keyword_token" => "renouvellement", "language_code" => "fr"],
+                    ["id" => 59, "keyword_token" => "partenaire", "language_code" => "fr"],
+                    ["id" => 60, "keyword_token" => "reservation", "language_code" => "fr"],
+                    ["id" => 61, "keyword_token" => "شركة", "language_code" => "ar"],
+                    ["id" => 62, "keyword_token" => "تأسيس", "language_code" => "ar"],
+                    ["id" => 63, "keyword_token" => "هجرة", "language_code" => "ar"],
+                    ["id" => 64, "keyword_token" => "تأشيرة", "language_code" => "ar"],
+                    ["id" => 65, "keyword_token" => "مكتب", "language_code" => "ar"],
+                    ["id" => 66, "keyword_token" => "استشارة", "language_code" => "ar"],
+                    ["id" => 67, "keyword_token" => "بدء", "language_code" => "ar"],
+                    ["id" => 68, "keyword_token" => "إطلاق", "language_code" => "ar"],
+                    ["id" => 69, "keyword_token" => "فتح", "language_code" => "ar"],
+                    ["id" => 70, "keyword_token" => "خدمات", "language_code" => "ar"],
+                    ["id" => 71, "keyword_token" => "اجتماع", "language_code" => "ar"],
+                    ["id" => 72, "keyword_token" => "جدول", "language_code" => "ar"],
+                    ["id" => 73, "keyword_token" => "سجل", "language_code" => "ar"],
+                    ["id" => 74, "keyword_token" => "مرحبا", "language_code" => "ar"],
+                    ["id" => 75, "keyword_token" => "اختيار", "language_code" => "ar"],
+                    ["id" => 76, "keyword_token" => "زيارة", "language_code" => "ar"],
+                    ["id" => 77, "keyword_token" => "سياحة", "language_code" => "ar"],
+                    ["id" => 78, "keyword_token" => "رخصة", "language_code" => "ar"],
+                    ["id" => 79, "keyword_token" => "تصريح", "language_code" => "ar"],
+                    ["id" => 80, "keyword_token" => "شريك", "language_code" => "ar"],
+                    ["id" => 81, "keyword_token" => "حجز", "language_code" => "ar"],
+                    ["id" => 82, "keyword_token" => "کاروبار", "language_code" => "ur"],
+                    ["id" => 83, "keyword_token" => "سیٹ_اپ", "language_code" => "ur"],
+                    ["id" => 84, "keyword_token" => "کمپنی", "language_code" => "ur"],
+                    ["id" => 85, "keyword_token" => "امیگریشن", "language_code" => "ur"],
+                    ["id" => 86, "keyword_token" => "ویزہ", "language_code" => "ur"],
+                    ["id" => 87, "keyword_token" => "دفتر", "language_code" => "ur"],
+                    ["id" => 88, "keyword_token" => "مشاورت", "language_code" => "ur"],
+                    ["id" => 89, "keyword_token" => "شروع", "language_code" => "ur"],
+                    ["id" => 90, "keyword_token" => "لانچ", "language_code" => "ur"],
+                    ["id" => 91, "keyword_token" => "کھولیں", "language_code" => "ur"],
+                    ["id" => 92, "keyword_token" => "سروسز", "language_code" => "ur"],
+                    ["id" => 93, "keyword_token" => "میٹنگ", "language_code" => "ur"],
+                    ["id" => 94, "keyword_token" => "شیڈول", "language_code" => "ur"],
+                    ["id" => 95, "keyword_token" => "رجسٹر", "language_code" => "ur"],
+                    ["id" => 96, "keyword_token" => "خوش_آمدید", "language_code" => "ur"],
+                    ["id" => 97, "keyword_token" => "انتخاب", "language_code" => "ur"],
+                    ["id" => 98, "keyword_token" => "دورہ", "language_code" => "ur"],
+                    ["id" => 99, "keyword_token" => "سیاحت", "language_code" => "ur"],
+                    ["id" => 100, "keyword_token" => "لائسنس", "language_code" => "ur"],
+                    ["id" => 101, "keyword_token" => "شراکت_دار", "language_code" => "ur"],
+                    ["id" => 102, "keyword_token" => "بکنگ", "language_code" => "ur"]
+                ],
+                "bot_intent_synonyms" => [
+                    [
+                        "id" => 1,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "start a business",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 2,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "launch a company",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 3,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "open an office",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 4,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "incorporate a firm",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 5,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "launch a brand new company",
+                        "language_code" => "en"
+                    ],
+                    [
+                        "id" => 6,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "کاروبار",
+                        "language_code" => "ur"
+                    ]
+                ],
                 "payment_transactions" => [],
                 "customer_payments" => [],
                 "customer_applications" => [],
@@ -118,6 +260,18 @@ class MockDbHelper {
                         "interface_target" => "right_window",
                         "execution_action" => "dispatch_case_meeting",
                         "parent_step_id" => 2
+                    ],
+                    [
+                        "id" => 4,
+                        "step_key" => "intent_business_setup",
+                        "step_order" => 25,
+                        "primary_question_en" => "Loading the Business Setup module with customized service options. How can I help you today?",
+                        "primary_question_fr" => "Chargement du module de création d'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?",
+                        "primary_question_ar" => "نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟",
+                        "primary_question_ur" => "ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
                     ]
                 ],
                 "bot_interaction_logs" => []
@@ -166,7 +320,103 @@ class MockDbHelper {
                     ]
                 ];
                 $modified = true;
+            } else {
+                $has_intent_step = false;
+                foreach ($db['bot_workflow_steps'] as $st) {
+                    if (($st['step_key'] ?? '') === 'intent_business_setup') {
+                        $has_intent_step = true;
+                    }
+                }
+                if (!$has_intent_step) {
+                    $db['bot_workflow_steps'][] = [
+                        "id" => 4,
+                        "step_key" => "intent_business_setup",
+                        "step_order" => 25,
+                        "primary_question_en" => "Loading the Business Setup module with customized service options. How can I help you today?",
+                        "primary_question_fr" => "Chargement du module de création d'entreprise avec des options de service personnalisées. Comment puis-je vous aider ?",
+                        "primary_question_ar" => "نقوم بتحميل قسم تأسيس الشركات بخيارات الخدمة المخصصة. كيف يمكنني مساعدتك اليوم؟",
+                        "primary_question_ur" => "ہم کسٹمائزڈ سروس آپشنز کے ساتھ بزنس سیٹ اپ ماڈیول لوڈ کر رہے ہیں۔ آج آپ کی کیا مدد کر سکتا ہوں؟",
+                        "interface_target" => "right_window",
+                        "execution_action" => "hydrate_right_panel",
+                        "parent_step_id" => 1
+                    ];
+                    $modified = true;
+                }
             }
+
+            if (!isset($db['bot_approved_keywords']) || count($db['bot_approved_keywords']) < 50) {
+                $db['bot_approved_keywords'] = [];
+                $id = 1;
+                require_once __DIR__ . '/nlp_processor.php';
+                foreach (NlpProcessor::$fallback_keywords as $l => $tokens) {
+                    foreach ($tokens as $tok) {
+                        $db['bot_approved_keywords'][] = [
+                            "id" => $id++,
+                            "keyword_token" => $tok,
+                            "language_code" => $l,
+                            "created_at" => date('Y-m-d H:i:s')
+                        ];
+                    }
+                }
+                $modified = true;
+            }
+
+            // Ensure all keywords have created_at set to avoid warnings
+            if (isset($db['bot_approved_keywords'])) {
+                foreach ($db['bot_approved_keywords'] as &$item) {
+                    if (!isset($item['created_at'])) {
+                        $item['created_at'] = date('Y-m-d H:i:s');
+                        $modified = true;
+                    }
+                }
+            }
+
+            if (!isset($db['bot_intent_synonyms'])) {
+                $db['bot_intent_synonyms'] = [
+                    ["id" => 1, "system_intent_key" => "intent_business_setup", "phrase_variant" => "start a business", "language_code" => "en"],
+                    ["id" => 2, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a company", "language_code" => "en"],
+                    ["id" => 3, "system_intent_key" => "intent_business_setup", "phrase_variant" => "open an office", "language_code" => "en"],
+                    ["id" => 4, "system_intent_key" => "intent_business_setup", "phrase_variant" => "incorporate a firm", "language_code" => "en"]
+                ];
+                $modified = true;
+            } else {
+                $has_synonyms = false;
+                foreach ($db['bot_intent_synonyms'] as $sy) {
+                    if (($sy['phrase_variant'] ?? '') === 'start a business') {
+                        $has_synonyms = true;
+                    }
+                }
+                if (!$has_synonyms) {
+                    $db['bot_intent_synonyms'][] = ["id" => 1, "system_intent_key" => "intent_business_setup", "phrase_variant" => "start a business", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 2, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a company", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 3, "system_intent_key" => "intent_business_setup", "phrase_variant" => "open an office", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 4, "system_intent_key" => "intent_business_setup", "phrase_variant" => "incorporate a firm", "language_code" => "en"];
+                    $db['bot_intent_synonyms'][] = ["id" => 5, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a brand new company", "language_code" => "en"];
+                    $modified = true;
+                } else {
+                    $has_brand_new = false;
+                    foreach ($db['bot_intent_synonyms'] as $sy) {
+                        if (($sy['phrase_variant'] ?? '') === 'launch a brand new company') {
+                            $has_brand_new = true;
+                        }
+                    }
+                    if (!$has_brand_new) {
+                        $db['bot_intent_synonyms'][] = ["id" => 5, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a brand new company", "language_code" => "en"];
+                        $modified = true;
+                    }
+                    $has_urdu_syn = false;
+                    foreach ($db['bot_intent_synonyms'] as $sy) {
+                        if (($sy['phrase_variant'] ?? '') === 'کاروبار') {
+                            $has_urdu_syn = true;
+                        }
+                    }
+                    if (!$has_urdu_syn) {
+                        $db['bot_intent_synonyms'][] = ["id" => 6, "system_intent_key" => "intent_business_setup", "phrase_variant" => "کاروبار", "language_code" => "ur"];
+                        $modified = true;
+                    }
+                }
+            }
+
             if (!isset($db['bot_interaction_logs'])) {
                 $db['bot_interaction_logs'] = [];
                 $modified = true;
@@ -236,6 +486,28 @@ class MockMySQLi {
                 return ($a['step_order'] ?? 0) <=> ($b['step_order'] ?? 0);
             });
             return new MockMySQLiResult($rows);
+        }
+        if (stripos($sql, 'bot_approved_keywords') !== false) {
+            return new MockMySQLiResult($db['bot_approved_keywords'] ?? []);
+        }
+        if (stripos($sql, 'bot_failed_questions') !== false) {
+            $failed_list = [];
+            foreach ($db['bot_failed_questions'] ?? [] as $q) {
+                $failed_list[] = [
+                    'id' => $q['id'],
+                    'session_id' => $q['session_id'] ?? 1,
+                    'user_id' => $q['user_id'] ?? null,
+                    'customer_name' => 'Guest Customer',
+                    'customer_email' => '',
+                    'language_iso' => $q['language_iso'] ?? 'en',
+                    'unanswered_question' => $q['unanswered_question'] ?? '',
+                    'page_context_url' => $q['page_context_url'] ?? 'bot-landing.php',
+                    'session_token' => 'mock-token',
+                    'entry_point' => 'mock-entry',
+                    'created_at' => $q['created_at'] ?? date('Y-m-d H:i:s')
+                ];
+            }
+            return new MockMySQLiResult($failed_list);
         }
         if (stripos($sql, 'bot_interaction_logs') !== false) {
             if (stripos($sql, 'COUNT(*)') !== false && stripos($sql, 'GROUP BY') !== false) {
@@ -594,7 +866,13 @@ class MockMySQLiStmt {
             $this->result_rows = $db['voice_telemetry_logs'] ?? [];
         }
         elseif (stripos($sql, 'INSERT INTO bot_failed_questions') !== false) {
+            // Check table exists or init
+            if (!isset($db['bot_failed_questions'])) {
+                $db['bot_failed_questions'] = [];
+            }
+            $new_id = count($db['bot_failed_questions']) + 1;
             $db['bot_failed_questions'][] = [
+                'id' => $new_id,
                 'session_id' => $this->params[0] ?? null,
                 'user_id' => $this->params[1] ?? null,
                 'language_iso' => $this->params[2] ?? null,
@@ -603,7 +881,109 @@ class MockMySQLiStmt {
                 'created_at' => date('Y-m-d H:i:s')
             ];
             MockDbHelper::write($db);
-            $this->insert_id = count($db['bot_failed_questions']);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'DELETE FROM bot_failed_questions') !== false) {
+            $q_id = (int)($this->params[0] ?? 0);
+            $filtered = [];
+            if (isset($db['bot_failed_questions'])) {
+                foreach ($db['bot_failed_questions'] as $item) {
+                    if ((int)$item['id'] !== $q_id) {
+                        $filtered[] = $item;
+                    }
+                }
+                $db['bot_failed_questions'] = $filtered;
+                MockDbHelper::write($db);
+            }
+        }
+        elseif (stripos($sql, 'INSERT INTO bot_intent_synonyms') !== false) {
+            if (!isset($db['bot_intent_synonyms'])) {
+                $db['bot_intent_synonyms'] = [];
+            }
+            $new_id = count($db['bot_intent_synonyms']) + 1;
+            $db['bot_intent_synonyms'][] = [
+                'id' => $new_id,
+                'system_intent_key' => $this->params[0] ?? '',
+                'phrase_variant' => $this->params[1] ?? '',
+                'language_code' => $this->params[2] ?? ''
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'FROM bot_intent_synonyms') !== false) {
+            $matched = [];
+            if (stripos($sql, 'phrase_variant') !== false && count($this->params) >= 2) {
+                $phrase = $this->params[0];
+                $lang_val = $this->params[1];
+                foreach ($db['bot_intent_synonyms'] ?? [] as $syn) {
+                    if ($syn['phrase_variant'] === $phrase && $syn['language_code'] === $lang_val) {
+                        $matched[] = $syn;
+                    }
+                }
+            } else {
+                $matched = $db['bot_intent_synonyms'] ?? [];
+            }
+            $this->result_rows = $matched;
+        }
+        elseif (stripos($sql, 'INSERT INTO bot_approved_keywords') !== false) {
+            if (!isset($db['bot_approved_keywords'])) {
+                $db['bot_approved_keywords'] = [];
+            }
+            $new_id = count($db['bot_approved_keywords']) + 1;
+            $db['bot_approved_keywords'][] = [
+                'id' => $new_id,
+                'keyword_token' => $this->params[0] ?? '',
+                'language_code' => $this->params[1] ?? 'en'
+            ];
+            MockDbHelper::write($db);
+            $this->insert_id = $new_id;
+        }
+        elseif (stripos($sql, 'DELETE FROM bot_approved_keywords') !== false) {
+            $k_id = (int)($this->params[0] ?? 0);
+            $filtered = [];
+            if (isset($db['bot_approved_keywords'])) {
+                foreach ($db['bot_approved_keywords'] as $item) {
+                    if ((int)$item['id'] !== $k_id) {
+                        $filtered[] = $item;
+                    }
+                }
+                $db['bot_approved_keywords'] = $filtered;
+                MockDbHelper::write($db);
+            }
+        }
+        elseif (stripos($sql, 'FROM bot_approved_keywords') !== false) {
+            $matched = [];
+            if (count($this->params) >= 1) {
+                $lang_val = $this->params[0];
+                foreach ($db['bot_approved_keywords'] ?? [] as $key) {
+                    if ($key['language_code'] === $lang_val) {
+                        $matched[] = $key;
+                    }
+                }
+            } else {
+                $matched = $db['bot_approved_keywords'] ?? [];
+            }
+            $this->result_rows = $matched;
+        }
+        elseif (stripos($sql, 'FROM bot_failed_questions') !== false) {
+            // Emulate the failed questions list with sessions joined if needed
+            $failed_list = [];
+            foreach ($db['bot_failed_questions'] ?? [] as $q) {
+                $failed_list[] = [
+                    'id' => $q['id'],
+                    'session_id' => $q['session_id'],
+                    'user_id' => $q['user_id'],
+                    'customer_name' => 'Guest Customer',
+                    'customer_email' => '',
+                    'language_iso' => $q['language_iso'],
+                    'unanswered_question' => $q['unanswered_question'],
+                    'page_context_url' => $q['page_context_url'],
+                    'session_token' => 'mock-token',
+                    'entry_point' => 'mock-entry',
+                    'created_at' => $q['created_at']
+                ];
+            }
+            $this->result_rows = $failed_list;
         }
         elseif (stripos($sql, 'SELECT * FROM bot_ads WHERE id = ?') !== false) {
             $ad_id = (int)($this->params[0] ?? 0);
