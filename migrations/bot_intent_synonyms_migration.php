@@ -41,6 +41,7 @@ $synonyms = [
     ['intent_business_setup', 'open an office', 'en'],
     ['intent_business_setup', 'incorporate a firm', 'en'],
     ['intent_business_setup', 'launch a brand new company', 'en'],
+    ['intent_business_setup', 'کاروبار', 'ur'],
 ];
 
 foreach ($synonyms as $syn) {

@@ -18,9 +18,7 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     console.log('Spelling correction response:', body);
 
     expect(body.status).toBe('success');
-    // Assert active state token is mapped to 'intent_business_setup'
     expect(body.active_state_token).toBe('intent_business_setup');
-    // Assert it loads the Business Setup module via page swap
     expect(body.client_action).toBeDefined();
     expect(body.client_action.type).toBe('page_swap');
     expect(body.client_action.url).toContain('Business+Setup');
@@ -52,11 +50,14 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
     page.on('pageerror', err => console.log('BROWSER ERROR:', err.message));
 
+    // Generate a unique failed question to prevent stateful test pollution across runs
+    const failedQuestionText = 'where can i buy a hot cup of coffee ' + Math.random().toString(36).substring(7);
+
     // First, let's trigger a failed question log by sending an unmapped custom query
     const fallbackResponse = await request.post('/api/bot-controller.php', {
       data: {
         session_token: 'test-session-failed-log',
-        message: 'how to fly to mars on a pink unicorn',
+        message: failedQuestionText,
         entry_point: 'immersive_landing',
         step_key: 'welcome_funnel'
       }
@@ -71,11 +72,11 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     await page.goto('/admin/crm/failed-questions.php');
 
     // Assert the page contains our unmapped failed question
-    const failedQuestionCell = page.locator('text="how to fly to mars on a pink unicorn"');
+    const failedQuestionCell = page.locator(`text="${failedQuestionText}"`);
     await expect(failedQuestionCell).toBeVisible();
 
-    // Assert the Quick Action button is present
-    const mapBtn = page.locator('.btn-map-synonym').first();
+    // Assert the Quick Action button is present (we target the one for our specific question)
+    const mapBtn = page.locator(`tr:has-text("${failedQuestionText}") .btn-map-synonym`);
     await expect(mapBtn).toBeVisible();
 
     // CSP and Security Verification: Ensure NO inline "onclick" handlers exist on map buttons
@@ -88,7 +89,7 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     // Assert modal fields are populated correctly with defaulted values
     const modal = page.locator('#mapSynonymModal');
     await expect(modal).toBeVisible();
-    await expect(page.locator('#modalPhraseVariant')).toHaveValue('how to fly to mars on a pink unicorn');
+    await expect(page.locator('#modalPhraseVariant')).toHaveValue(failedQuestionText);
     await expect(page.locator('#modalLanguageCode')).toHaveValue('en');
 
     // Select target workflow step key from the dropdown
@@ -103,7 +104,7 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     await expect(successAlert).toContainText('Phrase variant successfully mapped');
 
     // Assert resolved question is now resolved and no longer exists in the list
-    await expect(page.locator('text="how to fly to mars on a pink unicorn"')).toBeHidden();
+    await expect(page.locator(`text="${failedQuestionText}"`)).toBeHidden();
   });
 
   test('4. Approved Keywords Admin CRUD Management panel flow', async ({ page }) => {
@@ -149,5 +150,46 @@ test.describe('NLP Pre-Processing & Intent Matching Layer E2E Tests', () => {
     // Assert success alert of deletion
     await expect(page.locator('.alert-success')).toContainText("Approved keyword successfully deleted.");
     await expect(page.locator('strong:has-text("unicorn")')).toBeHidden();
+  });
+
+  test('5. Multilingual Dashboard Filter assertion', async ({ page }) => {
+    // Authenticate as permitted administrator
+    await page.goto('/tests/test-login-helper.php?role=admin_with_permission');
+    await expect(page.locator('body')).toContainText('Session set for role: admin_with_permission');
+
+    // Navigate to bot keywords page
+    await page.goto('/admin/settings/bot_keywords.php');
+
+    // Select the Arabic 'ar' language filter
+    await page.selectOption('#adminKeywordLanguageFilter', 'ar');
+
+    // Assert that only 'ar' keywords are visible and 'en' keywords are hidden
+    const englishKeywordRow = page.locator('tr.keyword-row[data-lang="en"]').first();
+    const arabicKeywordRow = page.locator('tr.keyword-row[data-lang="ar"]').first();
+
+    await expect(englishKeywordRow).toBeHidden();
+    await expect(arabicKeywordRow).toBeVisible();
+  });
+
+  test('6. Multilingual Typo Self-Correction in Urdu/Hindi with transient caching', async ({ request }) => {
+    // Mock a public chat widget voice session in Urdu/Hindi with an Urdu typo: "کاروبارر"
+    const response = await request.post('/api/bot-controller.php', {
+      data: {
+        session_token: 'test-session-nlp-urdu',
+        message: 'کاروبارر',
+        language_iso: 'ur',
+        entry_point: 'immersive_landing',
+        step_key: 'welcome_funnel'
+      }
+    });
+
+    expect(response.status()).toBe(200);
+    const body = await response.json();
+    console.log('Urdu typo correction response:', body);
+
+    expect(body.status).toBe('success');
+    // The typo 'کاروبارر' should correct cleanly to the approved Urdu keyword token 'کاروبار'
+    // Since 'کاروبار' is Urdu for 'business', let's verify it didn't trigger cross-language collisions with English
+    expect(body.display_text).not.toContain('I am unable to find that specific configuration');
   });
 });

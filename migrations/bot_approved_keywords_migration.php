@@ -54,23 +54,44 @@ if ($pid) {
 
 // Seed keywords
 $default_keywords = [
-    'business', 'setup', 'company', 'immigration', 'visa', 'office',
-    'consultation', 'start', 'launch', 'open', 'incorporate', 'firm',
-    'services', 'meeting', 'schedule', 'register', 'welcome', 'funnel',
-    'selection', 'dispatch', 'visit', 'tourism', 'license', 'permit',
-    'emirates', 'national', 'stamping', 'attestation', 'renewal',
-    'consultant', 'advisory', 'partner', 'booking'
+    'en' => [
+        'business', 'setup', 'company', 'immigration', 'visa', 'office',
+        'consultation', 'start', 'launch', 'open', 'incorporate', 'firm',
+        'services', 'meeting', 'schedule', 'register', 'welcome', 'funnel',
+        'selection', 'dispatch', 'visit', 'tourism', 'license', 'permit',
+        'emirates', 'national', 'stamping', 'attestation', 'renewal',
+        'consultant', 'advisory', 'partner', 'booking'
+    ],
+    'fr' => [
+        'entreprise', 'installation', 'societe', 'immigration', 'visa', 'bureau',
+        'consultation', 'commencer', 'lancement', 'ouvrir', 'incorporer', 'firme',
+        'services', 'rendezvous', 'planifier', 'enregistrer', 'bienvenue', 'selection',
+        'visite', 'tourisme', 'permis', 'licence', 'stamping', 'attestation',
+        'renouvellement', 'partenaire', 'reservation'
+    ],
+    'ar' => [
+        'شركة', 'تأسيس', 'هجرة', 'تأشيرة', 'مكتب', 'استشارة', 'بدء', 'إطلاق',
+        'فتح', 'خدمات', 'اجتماع', 'جدول', 'سجل', 'مرحبا', 'اختيار', 'زيارة',
+        'سياحة', 'رخصة', 'تصريح', 'شريك', 'حجز'
+    ],
+    'ur' => [
+        'کاروبار', 'سیٹ_اپ', 'کمپنی', 'امیگریشن', 'ویزہ', 'دفتر', 'مشاورت',
+        'شروع', 'لانچ', 'کھولیں', 'سروسز', 'میٹنگ', 'شیڈول', 'رجسٹر',
+        'خوش_آمدید', 'انتخاب', 'دورہ', 'سیاحت', 'لائسنس', 'شراکت_دار', 'بکنگ'
+    ]
 ];
 
-foreach ($default_keywords as $keyword) {
-    $stmt = $mysqli->prepare("INSERT IGNORE INTO bot_approved_keywords (keyword_token, language_code) VALUES (?, 'en')");
-    if ($stmt) {
-        $stmt->bind_param('s', $keyword);
-        $stmt->execute();
-        $stmt->close();
+foreach ($default_keywords as $lang_code => $keywords) {
+    foreach ($keywords as $keyword) {
+        $stmt = $mysqli->prepare("INSERT IGNORE INTO bot_approved_keywords (keyword_token, language_code) VALUES (?, ?)");
+        if ($stmt) {
+            $stmt->bind_param('ss', $keyword, $lang_code);
+            $stmt->execute();
+            $stmt->close();
+        }
     }
 }
-echo "Default keywords seeded successfully.\n";
+echo "Default multilingual keywords seeded successfully.\n";
 
 $mysqli->query("SET FOREIGN_KEY_CHECKS = 1;");
 echo "Approved Keywords migration completed successfully.\n";

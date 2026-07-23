@@ -109,7 +109,76 @@ class MockDbHelper {
                     ["id" => 30, "keyword_token" => "consultant", "language_code" => "en"],
                     ["id" => 31, "keyword_token" => "advisory", "language_code" => "en"],
                     ["id" => 32, "keyword_token" => "partner", "language_code" => "en"],
-                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"]
+                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"],
+                    ["id" => 34, "keyword_token" => "entreprise", "language_code" => "fr"],
+                    ["id" => 35, "keyword_token" => "installation", "language_code" => "fr"],
+                    ["id" => 36, "keyword_token" => "societe", "language_code" => "fr"],
+                    ["id" => 37, "keyword_token" => "immigration", "language_code" => "fr"],
+                    ["id" => 38, "keyword_token" => "visa", "language_code" => "fr"],
+                    ["id" => 39, "keyword_token" => "bureau", "language_code" => "fr"],
+                    ["id" => 40, "keyword_token" => "consultation", "language_code" => "fr"],
+                    ["id" => 41, "keyword_token" => "commencer", "language_code" => "fr"],
+                    ["id" => 42, "keyword_token" => "lancement", "language_code" => "fr"],
+                    ["id" => 43, "keyword_token" => "ouvrir", "language_code" => "fr"],
+                    ["id" => 44, "keyword_token" => "incorporer", "language_code" => "fr"],
+                    ["id" => 45, "keyword_token" => "firme", "language_code" => "fr"],
+                    ["id" => 46, "keyword_token" => "services", "language_code" => "fr"],
+                    ["id" => 47, "keyword_token" => "rendezvous", "language_code" => "fr"],
+                    ["id" => 48, "keyword_token" => "planifier", "language_code" => "fr"],
+                    ["id" => 49, "keyword_token" => "enregistrer", "language_code" => "fr"],
+                    ["id" => 50, "keyword_token" => "bienvenue", "language_code" => "fr"],
+                    ["id" => 51, "keyword_token" => "selection", "language_code" => "fr"],
+                    ["id" => 52, "keyword_token" => "visite", "language_code" => "fr"],
+                    ["id" => 53, "keyword_token" => "tourisme", "language_code" => "fr"],
+                    ["id" => 54, "keyword_token" => "permis", "language_code" => "fr"],
+                    ["id" => 55, "keyword_token" => "licence", "language_code" => "fr"],
+                    ["id" => 56, "keyword_token" => "stamping", "language_code" => "fr"],
+                    ["id" => 57, "keyword_token" => "attestation", "language_code" => "fr"],
+                    ["id" => 58, "keyword_token" => "renouvellement", "language_code" => "fr"],
+                    ["id" => 59, "keyword_token" => "partenaire", "language_code" => "fr"],
+                    ["id" => 60, "keyword_token" => "reservation", "language_code" => "fr"],
+                    ["id" => 61, "keyword_token" => "شركة", "language_code" => "ar"],
+                    ["id" => 62, "keyword_token" => "تأسيس", "language_code" => "ar"],
+                    ["id" => 63, "keyword_token" => "هجرة", "language_code" => "ar"],
+                    ["id" => 64, "keyword_token" => "تأشيرة", "language_code" => "ar"],
+                    ["id" => 65, "keyword_token" => "مكتب", "language_code" => "ar"],
+                    ["id" => 66, "keyword_token" => "استشارة", "language_code" => "ar"],
+                    ["id" => 67, "keyword_token" => "بدء", "language_code" => "ar"],
+                    ["id" => 68, "keyword_token" => "إطلاق", "language_code" => "ar"],
+                    ["id" => 69, "keyword_token" => "فتح", "language_code" => "ar"],
+                    ["id" => 70, "keyword_token" => "خدمات", "language_code" => "ar"],
+                    ["id" => 71, "keyword_token" => "اجتماع", "language_code" => "ar"],
+                    ["id" => 72, "keyword_token" => "جدول", "language_code" => "ar"],
+                    ["id" => 73, "keyword_token" => "سجل", "language_code" => "ar"],
+                    ["id" => 74, "keyword_token" => "مرحبا", "language_code" => "ar"],
+                    ["id" => 75, "keyword_token" => "اختيار", "language_code" => "ar"],
+                    ["id" => 76, "keyword_token" => "زيارة", "language_code" => "ar"],
+                    ["id" => 77, "keyword_token" => "سياحة", "language_code" => "ar"],
+                    ["id" => 78, "keyword_token" => "رخصة", "language_code" => "ar"],
+                    ["id" => 79, "keyword_token" => "تصريح", "language_code" => "ar"],
+                    ["id" => 80, "keyword_token" => "شريك", "language_code" => "ar"],
+                    ["id" => 81, "keyword_token" => "حجز", "language_code" => "ar"],
+                    ["id" => 82, "keyword_token" => "کاروبار", "language_code" => "ur"],
+                    ["id" => 83, "keyword_token" => "سیٹ_اپ", "language_code" => "ur"],
+                    ["id" => 84, "keyword_token" => "کمپنی", "language_code" => "ur"],
+                    ["id" => 85, "keyword_token" => "امیگریشن", "language_code" => "ur"],
+                    ["id" => 86, "keyword_token" => "ویزہ", "language_code" => "ur"],
+                    ["id" => 87, "keyword_token" => "دفتر", "language_code" => "ur"],
+                    ["id" => 88, "keyword_token" => "مشاورت", "language_code" => "ur"],
+                    ["id" => 89, "keyword_token" => "شروع", "language_code" => "ur"],
+                    ["id" => 90, "keyword_token" => "لانچ", "language_code" => "ur"],
+                    ["id" => 91, "keyword_token" => "کھولیں", "language_code" => "ur"],
+                    ["id" => 92, "keyword_token" => "سروسز", "language_code" => "ur"],
+                    ["id" => 93, "keyword_token" => "میٹنگ", "language_code" => "ur"],
+                    ["id" => 94, "keyword_token" => "شیڈول", "language_code" => "ur"],
+                    ["id" => 95, "keyword_token" => "رجسٹر", "language_code" => "ur"],
+                    ["id" => 96, "keyword_token" => "خوش_آمدید", "language_code" => "ur"],
+                    ["id" => 97, "keyword_token" => "انتخاب", "language_code" => "ur"],
+                    ["id" => 98, "keyword_token" => "دورہ", "language_code" => "ur"],
+                    ["id" => 99, "keyword_token" => "سیاحت", "language_code" => "ur"],
+                    ["id" => 100, "keyword_token" => "لائسنس", "language_code" => "ur"],
+                    ["id" => 101, "keyword_token" => "شراکت_دار", "language_code" => "ur"],
+                    ["id" => 102, "keyword_token" => "بکنگ", "language_code" => "ur"]
                 ],
                 "bot_intent_synonyms" => [
                     [
@@ -141,6 +210,12 @@ class MockDbHelper {
                         "system_intent_key" => "intent_business_setup",
                         "phrase_variant" => "launch a brand new company",
                         "language_code" => "en"
+                    ],
+                    [
+                        "id" => 6,
+                        "system_intent_key" => "intent_business_setup",
+                        "phrase_variant" => "کاروبار",
+                        "language_code" => "ur"
                     ]
                 ],
                 "payment_transactions" => [],
@@ -269,43 +344,31 @@ class MockDbHelper {
                 }
             }
 
-            if (!isset($db['bot_approved_keywords'])) {
-                $db['bot_approved_keywords'] = [
-                    ["id" => 1, "keyword_token" => "business", "language_code" => "en"],
-                    ["id" => 2, "keyword_token" => "setup", "language_code" => "en"],
-                    ["id" => 3, "keyword_token" => "company", "language_code" => "en"],
-                    ["id" => 4, "keyword_token" => "immigration", "language_code" => "en"],
-                    ["id" => 5, "keyword_token" => "visa", "language_code" => "en"],
-                    ["id" => 6, "keyword_token" => "office", "language_code" => "en"],
-                    ["id" => 7, "keyword_token" => "consultation", "language_code" => "en"],
-                    ["id" => 8, "keyword_token" => "start", "language_code" => "en"],
-                    ["id" => 9, "keyword_token" => "launch", "language_code" => "en"],
-                    ["id" => 10, "keyword_token" => "open", "language_code" => "en"],
-                    ["id" => 11, "keyword_token" => "incorporate", "language_code" => "en"],
-                    ["id" => 12, "keyword_token" => "firm", "language_code" => "en"],
-                    ["id" => 13, "keyword_token" => "services", "language_code" => "en"],
-                    ["id" => 14, "keyword_token" => "meeting", "language_code" => "en"],
-                    ["id" => 15, "keyword_token" => "schedule", "language_code" => "en"],
-                    ["id" => 16, "keyword_token" => "register", "language_code" => "en"],
-                    ["id" => 17, "keyword_token" => "welcome", "language_code" => "en"],
-                    ["id" => 18, "keyword_token" => "funnel", "language_code" => "en"],
-                    ["id" => 19, "keyword_token" => "selection", "language_code" => "en"],
-                    ["id" => 20, "keyword_token" => "dispatch", "language_code" => "en"],
-                    ["id" => 21, "keyword_token" => "visit", "language_code" => "en"],
-                    ["id" => 22, "keyword_token" => "tourism", "language_code" => "en"],
-                    ["id" => 23, "keyword_token" => "license", "language_code" => "en"],
-                    ["id" => 24, "keyword_token" => "permit", "language_code" => "en"],
-                    ["id" => 25, "keyword_token" => "emirates", "language_code" => "en"],
-                    ["id" => 26, "keyword_token" => "national", "language_code" => "en"],
-                    ["id" => 27, "keyword_token" => "stamping", "language_code" => "en"],
-                    ["id" => 28, "keyword_token" => "attestation", "language_code" => "en"],
-                    ["id" => 29, "keyword_token" => "renewal", "language_code" => "en"],
-                    ["id" => 30, "keyword_token" => "consultant", "language_code" => "en"],
-                    ["id" => 31, "keyword_token" => "advisory", "language_code" => "en"],
-                    ["id" => 32, "keyword_token" => "partner", "language_code" => "en"],
-                    ["id" => 33, "keyword_token" => "booking", "language_code" => "en"]
-                ];
+            if (!isset($db['bot_approved_keywords']) || count($db['bot_approved_keywords']) < 50) {
+                $db['bot_approved_keywords'] = [];
+                $id = 1;
+                require_once __DIR__ . '/nlp_processor.php';
+                foreach (NlpProcessor::$fallback_keywords as $l => $tokens) {
+                    foreach ($tokens as $tok) {
+                        $db['bot_approved_keywords'][] = [
+                            "id" => $id++,
+                            "keyword_token" => $tok,
+                            "language_code" => $l,
+                            "created_at" => date('Y-m-d H:i:s')
+                        ];
+                    }
+                }
                 $modified = true;
+            }
+
+            // Ensure all keywords have created_at set to avoid warnings
+            if (isset($db['bot_approved_keywords'])) {
+                foreach ($db['bot_approved_keywords'] as &$item) {
+                    if (!isset($item['created_at'])) {
+                        $item['created_at'] = date('Y-m-d H:i:s');
+                        $modified = true;
+                    }
+                }
             }
 
             if (!isset($db['bot_intent_synonyms'])) {
@@ -339,6 +402,16 @@ class MockDbHelper {
                     }
                     if (!$has_brand_new) {
                         $db['bot_intent_synonyms'][] = ["id" => 5, "system_intent_key" => "intent_business_setup", "phrase_variant" => "launch a brand new company", "language_code" => "en"];
+                        $modified = true;
+                    }
+                    $has_urdu_syn = false;
+                    foreach ($db['bot_intent_synonyms'] as $sy) {
+                        if (($sy['phrase_variant'] ?? '') === 'کاروبار') {
+                            $has_urdu_syn = true;
+                        }
+                    }
+                    if (!$has_urdu_syn) {
+                        $db['bot_intent_synonyms'][] = ["id" => 6, "system_intent_key" => "intent_business_setup", "phrase_variant" => "کاروبار", "language_code" => "ur"];
                         $modified = true;
                     }
                 }
@@ -879,7 +952,18 @@ class MockMySQLiStmt {
             }
         }
         elseif (stripos($sql, 'FROM bot_approved_keywords') !== false) {
-            $this->result_rows = $db['bot_approved_keywords'] ?? [];
+            $matched = [];
+            if (count($this->params) >= 1) {
+                $lang_val = $this->params[0];
+                foreach ($db['bot_approved_keywords'] ?? [] as $key) {
+                    if ($key['language_code'] === $lang_val) {
+                        $matched[] = $key;
+                    }
+                }
+            } else {
+                $matched = $db['bot_approved_keywords'] ?? [];
+            }
+            $this->result_rows = $matched;
         }
         elseif (stripos($sql, 'FROM bot_failed_questions') !== false) {
             // Emulate the failed questions list with sessions joined if needed

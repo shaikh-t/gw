@@ -8,12 +8,31 @@ class NlpProcessor {
      * Fallback approved keywords for typo correction if DB is empty.
      */
     public static $fallback_keywords = [
-        'business', 'setup', 'company', 'immigration', 'visa', 'office',
-        'consultation', 'start', 'launch', 'open', 'incorporate', 'firm',
-        'services', 'meeting', 'schedule', 'register', 'welcome', 'funnel',
-        'selection', 'dispatch', 'visit', 'tourism', 'license', 'permit',
-        'emirates', 'national', 'stamping', 'attestation', 'renewal',
-        'consultant', 'advisory', 'partner', 'booking'
+        'en' => [
+            'business', 'setup', 'company', 'immigration', 'visa', 'office',
+            'consultation', 'start', 'launch', 'open', 'incorporate', 'firm',
+            'services', 'meeting', 'schedule', 'register', 'welcome', 'funnel',
+            'selection', 'dispatch', 'visit', 'tourism', 'license', 'permit',
+            'emirates', 'national', 'stamping', 'attestation', 'renewal',
+            'consultant', 'advisory', 'partner', 'booking'
+        ],
+        'fr' => [
+            'entreprise', 'installation', 'societe', 'immigration', 'visa', 'bureau',
+            'consultation', 'commencer', 'lancement', 'ouvrir', 'incorporer', 'firme',
+            'services', 'rendezvous', 'planifier', 'enregistrer', 'bienvenue', 'selection',
+            'visite', 'tourisme', 'permis', 'licence', 'stamping', 'attestation',
+            'renouvellement', 'partenaire', 'reservation'
+        ],
+        'ar' => [
+            'شركة', 'تأسيس', 'هجرة', 'تأشيرة', 'مكتب', 'استشارة', 'بدء', 'إطلاق',
+            'فتح', 'خدمات', 'اجتماع', 'جدول', 'سجل', 'مرحبا', 'اختيار', 'زيارة',
+            'سياحة', 'رخصة', 'تصريح', 'شريك', 'حجز'
+        ],
+        'ur' => [
+            'کاروبار', 'سیٹ_اپ', 'کمپنی', 'امیگریشن', 'ویزہ', 'دفتر', 'مشاورت',
+            'شروع', 'لانچ', 'کھولیں', 'سروسز', 'میٹنگ', 'شیڈول', 'رجسٹر',
+            'خوش_آمدید', 'انتخاب', 'دورہ', 'سیاحت', 'لائسنس', 'شراکت_دار', 'بکنگ'
+        ]
     ];
 
     /**
@@ -76,7 +95,7 @@ class NlpProcessor {
 
         // Apply fallback if still empty
         if (empty($approved_keywords)) {
-            $approved_keywords = self::$fallback_keywords;
+            $approved_keywords = self::$fallback_keywords[$lang] ?? self::$fallback_keywords['en'];
         }
 
         // Step B (Levenshtein Distance Check): Compare input words against approved keywords word-by-word

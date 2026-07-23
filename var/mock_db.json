@@ -54,17 +54,7 @@
         }
     ],
     "bot_ad_fraud_logs": [],
-    "bot_failed_questions": [
-        {
-            "id": 1,
-            "session_id": 1,
-            "user_id": null,
-            "language_iso": "en",
-            "unanswered_question": "hello",
-            "page_context_url": "http:\/\/127.0.0.1:8000\/bot-landing.php",
-            "created_at": "2026-07-22 22:33:48"
-        }
-    ],
+    "bot_failed_questions": [],
     "payment_transactions": [],
     "customer_payments": [],
     "customer_applications": [],
@@ -132,167 +122,614 @@
         {
             "id": 1,
             "keyword_token": "business",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 2,
             "keyword_token": "setup",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 3,
             "keyword_token": "company",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 4,
             "keyword_token": "immigration",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 5,
             "keyword_token": "visa",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 6,
             "keyword_token": "office",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 7,
             "keyword_token": "consultation",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 8,
             "keyword_token": "start",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 9,
             "keyword_token": "launch",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 10,
             "keyword_token": "open",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 11,
             "keyword_token": "incorporate",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 12,
             "keyword_token": "firm",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 13,
             "keyword_token": "services",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 14,
             "keyword_token": "meeting",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 15,
             "keyword_token": "schedule",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 16,
             "keyword_token": "register",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 17,
             "keyword_token": "welcome",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 18,
             "keyword_token": "funnel",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 19,
             "keyword_token": "selection",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 20,
             "keyword_token": "dispatch",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 21,
             "keyword_token": "visit",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 22,
             "keyword_token": "tourism",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 23,
             "keyword_token": "license",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 24,
             "keyword_token": "permit",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 25,
             "keyword_token": "emirates",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 26,
             "keyword_token": "national",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 27,
             "keyword_token": "stamping",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 28,
             "keyword_token": "attestation",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 29,
             "keyword_token": "renewal",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 30,
             "keyword_token": "consultant",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 31,
             "keyword_token": "advisory",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 32,
             "keyword_token": "partner",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
         },
         {
             "id": 33,
             "keyword_token": "booking",
-            "language_code": "en"
+            "language_code": "en",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 34,
+            "keyword_token": "entreprise",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 35,
+            "keyword_token": "installation",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 36,
+            "keyword_token": "societe",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 37,
+            "keyword_token": "immigration",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 38,
+            "keyword_token": "visa",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 39,
+            "keyword_token": "bureau",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 40,
+            "keyword_token": "consultation",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 41,
+            "keyword_token": "commencer",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 42,
+            "keyword_token": "lancement",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 43,
+            "keyword_token": "ouvrir",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 44,
+            "keyword_token": "incorporer",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 45,
+            "keyword_token": "firme",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 46,
+            "keyword_token": "services",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 47,
+            "keyword_token": "rendezvous",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 48,
+            "keyword_token": "planifier",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 49,
+            "keyword_token": "enregistrer",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 50,
+            "keyword_token": "bienvenue",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 51,
+            "keyword_token": "selection",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 52,
+            "keyword_token": "visite",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 53,
+            "keyword_token": "tourisme",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 54,
+            "keyword_token": "permis",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 55,
+            "keyword_token": "licence",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 56,
+            "keyword_token": "stamping",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 57,
+            "keyword_token": "attestation",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 58,
+            "keyword_token": "renouvellement",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 59,
+            "keyword_token": "partenaire",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 60,
+            "keyword_token": "reservation",
+            "language_code": "fr",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 61,
+            "keyword_token": "\u0634\u0631\u0643\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 62,
+            "keyword_token": "\u062a\u0623\u0633\u064a\u0633",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 63,
+            "keyword_token": "\u0647\u062c\u0631\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 64,
+            "keyword_token": "\u062a\u0623\u0634\u064a\u0631\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 65,
+            "keyword_token": "\u0645\u0643\u062a\u0628",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 66,
+            "keyword_token": "\u0627\u0633\u062a\u0634\u0627\u0631\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 67,
+            "keyword_token": "\u0628\u062f\u0621",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 68,
+            "keyword_token": "\u0625\u0637\u0644\u0627\u0642",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 69,
+            "keyword_token": "\u0641\u062a\u062d",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 70,
+            "keyword_token": "\u062e\u062f\u0645\u0627\u062a",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 71,
+            "keyword_token": "\u0627\u062c\u062a\u0645\u0627\u0639",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 72,
+            "keyword_token": "\u062c\u062f\u0648\u0644",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 73,
+            "keyword_token": "\u0633\u062c\u0644",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 74,
+            "keyword_token": "\u0645\u0631\u062d\u0628\u0627",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 75,
+            "keyword_token": "\u0627\u062e\u062a\u064a\u0627\u0631",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 76,
+            "keyword_token": "\u0632\u064a\u0627\u0631\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 77,
+            "keyword_token": "\u0633\u064a\u0627\u062d\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 78,
+            "keyword_token": "\u0631\u062e\u0635\u0629",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 79,
+            "keyword_token": "\u062a\u0635\u0631\u064a\u062d",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 80,
+            "keyword_token": "\u0634\u0631\u064a\u0643",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 81,
+            "keyword_token": "\u062d\u062c\u0632",
+            "language_code": "ar",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 82,
+            "keyword_token": "\u06a9\u0627\u0631\u0648\u0628\u0627\u0631",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 83,
+            "keyword_token": "\u0633\u06cc\u0679_\u0627\u067e",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 84,
+            "keyword_token": "\u06a9\u0645\u067e\u0646\u06cc",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 85,
+            "keyword_token": "\u0627\u0645\u06cc\u06af\u0631\u06cc\u0634\u0646",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 86,
+            "keyword_token": "\u0648\u06cc\u0632\u06c1",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 87,
+            "keyword_token": "\u062f\u0641\u062a\u0631",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 88,
+            "keyword_token": "\u0645\u0634\u0627\u0648\u0631\u062a",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 89,
+            "keyword_token": "\u0634\u0631\u0648\u0639",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 90,
+            "keyword_token": "\u0644\u0627\u0646\u0686",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 91,
+            "keyword_token": "\u06a9\u06be\u0648\u0644\u06cc\u06ba",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 92,
+            "keyword_token": "\u0633\u0631\u0648\u0633\u0632",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 93,
+            "keyword_token": "\u0645\u06cc\u0679\u0646\u06af",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 94,
+            "keyword_token": "\u0634\u06cc\u0688\u0648\u0644",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 95,
+            "keyword_token": "\u0631\u062c\u0633\u0679\u0631",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 96,
+            "keyword_token": "\u062e\u0648\u0634_\u0622\u0645\u062f\u06cc\u062f",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 97,
+            "keyword_token": "\u0627\u0646\u062a\u062e\u0627\u0628",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 98,
+            "keyword_token": "\u062f\u0648\u0631\u06c1",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 99,
+            "keyword_token": "\u0633\u06cc\u0627\u062d\u062a",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 100,
+            "keyword_token": "\u0644\u0627\u0626\u0633\u0646\u0633",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 101,
+            "keyword_token": "\u0634\u0631\u0627\u06a9\u062a_\u062f\u0627\u0631",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
+        },
+        {
+            "id": 102,
+            "keyword_token": "\u0628\u06a9\u0646\u06af",
+            "language_code": "ur",
+            "created_at": "2026-07-23 06:50:34"
         }
     ],
     "bot_intent_synonyms": [
@@ -329,120 +766,30 @@
         {
             "id": 6,
             "system_intent_key": "intent_business_setup",
-            "phrase_variant": "how to fly to mars on a pink unicorn",
-            "language_code": "en"
+            "phrase_variant": "\u06a9\u0627\u0631\u0648\u0628\u0627\u0631",
+            "language_code": "ur"
         }
     ],
     "bot_interaction_logs": [
         {
             "id": 1,
-            "session_id": "test-session-nlp-spelling",
-            "user_id": null,
-            "spoken_text_transcript": "intent_business_setup",
-            "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
+            "session_id": "",
+            "user_id": 1,
+            "spoken_text_transcript": "",
+            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
             "match_type": "workflow_step",
-            "active_state_token": "intent_business_setup",
-            "created_at": "2026-07-22 22:33:44"
+            "active_state_token": "welcome_funnel",
+            "created_at": "2026-07-23 06:51:26"
         },
         {
             "id": 2,
-            "session_id": "test-session-nlp-synonym",
-            "user_id": null,
-            "spoken_text_transcript": "intent_business_setup",
-            "bot_response_text": "Loading the Business Setup module with customized service options. How can I help you today?",
-            "match_type": "workflow_step",
-            "active_state_token": "intent_business_setup",
-            "created_at": "2026-07-22 22:33:44"
-        },
-        {
-            "id": 3,
-            "session_id": "test-session-failed-log",
-            "user_id": null,
-            "spoken_text_transcript": "how to fly to mars on a pink unicorn",
-            "bot_response_text": "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.",
-            "match_type": "rag_fallback",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:44"
-        },
-        {
-            "id": 4,
-            "session_id": "",
-            "user_id": 1,
-            "spoken_text_transcript": "",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:47"
-        },
-        {
-            "id": 5,
             "session_id": "",
             "user_id": 1,
             "spoken_text_transcript": "reset",
             "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
             "match_type": "workflow_step",
             "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:47"
-        },
-        {
-            "id": 6,
-            "session_id": "",
-            "user_id": null,
-            "spoken_text_transcript": "",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:47"
-        },
-        {
-            "id": 7,
-            "session_id": "",
-            "user_id": null,
-            "spoken_text_transcript": "reset",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:48"
-        },
-        {
-            "id": 8,
-            "session_id": "",
-            "user_id": null,
-            "spoken_text_transcript": "hello",
-            "bot_response_text": "I am unable to find that specific configuration in my database right now, but I have logged your question for our support team to review. Let me loop you back to our primary menu options.",
-            "match_type": "rag_fallback",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:33:48"
-        },
-        {
-            "id": 9,
-            "session_id": "",
-            "user_id": null,
-            "spoken_text_transcript": "",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:34:25"
-        },
-        {
-            "id": 10,
-            "session_id": "",
-            "user_id": null,
-            "spoken_text_transcript": "reset",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:34:25"
-        },
-        {
-            "id": 11,
-            "session_id": "de92002c42a8986499aa0956ed44446b218d9d54fac163ec769dcb385d29b3f1",
-            "user_id": null,
-            "spoken_text_transcript": "",
-            "bot_response_text": "Welcome to GlobalWays! Please select your service category below to personalize your journey.",
-            "match_type": "workflow_step",
-            "active_state_token": "welcome_funnel",
-            "created_at": "2026-07-22 22:34:56"
+            "created_at": "2026-07-23 06:51:27"
         }
     ],
     "voice_telemetry_logs": []

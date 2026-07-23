@@ -11,6 +11,11 @@ require_once __DIR__ . '/../lib/uuid_helper.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/users_helpers.php';
 
+// Start session early to access registration state before NLP normalization
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 // Ensure database connection is active
 if (!isset($mysqli) || $mysqli->connect_errno) {
     http_response_code(500);
@@ -259,10 +264,18 @@ if (!in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
     $lang = 'en';
 }
 
-// Apply NLP Pre-Processing & Intent Matching Layer
-require_once __DIR__ . '/../lib/nlp_processor.php';
-if ($message_content !== '') {
-    $message_content = NlpProcessor::process($message_content, $lang);
+// Apply State-Aware Context Bypass: check if we are collecting raw guest data
+$isCollectingRawData = (!empty($_SESSION['registration_state']) && in_array($_SESSION['registration_state']['step'] ?? '', ['first_name_input', 'last_name_input', 'email_input', 'phone_input']));
+
+if ($isCollectingRawData) {
+    // Completely bypass mb_strtolower, Levenshtein checks, and synonym resolutions to preserve formatting
+    $message_content = trim($message_content);
+} else {
+    // Apply NLP Pre-Processing & Intent Matching Layer
+    require_once __DIR__ . '/../lib/nlp_processor.php';
+    if ($message_content !== '') {
+        $message_content = NlpProcessor::process($message_content, $lang);
+    }
 }
 
 // Strongly Type and Sanitize spoken and textual inputs to prevent XSS
@@ -293,10 +306,7 @@ if ($entry_point_input !== '') {
     $entry_point_input = htmlspecialchars($entry_point_input, ENT_QUOTES, 'UTF-8');
 }
 
-// Start session to access page context tracking or login user state
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+// Session has been started early at the absolute top of the controller
 
 // Resolve dynamic cross-page context (merge input context and session context)
 $current_page_context = $_SESSION['bot_page_context'] ?? [];
@@ -332,7 +342,7 @@ if (!$is_logged_in && ($is_trigger_word || !empty($_SESSION['registration_state'
     // Helper to validate Latin character diacritics and reject non-Latin characters (Arabic, Urdu, etc.)
     if (!function_exists('is_valid_latin_input')) {
         function is_valid_latin_input($str) {
-            return preg_match('/^[\p{Latin}\s\'\-]+$/u', $str) && !preg_match('/[\p{Arabic}\p{Devanagari}\p{Bengali}\p{Urdu}\p{Han}]/u', $str);
+            return preg_match('/^[\p{Latin}\s\'\-]+$/u', $str) && !preg_match('/[\p{Arabic}\p{Devanagari}\p{Bengali}\p{Han}]/u', $str);
         }
     }
 
@@ -635,7 +645,7 @@ if (!function_exists('get_workflow_options')) {
                 }
                 $options[] = [
                     'step_key' => $row['step_key'],
-                    'label' => substr($row[$label_col], 0, 40)
+                    'label' => mb_substr($row[$label_col], 0, 40, 'UTF-8')
                 ];
             }
             $stmt->close();
@@ -680,10 +690,12 @@ if (!function_exists('log_bot_interaction')) {
 $is_immersive = ($entry_point_input === 'immersive_landing' || isset($input['step_key']) || isset($_SESSION['active_workflow_state_token']));
 
 if ($is_immersive) {
-    // Determine language
-    $lang = isset($_SESSION['bot_page_context']['language_iso']) ? $_SESSION['bot_page_context']['language_iso'] : 'en';
-    if (!in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
-        $lang = 'en';
+    // Determine language (respect early resolved $lang)
+    if (empty($lang) || !in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
+        $lang = isset($_SESSION['bot_page_context']['language_iso']) ? $_SESSION['bot_page_context']['language_iso'] : 'en';
+        if (!in_array($lang, ['en', 'fr', 'ar', 'ur'])) {
+            $lang = 'en';
+        }
     }
 
     // Handle resets
@@ -771,8 +783,8 @@ if ($is_immersive) {
             if ($has_rag_matches) {
                 $top_match = $chunks[0];
                 $display_text = "Verified Guidelines: " . $top_match;
-                if (strlen($display_text) > 180) {
-                    $display_text = substr($display_text, 0, 180) . "...";
+                if (mb_strlen($display_text, 'UTF-8') > 180) {
+                    $display_text = mb_substr($display_text, 0, 180, 'UTF-8') . "...";
                 }
                 if (!empty($source_files)) {
                     $display_text .= "\n\n" . implode(", ", array_unique($source_files));
@@ -784,7 +796,7 @@ if ($is_immersive) {
                     'status' => 'success',
                     'session_token' => $session_token,
                     'display_text' => $display_text,
-                    'spoken_text' => "According to our guidelines: " . substr($top_match, 0, 100),
+                    'spoken_text' => "According to our guidelines: " . mb_substr($top_match, 0, 100, 'UTF-8'),
                     'language_iso' => $lang,
                     'active_state_token' => $active_state_token,
                     'next_options' => get_workflow_options_by_key($active_state_token, $lang)
@@ -1080,13 +1092,13 @@ if ($is_mock_mode) {
         if ($has_rag_matches) {
             $top_match = $chunks[0];
             $display_text = "Verified Guidelines: " . $top_match;
-            if (strlen($display_text) > 180) {
-                $display_text = substr($display_text, 0, 180) . "...";
+            if (mb_strlen($display_text, 'UTF-8') > 180) {
+                $display_text = mb_substr($display_text, 0, 180, 'UTF-8') . "...";
             }
             if (!empty($source_files)) {
                 $display_text .= "\n\n" . implode(", ", array_unique($source_files));
             }
-            $spoken_text = "According to our verified guidelines: " . substr($top_match, 0, 150);
+            $spoken_text = "According to our verified guidelines: " . mb_substr($top_match, 0, 150, 'UTF-8');
 
             send_json_response([
                 'status' => 'success',
@@ -1390,15 +1402,15 @@ if ($node_id === null && $message_content !== '' && !$is_system_action) {
         // Generate dynamic response using top matched chunk
         $top_match = $chunks[0];
         $display_text = "Verified Guidelines: " . $top_match;
-        if (strlen($display_text) > 180) {
-            $display_text = substr($display_text, 0, 180) . "...";
+        if (mb_strlen($display_text, 'UTF-8') > 180) {
+            $display_text = mb_substr($display_text, 0, 180, 'UTF-8') . "...";
         }
         // Append source citation
         if (!empty($source_files)) {
             $display_text .= "\n\n" . implode(", ", array_unique($source_files));
         }
 
-        $spoken_text = "According to our verified guidelines: " . substr($top_match, 0, 150);
+        $spoken_text = "According to our verified guidelines: " . mb_substr($top_match, 0, 150, 'UTF-8');
 
         // Log bot response in chat logs
         $sender_bot = 'bot';

@@ -124,7 +124,7 @@ echo '<main class="main-content p-4">';
         </div>
         <div class="col-md-3">
           <label for="new_language_code" class="form-label small fw-semibold mb-1">Language Code</label>
-          <select class="form-select" name="language_code" id="new_language_code">
+          <select class="form-select" name="language_code" id="new_language_code" required>
             <option value="en">English (en)</option>
             <option value="fr">French (fr)</option>
             <option value="ar">Arabic (ar)</option>
@@ -137,6 +137,23 @@ echo '<main class="main-content p-4">';
           </button>
         </div>
       </form>
+    </div>
+
+    <!-- Real-time Filter Bar -->
+    <div class="row g-3 mb-4 align-items-center bg-light border-0 p-3 rounded-3 mx-0">
+      <div class="col-md-4">
+        <label for="adminKeywordLanguageFilter" class="form-label small fw-semibold mb-1"><i class="bi bi-funnel"></i> Filter Keywords by Language</label>
+        <select class="form-select" id="adminKeywordLanguageFilter">
+          <option value="all">-- All Languages --</option>
+          <option value="en">English (en)</option>
+          <option value="fr">French (fr)</option>
+          <option value="ar">Arabic (ar)</option>
+          <option value="ur">Urdu/Hindi (ur)</option>
+        </select>
+      </div>
+      <div class="col-md-8 text-end">
+        <span class="badge bg-secondary font-mono py-2 px-3 text-uppercase">Total tokens: <?= count($keywords) ?></span>
+      </div>
     </div>
 
     <!-- Active Keywords Table -->
@@ -160,7 +177,7 @@ echo '<main class="main-content p-4">';
             </tr>
           <?php else: ?>
             <?php foreach ($keywords as $k): ?>
-              <tr>
+              <tr class="keyword-row" data-lang="<?= htmlspecialchars($k['language_code']) ?>">
                 <td class="font-mono small text-secondary">#<?= $k['id'] ?></td>
                 <td><strong class="text-dark font-mono"><?= htmlspecialchars($k['keyword_token']) ?></strong></td>
                 <td><span class="badge bg-secondary-subtle text-secondary font-mono text-uppercase"><?= htmlspecialchars($k['language_code']) ?></span></td>
@@ -194,7 +211,27 @@ echo '<main class="main-content p-4">';
 
 <script nonce="<?php echo $cspNonce; ?>">
 (function() {
-    // Standard event bindings using `$cspNonce`
+    // 1. Language switching / Filtering logic (without full page reload)
+    const langFilter = document.getElementById("adminKeywordLanguageFilter");
+
+    function handleLanguageFilterChange() {
+        const selectedLang = langFilter.value;
+        const rows = document.querySelectorAll(".keyword-row");
+        rows.forEach(function(row) {
+            const rowLang = row.getAttribute("data-lang");
+            if (selectedLang === "all" || rowLang === selectedLang) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    if (langFilter) {
+        langFilter.onchange = handleLanguageFilterChange;
+    }
+
+    // 2. Standard form event bindings using `$cspNonce`
     const saveKeywordBtn = document.getElementById("submitNewSystemKeyword");
     const addKeywordForm = document.getElementById("addKeywordForm");
 
@@ -212,7 +249,7 @@ echo '<main class="main-content p-4">';
         saveKeywordBtn.onclick = handleKeywordSubmitEvent;
     }
 
-    // Programmatically bind delete buttons to prevent inline JavaScript
+    // 3. Programmatically bind delete buttons to prevent inline JavaScript
     const deleteButtons = document.querySelectorAll(".btn-delete-keyword");
     const deleteForm = document.getElementById("deleteKeywordForm");
     const deleteIdInput = document.getElementById("deleteKeywordId");
