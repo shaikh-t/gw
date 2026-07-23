@@ -687,7 +687,23 @@ if (!function_exists('log_bot_interaction')) {
 }
 
 // Check if we should execute via Conversational State-Machine Funnel
-$is_immersive = ($entry_point_input === 'immersive_landing' || isset($input['step_key']) || isset($_SESSION['active_workflow_state_token']));
+$session_node_id = 1;
+if (isset($_SESSION['mock_sessions'][$session_token]['current_node_id'])) {
+    $session_node_id = (int)$_SESSION['mock_sessions'][$session_token]['current_node_id'];
+} elseif (!empty($session_token) && isset($mysqli) && !$mysqli->connect_errno) {
+    $stmt_s = $mysqli->prepare("SELECT current_node_id FROM bot_sessions WHERE session_token = ? LIMIT 1");
+    if ($stmt_s) {
+        $stmt_s->bind_param('s', $session_token);
+        $stmt_s->execute();
+        $res_s = $stmt_s->get_result();
+        if ($res_s && $row_s = $res_s->fetch_assoc()) {
+            $session_node_id = (int)$row_s['current_node_id'];
+        }
+        $stmt_s->close();
+    }
+}
+$is_node_1_page_load = (isset($input['node_id']) && (int)$input['node_id'] === 1 && $message_content === '');
+$is_immersive = ($entry_point_input === 'immersive_landing' || isset($input['step_key']) || isset($_SESSION['active_workflow_state_token'])) && (!isset($input['node_id']) || $is_node_1_page_load) && ($session_node_id <= 1);
 
 if ($is_immersive) {
     // Determine language (respect early resolved $lang)

@@ -108,6 +108,12 @@ test.describe('Conversational Workflow & Telemetry Verification Suite', () => {
     page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
     page.on('pageerror', err => console.log('BROWSER ERROR:', err.message));
     await context.clearCookies();
+    await context.addCookies([{
+      name: 'force_mock_db',
+      value: 'true',
+      domain: '127.0.0.1',
+      path: '/'
+    }]);
     await page.goto('/tests/test-login-helper.php?role=logout');
     await page.evaluate(() => localStorage.clear());
     await page.evaluate(() => sessionStorage.clear());
