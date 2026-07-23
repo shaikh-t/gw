@@ -1031,7 +1031,7 @@ CREATE TABLE `customer_messages` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES
+INSERT INTO `users` (`id`, `uuid`, `name`, `email`, `password`, `avatar`, `phone`, `bio`, `last_login`, `created_at`, `updated_at`, `nationality`, `goal`, `emirate`) VALUES
 (1,'d82ee114-2e59-441c-871b-c037d552dc44','Admin','tahir@goproalpha.com','$2y$10$r1B0a3FsLhNNZIGUg.R1i.RdkQ46oYAnnFBhnMAe0rpCyppA7y5VO',NULL,NULL,NULL,'2026-07-06 18:37:15','2026-01-12 11:50:49','2026-07-06 13:37:15',NULL,NULL,NULL),
 (3,'fad6d2b3-700f-44dc-96f3-8a3a1a5809c2','Khurram','khurram@goproalpha.com','$2y$10$M2gQgMQ4i9z674RB0zY.3.1FhhAotqA6bXlYm96Pi4HEZ5aQumsS2','/public/uploads/avatars/f56f9be74aa815aec3fbabfa.png',NULL,NULL,NULL,'2026-01-16 07:43:51','2026-01-16 07:43:51',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
@@ -1043,7 +1043,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES
+INSERT INTO `roles` (`id`, `uuid`, `name`, `label`, `description`, `created_at`) VALUES
 (1,'20044733-5f4b-43be-9f1d-5b8f81db6173','admin','Administrator','Full system access','2026-01-12 11:50:49'),
 (2,'a86cb5e4-752d-4519-a82b-58db6ba1a9d1','manager','Manager','Manage operations','2026-01-12 11:50:49'),
 (3,'01741da9-0710-421e-8e02-5b572bfcab02','viewer','Viewer','Read-only access','2026-01-12 11:50:49'),
@@ -1058,7 +1058,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES
+INSERT INTO `permissions` (`id`, `uuid`, `name`, `label`, `description`, `created_at`) VALUES
 (1,'6d210674-f11a-47ee-8d56-1118414805f4','users.view','Users: View','View user list and profiles','2026-01-12 11:50:49'),
 (2,'86d60bc9-052b-4ca7-8b3f-404467663059','users.manage','Users: Manage','Create, update, delete users','2026-01-12 11:50:49'),
 (3,'f9a3f9d9-01da-4060-8c8c-61def89e981e','roles.view','Roles: View','View roles and permissions','2026-01-12 11:50:49'),
@@ -1079,8 +1079,7 @@ INSERT INTO `permissions` VALUES
 (20,'4dbbaaa3-3fc3-43cf-8682-023701b495a7','messages.manage','Contact Messages: Manage','Allows managing messages.manage','2026-07-13 09:03:27'),
 (21,'3a2b7245-21d3-488b-a45e-b8d4f40cf12b','can_manage_ads','Manage Ads','Allows access to admin/settings/bot_ads.php and ad creation forms','2026-07-17 12:00:00'),
 (22,'f43d22bf-829d-488c-9eb9-bcfd48383cb2','can_view_failed_queries','View Failed Queries','Allows access to admin/crm/failed-questions.php','2026-07-17 12:00:00'),
-(23,'ad7e06e3-ab78-4061-9c3f-c906f21c22cb','can_edit_knowledge_base','Edit Knowledge Base','Allows access to our local PDF/text CRUD manager at admin/crm/knowledge-base.php','2026-07-17 12:00:00');
-/*!40000 ALTER TABLE `permissions` ENABLE KEYS */,
+(23,'ad7e06e3-ab78-4061-9c3f-c906f21c22cb','can_edit_knowledge_base','Edit Knowledge Base','Allows access to our local PDF/text CRUD manager at admin/crm/knowledge-base.php','2026-07-17 12:00:00'),
 (24,'f5c9ef31-86f5-41d4-9315-cd18ce733f36','manage_system_analytics','Voice & Analytics Control','Allows managing site analytics and premium voice settings',current_timestamp()),
 (25,'72ac51ad-bb63-4d01-aeab-d5d1b64481df','view_voice_telemetry','Voice & Analytics Telemetry','Allows viewing voice assistant analytics and telemetry',current_timestamp()),
 (26,'3c10b24d-de91-4993-847c-7206b12a831e','manage_bot_steps','Manage Bot Steps','List, create, edit, delete and reorder conversational workflow steps',current_timestamp()),
@@ -1094,7 +1093,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES
+INSERT INTO `menus` (`id`, `name`, `location`) VALUES
 (1,'Header Menu','header'),
 (2,'Footer Pages','footer_pages'),
 (3,'Footer Services','footer_services'),
@@ -1108,7 +1107,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `service_categories` WRITE;
 /*!40000 ALTER TABLE `service_categories` DISABLE KEYS */;
-INSERT INTO `service_categories` VALUES
+INSERT INTO `service_categories` (`id`, `uuid`, `name`, `slug`, `description`, `created_at`) VALUES
 (1,'a0cdb1ff-ee84-4367-8125-75698f9910f3','Immigration Services','im','something here1','2026-01-15 13:37:18'),
 (2,'ee8788ff-13d4-4ba7-a02e-888509070c05','Immigration','imm','some description','2026-01-16 07:44:41');
 /*!40000 ALTER TABLE `service_categories` ENABLE KEYS */;
@@ -1120,7 +1119,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `service_tags` WRITE;
 /*!40000 ALTER TABLE `service_tags` DISABLE KEYS */;
-INSERT INTO `service_tags` VALUES
+INSERT INTO `service_tags` (`id`, `uuid`, `name`, `created_at`) VALUES
 (1,'60bd89c8-a0bf-4407-8c3e-6a3bc9b1d7a4','Visa','2026-01-12 14:19:55'),
 (2,'37821471-0b87-4d4a-8de6-fc6a91ce4312','Business','2026-01-15 13:31:52'),
 (3,'968fd9f3-d26a-4faa-823a-e8797f9cbd45','xyz','2026-01-16 07:44:18');
@@ -1144,7 +1143,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `landing_features` WRITE;
 /*!40000 ALTER TABLE `landing_features` DISABLE KEYS */;
-INSERT INTO `landing_features` VALUES
+INSERT INTO `landing_features` (`id`, `uuid`, `title`, `description`, `icon_class`, `sort_order`) VALUES
 (1,'631d450e-5d6b-4317-8379-27fd09f9fc05','Escrow Payments','Pay securely. Funds are held until you confirm satisfaction with your service.','bi-shield-check',1),
 (2,'81f17006-0b2f-4176-a708-0a0cb15eed97','Real-Time Tracking','Watch your application progress live — every stage, every update, instantly.','bi-lightning',2),
 (3,'46550107-3cd2-4223-b96f-b6b5649a96d2','Document Vault','Encrypted cloud storage for all your UAE documents, accessible anytime.','bi-lock',3),
@@ -1160,7 +1159,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `site_settings` WRITE;
 /*!40000 ALTER TABLE `site_settings` DISABLE KEYS */;
-INSERT INTO `site_settings` VALUES
+INSERT INTO `site_settings` (`id`, `key`, `value`, `label`, `type`) VALUES
 (1,'hero_title','Your Ultimate UAE Marketplace for Documentation & Advisory','Hero Title','text'),
 (2,'hero_subtitle','Access a vetted network of top-tier legal, business, and administrative professionals. Secure escrow payments, live tracking, and verified results.','Hero Subtitle','longtext'),
 (3,'hero_bg_image','https://images.unsplash.com/photo-1582653280643-e395afdf1f1c?w=1400&q=85','Hero Background','image'),
@@ -1193,8 +1192,7 @@ INSERT INTO `site_settings` VALUES
 (30,'stat_card2_desc','Our framework reduces ambiguity and brings clarity to every layer of the application.','Stat Card 2 Description','longtext'),
 (31,'stat_card3_number','150+','Stat Card 3 Number','text'),
 (32,'stat_card3_label','Supported Globally','Stat Card 3 Label','text'),
-(33,'stat_card3_desc','We\'ve worked with customers across SaaS, fintech, agencies, and high-growth companies worldwide.','Stat Card 3 Description','longtext');
-/*!40000 ALTER TABLE `site_settings` ENABLE KEYS */,
+(33,'stat_card3_desc','We\'ve worked with customers across SaaS, fintech, agencies, and high-growth companies worldwide.','Stat Card 3 Description','longtext'),
 (34,'google_analytics_status','OFF','Google Analytics Integration Status','text'),
 (35,'google_analytics_measurement_id','UA-XXXXX-Y','Google Analytics Measurement ID','text'),
 (36,'elevenlabs_status','OFF','ElevenLabs Premium Engine Status','text'),
@@ -1203,6 +1201,7 @@ INSERT INTO `site_settings` VALUES
 (39,'elevenlabs_stability','0.75','ElevenLabs Voice Stability Slider','text'),
 (40,'elevenlabs_clarity','0.75','ElevenLabs Voice Clarity Slider','text'),
 (41,'ai_bot_global_status','enabled','AI Bot Global Status','text');
+/*!40000 ALTER TABLE `site_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1211,7 +1210,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `testimonials` WRITE;
 /*!40000 ALTER TABLE `testimonials` DISABLE KEYS */;
-INSERT INTO `testimonials` VALUES
+INSERT INTO `testimonials` (`id`, `uuid`, `client_name`, `client_role`, `client_location`, `quote`, `avatar_text`, `stars`, `is_active`, `created_at`) VALUES
 (1,'e1346380-60b7-4180-879e-716801933f7c','Ahmed Al-Rashidi','Head of Product','Dubai','Their structured approach cut our operational waste in half. Golden Visa processed in 5 days.','AH',5,1,'2026-07-13 09:03:15'),
 (2,'3587db44-05e8-406e-8e02-db6ba1a9d180','Sarah Thompson','Business Owner','Abu Dhabi','Set up my mainland company in under a week. Escrow payment gave me total peace of mind.','ST',5,1,'2026-07-13 09:03:15'),
 (3,'0fc59ff7-5304-4be7-a0f9-36c388d783d1','Priya Sharma','HR Director','Sharjah','Managing 30+ employee visas has never been easier. Saves our team 10+ hours every month.','PS',5,1,'2026-07-13 09:03:15');
@@ -1224,7 +1223,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `cms_pages` WRITE;
 /*!40000 ALTER TABLE `cms_pages` DISABLE KEYS */;
-INSERT INTO `cms_pages` VALUES
+INSERT INTO `cms_pages` (`id`, `page_name`, `content`) VALUES
 (1,'about','{\"stats\": [{\"label\": \"Happy Customers\", \"number\": \"50,000+\", \"highlight\": false}, {\"label\": \"Verified Vendors\", \"number\": \"500+\", \"highlight\": true}, {\"label\": \"Success Rate\", \"number\": \"99.8%\", \"highlight\": false}, {\"label\": \"Nationalities Served\", \"number\": \"150+\", \"highlight\": false}], \"values\": [{\"desc\": \"Every decision we make starts with ‘does this protect our customers?’\", \"icon\": \"bi-shield\", \"title\": \"Trust First\"}, {\"desc\": \"No hidden fees, no surprises. What you see is exactly what you get.\", \"icon\": \"bi-lightning\", \"title\": \"Radical Transparency\"}, {\"desc\": \"Behind every application is a person’s dream. We take that seriously.\", \"icon\": \"bi-heart\", \"title\": \"People-Centred\"}, {\"desc\": \"We obsess over making every part of the platform better, every day.\", \"icon\": \"bi-graph-up-arrow\", \"title\": \"Continuous Excellence\"}], \"journey\": [{\"desc\": \"Started as a PRO services comparison tool by two frustrated expats\", \"year\": \"2020\", \"title\": \"Founded in Dubai\"}, {\"desc\": \"Reached our first 100 verified vendor partners across 5 Emirates\", \"year\": \"2021\", \"title\": \"100 Vendors\"}, {\"desc\": \"Crossed 10,000 customers and launched our Document Vault\", \"year\": \"2022\", \"title\": \"10,000 Customers\"}, {\"desc\": \"Launched industry-first escrow payment protection for UAE services\", \"year\": \"2023\", \"title\": \"Escrow Payments\"}, {\"desc\": \"Raised AED 16M to expand our vendor network and tech platform\", \"year\": \"2024\", \"title\": \"Series A Raised\"}, {\"desc\": \"Trusted by 50,000+ customers across 150+ nationalities\", \"year\": \"2026\", \"title\": \"50,000 Customers\"}], \"story_sub\": \"Two expats — tired of chasing PRO agents, losing documents, and paying without any guarantee — decided to build a marketplace that puts customers first.\", \"story_title\": \"We Built the Platform We Wished Existed\", \"mission_copy\": \"We connect individuals and businesses with verified UAE service providers — with escrow payments, real-time tracking, and transparent pricing at every step. Every vendor on our platform is vetted for licensing, success rate, and customer satisfaction. We don\'t just list services; we guarantee accountability.\", \"story_kicker\": \"Our Story\", \"values_title\": \"Our Values\", \"journey_title\": \"Six Years of Impact\", \"mission_proof\": [\"Verified all 500+ vendors for licensing, credentials, and compliance\", \"Protected over AED 48M in escrow payments for UAE customers\", \"Maintained a 99.8% application success rate across services\", \"Served customers from 150+ nationalities with real-time tracking\", \"Built transparent pricing with no hidden fees at any step\"], \"mission_title\": \"Making UAE Documentation Simple, Safe & Stress-Free\", \"story_cta_url\": \"services.php\", \"values_kicker\": \"What We Stand For\", \"journey_kicker\": \"Our Journey\", \"mission_kicker\": \"Our Mission\", \"story_cta_text\": \"Explore Services\"}'),
 (2,'contact','{\"email\": \"hello@globalways.ae\", \"hours\": [{\"days\": \"Sun – Thu\", \"time\": \"8:00 AM – 6:00 PM GST\", \"closed\": false}, {\"days\": \"Friday\", \"time\": \"8:00 AM – 1:00 PM GST\", \"closed\": false}, {\"days\": \"Saturday\", \"time\": \"Closed\", \"closed\": true}], \"phone\": \"+971 4 400 0000\", \"hero_sub\": \"Our team responds within 2 hours during business hours. For urgent matters, reach us on WhatsApp.\", \"hq_title\": \"Dubai, UAE\", \"whatsapp\": \"+971 4 400 0000\", \"email_meta\": \"Avg. reply · under 2 hours\", \"hero_title\": \"Get in Touch\", \"hq_address\": \"Global Ways Advisory\\nDubai International Financial Centre\\nLevel 6, Gate Avenue\\nDubai, UAE 000001\", \"phone_meta\": \"Sun–Thu · 8:00 AM – 6:00 PM GST\", \"hero_kicker\": \"Contact\", \"whatsapp_url\": \"https://wa.me/97144000000\", \"whatsapp_meta\": \"Avg. reply · under 30 min\"}'),
 (3,'how_it_works','{\"steps\": [{\"num\": \"01\", \"desc\": \"Search 500+ verified vendors by service type, rating, price, language, and location. Every vendor has been background-checked and has real verified reviews.\", \"icon\": \"bi-search\", \"title\": \"Browse & Compare Vendors\", \"bullets\": [\"Filter by service type, city, language & rating\", \"Read real reviews from verified customers\", \"Compare price, timeline & success rate side-by-side\", \"View vendor credentials and certifications\"], \"mockup_items\": [{\"sub\": \"Golden Visa Specialist\", \"name\": \"Emirates Pro Services\", \"active\": false, \"avatar\": \"E\", \"rating\": \"4.9\"}, {\"sub\": \"Business Setup Expert\", \"name\": \"Dubai Business Hub\", \"active\": true, \"avatar\": \"D\", \"rating\": \"4.9\"}, {\"sub\": \"PRO Services Leader\", \"name\": \"Al Maha Consultants\", \"active\": false, \"avatar\": \"A\", \"rating\": \"4.9\"}], \"mockup_label\": \"Top Vendors\"}, {\"num\": \"02\", \"desc\": \"Select your vendor and pay through our secure platform. Your payment is held in escrow — the vendor only receives it after you confirm the work is done.\", \"icon\": \"bi-credit-card\", \"title\": \"Book & Pay via Secure Escrow\", \"bullets\": [\"Pay by card, bank transfer or Apple/Google Pay\", \"Funds held in escrow until you confirm completion\", \"No upfront risk — money returned if vendor fails\", \"VAT receipts issued automatically\"], \"mockup_label\": \"Order Summary\", \"mockup_lines\": [{\"label\": \"Vendor quote\", \"amount\": \"AED 5,000\"}, {\"label\": \"Platform Fee (3%)\", \"amount\": \"AED 150\"}, {\"label\": \"Government Fees (est.)\", \"amount\": \"AED 2,720\"}], \"mockup_title\": \"Golden Visa — Emirates Pro Services\", \"mockup_total\": \"AED 7,870\"}, {\"num\": \"03\", \"desc\": \"Once booked, your vendor starts working and updates each milestone in real-time. You\'ll receive WhatsApp and email notifications at every stage.\", \"icon\": \"bi-bell\", \"title\": \"Track Your Application Live\", \"bullets\": [\"FedEx-style milestone tracking dashboard\", \"WhatsApp & email notifications at every step\", \"Direct in-app messaging with your vendor\", \"Estimated completion date always visible\"], \"mockup_label\": \"Application Tracker\", \"mockup_statuses\": [{\"label\": \"Submitted\", \"status\": \"done\"}, {\"label\": \"Docs Verified\", \"status\": \"done\"}, {\"label\": \"Gov. Submitted\", \"status\": \"done\"}, {\"label\": \"Biometrics\", \"status\": \"in-progress\"}, {\"label\": \"Approved\", \"status\": \"pending\"}]}, {\"num\": \"04\", \"desc\": \"Your documents are delivered to your encrypted Document Vault. Confirm delivery, rate your vendor, and access your documents forever.\", \"icon\": \"bi-check2-circle\", \"title\": \"Receive & Review\", \"bullets\": [\"Documents stored in encrypted cloud vault\", \"Download, share or forward to other services\", \"Rate your vendor to help other customers\", \"Renewal reminders sent before documents expire\"], \"mockup_docs\": [{\"name\": \"🏆 Golden Visa Certificate.pdf\", \"expires\": \"Expires 2031\"}, {\"name\": \"🪪 Emirates ID.pdf\", \"expires\": \"Expires 2028\"}, {\"name\": \"✈️ Entry Stamp.pdf\", \"expires\": \"Expires —\"}], \"mockup_label\": \"Document Vault\"}], \"cta_sub\": \"Browse 500+ verified vendors and find the right one for your UAE documentation needs — for free.\", \"hero_sub\": \"We\'ve simplified UAE bureaucracy into a transparent, guaranteed process — whether you need a visa, a trade license, or an Emirates ID.\", \"cta_title\": \"UAE Documentation, Simplified.\", \"cta_kicker\": \"Ready to Start?\", \"hero_title\": \"From Application to Approval in 4 Steps\", \"vendor_sub\": \"Becoming a verified vendor is simple. Get discovered by thousands of customers actively searching for your services.\", \"hero_kicker\": \"How It Works\", \"vendor_steps\": [{\"desc\": \"Submit your business details, license and certifications. Reviewed within 48 hours.\", \"icon\": \"bi-cloud-arrow-up\", \"step\": \"STEP 1\", \"title\": \"Apply & Get Verified\"}, {\"desc\": \"List services, set pricing, upload portfolio, and connect your availability.\", \"icon\": \"bi-globe2\", \"step\": \"STEP 2\", \"title\": \"Set Up Your Profile\"}, {\"desc\": \"Customers discover and book you directly. Respond and accept new orders.\", \"icon\": \"bi-file-earmark-text\", \"step\": \"STEP 3\", \"title\": \"Receive Orders\"}, {\"desc\": \"Update milestones, deliver outcomes, and get paid to your bank quickly.\", \"icon\": \"bi-arrow-repeat\", \"step\": \"STEP 4\", \"title\": \"Deliver & Get Paid\"}], \"vendor_title\": \"How Vendors Join & Grow\", \"vendor_kicker\": \"For Vendors\"}');
@@ -1254,7 +1253,7 @@ UNLOCK TABLES;
 --
 
 LOCK TABLES `bot_nodes` WRITE;
-INSERT INTO `bot_nodes` VALUES
+INSERT INTO `bot_nodes` (`id`, `parent_id`, `node_type`, `language_iso`, `display_text`, `spoken_text`, `target_action`) VALUES
 (1, NULL, 'greeting', 'en', 'Welcome to Global Ways! Please select your preferred language to begin.', 'Welcome to Global Ways! Please select your preferred language to begin.', NULL),
 (10, 1, 'voice_selection', 'en', 'Thank you. Would you prefer to explore our platform with the assistance of our AI Voice Companion, or would you like to browse the site independently at your own pace?', 'Thank you. Would you prefer to explore our platform with the assistance of our AI Voice Companion, or would you like to browse the site independently at your own pace?', NULL),
 (11, 1, 'voice_selection', 'fr', 'Merci. Préféreriez-vous explorer notre plateforme avec l''aide de notre compagnon vocal IA, ou préférez-vous naviguer sur le site de manière indépendante à votre propre rythme ?', 'Merci. Préféreriez-vous explorer notre plateforme avec l''aide de notre compagnon vocal IA, ou préférez-vous naviguer sur le site de manière indépendante à votre propre rythme ?', NULL),
@@ -1339,27 +1338,20 @@ INSERT INTO `bot_approved_keywords` (`keyword_token`, `language_code`) VALUES
 ('entreprise', 'fr'),
 ('installation', 'fr'),
 ('societe', 'fr'),
-('immigration', 'fr'),
-('visa', 'fr'),
 ('bureau', 'fr'),
-('consultation', 'fr'),
 ('commencer', 'fr'),
 ('lancement', 'fr'),
 ('ouvrir', 'fr'),
 ('incorporer', 'fr'),
 ('firme', 'fr'),
-('services', 'fr'),
 ('rendezvous', 'fr'),
 ('planifier', 'fr'),
 ('enregistrer', 'fr'),
 ('bienvenue', 'fr'),
-('selection', 'fr'),
 ('visite', 'fr'),
 ('tourisme', 'fr'),
 ('permis', 'fr'),
 ('licence', 'fr'),
-('stamping', 'fr'),
-('attestation', 'fr'),
 ('renouvellement', 'fr'),
 ('partenaire', 'fr'),
 ('reservation', 'fr'),
@@ -1413,7 +1405,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `providers` WRITE;
 /*!40000 ALTER TABLE `providers` DISABLE KEYS */;
-INSERT INTO `providers` VALUES
+INSERT INTO `providers` (`id`, `uuid`, `owner_user_id`, `name`, `slug`, `email`, `phone`, `address`, `city`, `state`, `country`, `latitude`, `longitude`, `logo`, `description`, `status`, `verification_status`, `verification_docs`, `created_at`, `updated_at`, `rating_avg`, `rating_count`, `settings`, `created_by`, `team_size`, `languages`, `starting_price`, `specialties`) VALUES
 (1,'59ee7db4-44e7-4254-8b97-8fbe6c289005',3,'GoProAlpha','goproalpha','tahir@example.com','03333092281','House #70-A 2nd floor, Shah Faisal Colony Block 2','Karachi','Sindh','Pakistan',NULL,NULL,'/public/uploads/providers/a0805473647f28e0281c6f32.png','Complete visa services','draft','unverified',NULL,'2026-01-14 08:22:05','2026-07-15 09:22:02',NULL,0,NULL,NULL,1,'English',NULL,NULL);
 /*!40000 ALTER TABLE `providers` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1433,7 +1425,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES
+INSERT INTO `user_roles` (`user_id`, `role_id`, `assigned_at`) VALUES
 (1,4,'2026-01-12 11:50:49'),
 (3,1,'2026-01-16 07:43:51');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
@@ -1490,7 +1482,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
-INSERT INTO `services` VALUES
+INSERT INTO `services` (`id`, `uuid`, `provider_id`, `category_id`, `title`, `slug`, `short_description`, `description`, `price`, `currency`, `duration_minutes`, `images`, `status`, `created_at`, `updated_at`, `rating_avg`, `rating_count`, `icon_class`, `duration_text`, `master_service_id`) VALUES
 (1,'8a38d478-ee47-424d-ba74-a02ca0ce6a6f',1,1,'Visa','visa','-','-',100.00,'USD',0,'[\"/public/uploads/services/c044f768e071b898b634edc2.png\"]','draft','2026-01-15 13:45:30','2026-07-15 09:09:20',NULL,0,'bi-award','5–7 days',10),
 (2,'89345c61-7173-48a3-8373-3a020b08e678',1,1,'Golden Visa','golden-visa','Long-term residency for investors & talent','-',5000.00,'AED',0,NULL,'published','2026-07-13 09:12:43','2026-07-15 09:09:20',NULL,0,'bi-award','5–7 days',11),
 (3,'e6233cb0-18e8-480b-899a-83fb62945eb8',1,1,'Business Setup','business-setup','Full company formation & bank account opening','-',8000.00,'AED',0,NULL,'published','2026-07-13 09:12:43','2026-07-15 09:09:20',NULL,0,'bi-building','3–5 days',12),
@@ -1518,7 +1510,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `service_tag_map` WRITE;
 /*!40000 ALTER TABLE `service_tag_map` DISABLE KEYS */;
-INSERT INTO `service_tag_map` VALUES
+INSERT INTO `service_tag_map` (`service_id`, `tag_id`) VALUES
 (1,1);
 /*!40000 ALTER TABLE `service_tag_map` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1529,7 +1521,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `blog_posts` WRITE;
 /*!40000 ALTER TABLE `blog_posts` DISABLE KEYS */;
-INSERT INTO `blog_posts` VALUES
+INSERT INTO `blog_posts` (`id`, `uuid`, `title`, `slug`, `excerpt`, `content`, `category`, `reading_time`, `author_user_id`, `image_url`, `tags`, `status`, `created_at`, `updated_at`) VALUES
 (1,'7b3ba3e9-e2b9-4546-827f-b2aa406af4bb','Why Scaling Breaks Businesses Without Operating Discipline','scaling-breaks-businesses','Growth exposes weak systems, not market demand. Learn how to build operational discipline before you scale.','<p class=\"lead\">Growth exposes weak systems, not market demand. When revenue grows faster than your operations, cracks appear everywhere — and the businesses that survive are the ones that build structure before they scale.</p><h2>The False Comfort of Demand</h2><p>High demand often masks operational risk. When teams chase top-line growth without strong delivery systems, churn and service failures follow. Revenue can climb while customer satisfaction quietly erodes.</p><h2>Misaligned Leadership Compounds the Problem</h2><p>Strategy fails when execution ownership is unclear. Define accountability across teams and map every process handoff. Without shared visibility, each department optimizes locally while the customer experience breaks globally.</p><h2>Complexity as a Risk Factor</h2><p>As service lines increase, complexity multiplies. Standardized workflows and clear decision rights are the only way to scale sustainably. Every new offering should come with a defined owner and a measurable outcome.</p>','Consultancy','5 min read',1,'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=85','UAE,Documentation,Marketing,Global Ways,2026','published','2026-07-13 09:03:27',NULL),
 (2,'560f3e21-e5ac-4355-add7-c0ef4373c8e7','Strategy Fails When Execution Lacks Structural Accountability','strategy-fails-without-accountability','Most strategy documents fail not because the ideas are wrong, but because no one owns the outcome.','<p class=\"lead\">Most strategy documents fail not because the ideas are wrong, but because no one owns the outcome.</p><h2>The Accountability Gap</h2><p>When leadership rolls out major changes without individual owners, alignment decays. Accountability isn\'t about blame; it\'s about knowing exactly who is responsible for driving each milestone to completion.</p>','Consultancy','5 min read',1,'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&q=85','UAE,Business Setup,Strategy','published','2026-07-13 09:03:27',NULL),
 (3,'917f8b09-792b-4646-80d2-0e80246fcdf3','Growth Exposes Weak Systems, Not Market Demand','growth-exposes-weak-systems','When revenue grows faster than your operations, cracks appear everywhere. Here\'s how to stay ahead.','<p class=\"lead\">When revenue grows faster than your operations, cracks appear everywhere. Here\'s how to stay ahead.</p><p>We focus on simplifying ownership, strengthening systems, and aligning leadership around what actually moves your UAE journey forward.</p>','Marketing','4 min read',1,'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=85','Escrow,Payments,Secure','published','2026-07-13 09:03:27',NULL);
@@ -1542,7 +1534,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES
+INSERT INTO `reviews` (`id`, `uuid`, `user_id`, `provider_id`, `service_id`, `rating`, `title`, `body`, `status`, `helpful_count`, `created_at`, `updated_at`) VALUES
 (1,'21020e21-284b-43c3-9b62-f1c30414f5d8',1,1,NULL,5,'Title','Body here','pending',0,'2026-01-15 13:48:33',NULL),
 (2,'a273a233-0cdd-46da-863e-00e5e54aecc1',3,NULL,1,4,'some title','review description','pending',0,'2026-01-16 07:51:04',NULL);
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
@@ -1563,7 +1555,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `review_moderation_logs` WRITE;
 /*!40000 ALTER TABLE `review_moderation_logs` DISABLE KEYS */;
-INSERT INTO `review_moderation_logs` VALUES
+INSERT INTO `review_moderation_logs` (`id`, `review_id`, `actor_user_id`, `action`, `note`, `created_at`) VALUES
 (1,1,1,'approve','Created by admin id 1 as pending','2026-01-15 13:48:33'),
 (2,2,1,'approve','Created by admin id 1 as pending','2026-01-16 07:51:04');
 /*!40000 ALTER TABLE `review_moderation_logs` ENABLE KEYS */;
@@ -1575,7 +1567,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `role_permissions` WRITE;
 /*!40000 ALTER TABLE `role_permissions` DISABLE KEYS */;
-INSERT INTO `role_permissions` VALUES
+INSERT INTO `role_permissions` (`role_id`, `permission_id`, `created_at`) VALUES
 (1,1,'2026-01-14 08:01:08'),
 (1,3,'2026-01-14 08:01:08'),
 (1,4,'2026-01-14 08:01:08'),
@@ -1622,8 +1614,7 @@ INSERT INTO `role_permissions` VALUES
 (4,17,'2026-01-14 08:13:10'),
 (4,18,'2026-07-13 09:03:27'),
 (4,19,'2026-07-13 09:03:27'),
-(4,20,'2026-07-13 09:03:27');
-/*!40000 ALTER TABLE `role_permissions` ENABLE KEYS */,
+(4,20,'2026-07-13 09:03:27'),
 (1,24,current_timestamp()),
 (1,25,current_timestamp()),
 (4,24,current_timestamp()),
@@ -1634,6 +1625,7 @@ INSERT INTO `role_permissions` VALUES
 (4,27,current_timestamp()),
 (1,28,current_timestamp()),
 (4,28,current_timestamp());
+/*!40000 ALTER TABLE `role_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1642,7 +1634,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `menu_items` WRITE;
 /*!40000 ALTER TABLE `menu_items` DISABLE KEYS */;
-INSERT INTO `menu_items` VALUES
+INSERT INTO `menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `sort_order`) VALUES
 (1,1,NULL,'Services','services.php',1),
 (2,1,NULL,'Vendors','vendors.php',2),
 (3,1,NULL,'Pricing','pricing.php',3),
@@ -1673,12 +1665,12 @@ INSERT INTO `menu_items` VALUES
 UNLOCK TABLES;
 
 
-SET FOREIGN_KEY_CHECKS = 1;
+-- SET FOREIGN_KEY_CHECKS = 1; -- Keep disabled until the end
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+-- /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
@@ -1867,3 +1859,6 @@ CREATE TABLE `bot_ad_fraud_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dump completed on 2026-07-15  9:42:30
+
+SET FOREIGN_KEY_CHECKS = 1;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

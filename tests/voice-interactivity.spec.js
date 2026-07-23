@@ -3,9 +3,10 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Voice Interactivity & Multilingual AI Workflow Checks', () => {
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     // Capture browser console logs
     page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
+    await context.clearCookies();
 
     // Inject robust mocks for SpeechRecognition and SpeechSynthesis before any scripts load
     await page.addInitScript(() => {
